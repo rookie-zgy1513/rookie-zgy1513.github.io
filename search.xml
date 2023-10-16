@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>字符自动机新理解</title>
+      <link href="posts/5e53c868.html"/>
+      <url>posts/5e53c868.html</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="字符自动机"><a href="#字符自动机" class="headerlink" title="字符自动机"></a>字符自动机</h1><p>今天参考 <a href="">roife.github.io </a>上的做法，学习了 Verilog 字符串自动机的一点骚操作</p><p>对于后缀自动机，我们可以不去做状态转移，而是考虑建立一个字符缓冲区 <code>reg [127:0] buffer</code> ，每次读到的字符都存到缓冲区中，然后去时刻检查缓冲区的字符串后缀是否符合题意，这样复杂的状态机问题就被简化成了简单的字符串匹配问题了（之前的感觉都白学了…）</p><p>但是这个方法好像不是万能的，目前来看只能匹配定长的、不连续的字符串，下举两例说明：</p><p>比如 <code>[a-zA-Z]+[0-9]+ </code>这样的不定长匹配就不行（因为你不知道输入究竟有多长）<br>比如上次 Pre 课上的 <code> cscore</code> 匹配问题，如果输入是 <code>cscorecscore</code> ，是要一次匹配完的，这种就不行，因为 buffer 的后缀中会出现 <code>recsc</code> 这种情况，没办法跟 <code>cscorerecscore</code> 这种情况区分<br>把用缓冲区做的 BlockChecker 代码贴一下</p><pre class="line-numbers language-none"><code class="language-none">`timescale 1ns / 1psmodule BlockChecker(    input clk,    input reset,    input [7:0] in,    output reg result    );    function [7:0] lower;    input [7:0] in;        if(in &gt;= "a" &amp;&amp; in &lt;= "z") lower = in;        else if(in &gt;= "A" &amp;&amp; in &lt;= "Z") lower[7:0] = in[7:0] + ("a" - "A");        else lower = in;    endfunction    reg [127:0] buffer;    reg [31:0] mismatch_cnt;    reg fail;    initial begin        buffer = " ";        mismatch_cnt = 0;        fail = 0;        result = 1;    end    always @(posedge clk or posedge reset) begin        if(reset) begin            buffer &lt;= " ";            result &lt;= 1;            fail &lt;= 0;            mismatch_cnt &lt;= 0;        end else begin            buffer &lt;= {buffer[119:0], lower(in)};        end    end    always @(*) begin        if(!fail) begin            if(buffer[47:0] == " begin") mismatch_cnt = mismatch_cnt + 1;            else if(buffer[55:8] == " begin" &amp;&amp; buffer[7:0] != " ") mismatch_cnt = mismatch_cnt - 1;            else if(buffer[31:0] == " end") mismatch_cnt = mismatch_cnt - 1;            else if(buffer[39:8] == " end" &amp;&amp; buffer[7:0] != " ") mismatch_cnt = mismatch_cnt + 1;            else if(buffer[39:8] == " end" &amp;&amp; buffer[7:0] == " " &amp;&amp; $signed(mismatch_cnt) &lt; 0) fail = 1;            else mismatch_cnt = mismatch_cnt;        end    end    always @(*) begin        result = ~fail &amp;&amp; (mismatch_cnt == 0);    endendmodule<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><h2 id="字符串自动机的-Testbench-简单写法"><a href="#字符串自动机的-Testbench-简单写法" class="headerlink" title="字符串自动机的 Testbench 简单写法"></a>字符串自动机的 Testbench 简单写法</h2><p>每次写字符串自动机的 testbench 都得写成这样</p><pre class="line-numbers language-none"><code class="language-none">#2; reset = 0; in = "B";#2; in = "e";#2; in = "g";#2; in = "I";#2; in = "n";#2; in = " ";#2; in = " ";#2; in = "e";//... 此处省略 40 + 行<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><p>非常的讨厌，所以今天 get 到了简单用循环移位去做的简单写法（以 BlockerChecker 的 Testbench 为例）</p><pre class="line-numbers language-none"><code class="language-none">`timescale 1ns / 1psmodule BlockChecker_tb;// Inputsreg clk;reg reset;reg [7:0] in;// Outputswire result;reg [0:1023] data;integer i = 0;// Instantiate the Unit Under Test (UUT)BlockChecker uut (.clk(clk), .reset(reset), .in(in), .result(result));always #1 clk = ~clk;initial begin// Initialize Inputsclk = 0;reset = 1;in = 0;data = "begin enDbegin xyzz eNd BeGin begin end endbegin end ";while(!data[0:7]) data = data &lt;&lt; 8;#2;reset = 0;for(i = 0; i &lt; 53; i=i+1) beginin[7:0] = data[0:7];data = data &lt;&lt; 8;#2;end$finish;endendmodule<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><p>可以看到，定义了一个 <code>reg [0:1023] data </code>（注意，这里一定是从小端开始，否则你读到 <code>in</code> 端口里面的数据就是反过来的 ASCII 码就不对了），然后给 <code>data </code>用一串优雅的字符串直接赋上初值，由于我们赋值默认被挤到了最右端，所以用 <code>while(!data[0:7]) data = data &lt;&lt; 8</code>; 一直移位，直到找到我们想要的数据为止，然后用一个 <code>for</code> 循环，直接开始把值打到 <code>in</code> 端口里面去，非常的方便</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 计组 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 计组 </tag>
+            
+            <tag> P1 </tag>
+            
+            <tag> Verilog </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Hello World</title>
       <link href="posts/4a17b156.html"/>
       <url>posts/4a17b156.html</url>

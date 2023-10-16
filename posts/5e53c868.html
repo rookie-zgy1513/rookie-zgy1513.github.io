@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="分类, RooKie_Z 计算机科学与技术">
-    <meta name="description" content="RooKie_Z的计算机学院学习生活日常">
+    <meta name="keywords" content="字符自动机新理解, RooKie_Z 计算机科学与技术">
+    <meta name="description" content="近期对于字符自动机的新理解">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>分类 | RooKie_Z</title>
+    <title>字符自动机新理解 | RooKie_Z</title>
     <link rel="icon" type="image/jpeg" href="https://s1.ax1x.com/2020/05/17/YR20js.jpg">
     
 
@@ -333,169 +333,571 @@
 
 </header>
 
-    <div class="bg-cover pd-header about-cover">
-    <div class="container">
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/4.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">字符自动机新理解</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
     <div class="row">
-    <div class="col s10 offset-s1 m8 offset-m2 l8 offset-l2">
-        <div class="brand">
-            <div class="title center-align">
-                
-                RooKie_Zの小窝
-                
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/%E8%AE%A1%E7%BB%84/">
+                                <span class="chip bg-color">计组</span>
+                            </a>
+                        
+                            <a href="/tags/P1/">
+                                <span class="chip bg-color">P1</span>
+                            </a>
+                        
+                            <a href="/tags/Verilog/">
+                                <span class="chip bg-color">Verilog</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/%E8%AE%A1%E7%BB%84/" class="post-category">
+                                计组
+                            </a>
+                        
+                    </div>
+                    
+                </div>
             </div>
 
-            <div class="description center-align">
+            <div class="post-info">
                 
-                <span id="subtitle"></span>
-                <script src="/libs/typed/typed.js"></script>
-                <script>
-                    var typed = new Typed("#subtitle", {
-                        strings: [ 
-                            
-                                "真正的大师,永远怀着一颗学徒的心",
-                            
-                                "Always be a RooKie",
-                            
-                        ],
-                        startDelay: 300,
-                        typeSpeed: 100,
-                        loop: true,
-                        backSpeed: 50,
-                        showCursor: true
-                    });
-                </script>
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2023-10-16
+                </div>
                 
+
+                
+
+                
+
+                
+
+                
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.min.css">
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="字符自动机"><a href="#字符自动机" class="headerlink" title="字符自动机"></a>字符自动机</h1><p>今天参考 <a href="">roife.github.io </a>上的做法，学习了 Verilog 字符串自动机的一点骚操作</p>
+<p>对于后缀自动机，我们可以不去做状态转移，而是考虑建立一个字符缓冲区 <code>reg [127:0] buffer</code> ，每次读到的字符都存到缓冲区中，然后去时刻检查缓冲区的字符串后缀是否符合题意，这样复杂的状态机问题就被简化成了简单的字符串匹配问题了（之前的感觉都白学了…）</p>
+<p>但是这个方法好像不是万能的，目前来看只能匹配定长的、不连续的字符串，下举两例说明：</p>
+<p>比如 <code>[a-zA-Z]+[0-9]+ </code>这样的不定长匹配就不行（因为你不知道输入究竟有多长）<br>比如上次 Pre 课上的 <code> cscore</code> 匹配问题，如果输入是 <code>cscorecscore</code> ，是要一次匹配完的，这种就不行，因为 buffer 的后缀中会出现 <code>recsc</code> 这种情况，没办法跟 <code>cscorerecscore</code> 这种情况区分<br>把用缓冲区做的 BlockChecker 代码贴一下</p>
+<pre class="line-numbers language-none"><code class="language-none">`timescale 1ns / 1ps
+module BlockChecker(
+    input clk,
+    input reset,
+    input [7:0] in,
+    output reg result
+    );
+
+    function [7:0] lower;
+    input [7:0] in;
+        if(in &gt;= "a" &amp;&amp; in &lt;= "z") lower = in;
+        else if(in &gt;= "A" &amp;&amp; in &lt;= "Z") lower[7:0] = in[7:0] + ("a" - "A");
+        else lower = in;
+    endfunction
+
+    reg [127:0] buffer;
+    reg [31:0] mismatch_cnt;
+    reg fail;
+
+    initial begin
+        buffer = " ";
+        mismatch_cnt = 0;
+        fail = 0;
+        result = 1;
+    end
+
+    always @(posedge clk or posedge reset) begin
+        if(reset) begin
+            buffer &lt;= " ";
+            result &lt;= 1;
+            fail &lt;= 0;
+            mismatch_cnt &lt;= 0;
+        end else begin
+            buffer &lt;= {buffer[119:0], lower(in)};
+        end
+    end
+
+    always @(*) begin
+        if(!fail) begin
+            if(buffer[47:0] == " begin") mismatch_cnt = mismatch_cnt + 1;
+            else if(buffer[55:8] == " begin" &amp;&amp; buffer[7:0] != " ") mismatch_cnt = mismatch_cnt - 1;
+            else if(buffer[31:0] == " end") mismatch_cnt = mismatch_cnt - 1;
+            else if(buffer[39:8] == " end" &amp;&amp; buffer[7:0] != " ") mismatch_cnt = mismatch_cnt + 1;
+            else if(buffer[39:8] == " end" &amp;&amp; buffer[7:0] == " " &amp;&amp; $signed(mismatch_cnt) &lt; 0) fail = 1;
+            else mismatch_cnt = mismatch_cnt;
+        end
+    end
+
+    always @(*) begin
+        result = ~fail &amp;&amp; (mismatch_cnt == 0);
+    end
+endmodule<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="字符串自动机的-Testbench-简单写法"><a href="#字符串自动机的-Testbench-简单写法" class="headerlink" title="字符串自动机的 Testbench 简单写法"></a>字符串自动机的 Testbench 简单写法</h2><p>每次写字符串自动机的 testbench 都得写成这样</p>
+<pre class="line-numbers language-none"><code class="language-none">#2; reset = 0; in = "B";
+#2; in = "e";
+#2; in = "g";
+#2; in = "I";
+#2; in = "n";
+#2; in = " ";
+#2; in = " ";
+#2; in = "e";
+//... 此处省略 40 + 行<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>非常的讨厌，所以今天 get 到了简单用循环移位去做的简单写法（以 BlockerChecker 的 Testbench 为例）</p>
+<pre class="line-numbers language-none"><code class="language-none">`timescale 1ns / 1ps
+module BlockChecker_tb;
+
+	// Inputs
+	reg clk;
+	reg reset;
+	reg [7:0] in;
+
+	// Outputs
+	wire result;
+
+	reg [0:1023] data;
+	integer i = 0;
+
+	// Instantiate the Unit Under Test (UUT)
+	BlockChecker uut (
+		.clk(clk), 
+		.reset(reset), 
+		.in(in), 
+		.result(result)
+	);
+
+	always #1 clk = ~clk;
+
+	initial begin
+		// Initialize Inputs
+		clk = 0;
+		reset = 1;
+		in = 0;
+		data = "begin enDbegin xyzz eNd BeGin begin end endbegin end ";
+		while(!data[0:7]) data = data &lt;&lt; 8;
+		#2;
+		reset = 0;
+		for(i = 0; i &lt; 53; i=i+1) begin
+			in[7:0] = data[0:7];
+			data = data &lt;&lt; 8;
+			#2;
+		end
+		$finish;
+	end
+endmodule<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>可以看到，定义了一个 <code>reg [0:1023] data </code>（注意，这里一定是从小端开始，否则你读到 <code>in</code> 端口里面的数据就是反过来的 ASCII 码就不对了），然后给 <code>data </code>用一串优雅的字符串直接赋上初值，由于我们赋值默认被挤到了最右端，所以用 <code>while(!data[0:7]) data = data &lt;&lt; 8</code>; 一直移位，直到找到我们想要的数据为止，然后用一个 <code>for</code> 循环，直接开始把值打到 <code>in</code> 端口里面去，非常的方便</p>
+
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">RooKie_Z</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="http://www.luckyzmj.cn/posts/5e53c868.html">http://www.luckyzmj.cn/posts/5e53c868.html</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">RooKie_Z</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/%E8%AE%A1%E7%BB%84/">
+                                    <span class="chip bg-color">计组</span>
+                                </a>
+                            
+                                <a href="/tags/P1/">
+                                    <span class="chip bg-color">P1</span>
+                                </a>
+                            
+                                <a href="/tags/Verilog/">
+                                    <span class="chip bg-color">Verilog</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-
 <script>
-    // 每天切换 banner 图.  Switch banner image every day.
-    var bannerUrl = "/medias/banner/" + new Date().getDay() + '.jpg';
-    $('.bg-cover').css('background-image', 'url(' + bannerUrl + ')');
+    $(function () {
+        $('.tabs').tabs();
+    });
 </script>
-<script>
-    
-      // 每天切换 banner 图.  Switch banner image every day.
-      var bannerUrl = "/medias/banner/" + new Date().getDay() + '.jpg';
-    
-    $('.bg-cover.about-cover').css('background-image', 'url(' + bannerUrl + ')');
 
-</script>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
+            <div class="card">
+                <a href="/posts/5e53c868.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="字符自动机新理解">
+                        
+                        <span class="card-title">字符自动机新理解</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            近期对于字符自动机的新理解
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-10-16
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E8%AE%A1%E7%BB%84/" class="post-category">
+                                    计组
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E8%AE%A1%E7%BB%84/">
+                        <span class="chip bg-color">计组</span>
+                    </a>
+                    
+                    <a href="/tags/P1/">
+                        <span class="chip bg-color">P1</span>
+                    </a>
+                    
+                    <a href="/tags/Verilog/">
+                        <span class="chip bg-color">Verilog</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/4a17b156.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="Hello World">
+                        
+                        <span class="card-title">Hello World</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-10-14
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            RooKie_Z
+                            
+                        </span>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+
+  <!-- 是否加载使用自带的 prismjs. -->
+  <script type="text/javascript" src="/libs/prism/prism.min.js"></script>
+
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
 
 
     </div>
-</div>
-
-<main class="content">
-
-    
-
-<div id="category-cloud" class="container chip-container">
-    <div class="card">
-        <div class="card-content">
-            <div class="tag-title center-align">
-                <i class="fas fa-bookmark"></i>&nbsp;&nbsp;文章分类
-            </div>
-            <div class="tag-chips">
-                
-                
-                
-                <a href="/categories/%E5%8D%9A%E5%AE%A2%E7%AF%87/" title="博客篇: 5">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            style="background-color: #F9EBEA;">博客篇
-                        <span class="tag-length">5</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/categories/%E5%89%8D%E7%AB%AF%E7%AF%87/" title="前端篇: 1">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            style="background-color: #F5EEF8;">前端篇
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/categories/%E8%AE%A1%E7%BB%84/" title="计组: 1">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            style="background-color: #D5F5E3;">计组
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-            </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
         </div>
     </div>
 </div>
 
+<!-- TOC 悬浮按钮. -->
 
-    
-    <style type="text/css">
-    #category-radar {
-        width: 100%;
-        height: 360px;
-    }
-</style>
-
-<div class="container" data-aos="fade-up">
-    <div class="card">
-        <div id="category-radar" class="card-content"></div>
-    </div>
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
 </div>
 
-<script type="text/javascript" src="/libs/echarts/echarts.min.js"></script>
-<script type="text/javascript">
-    let radarChart = echarts.init(document.getElementById('category-radar'));
 
-    
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
 
-    let option = {
-        title: {
-            left: 'center',
-            text: '文章分类雷达图',
-            textStyle: {
-                fontWeight: 500,
-                fontSize: 22
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
             }
-        },
-        tooltip: {},
-        radar: {
-            name: {
-                textStyle: {
-                    color: '#3C4858'
-                }
-            },
-            indicator: [{"name":"博客篇","max":6},{"name":"前端篇","max":6},{"name":"计组","max":6}],
-            nameGap: 5,
-            center: ['50%','55%'],
-            radius: '66%'
-        },
-        series: [{
-            type: 'radar',
-            color: ['#3ecf8e'],
-            itemStyle: {normal: {areaStyle: {type: 'default'}}},
-            data : [
-                {
-                    value : [5,1,1],
-                    name : '文章分类数量'
-                }
-            ]
-        }]
-    };
+        });
 
-    radarChart.setOption(option);
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
 </script>
 
     
 
 </main>
+
+
 
 
     <footer class="page-footer bg-color">
