@@ -406,7 +406,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-10-16
+                    2023-10-17
                 </div>
                 
 
@@ -441,7 +441,9 @@
                 <h1 id="字符自动机"><a href="#字符自动机" class="headerlink" title="字符自动机"></a>字符自动机</h1><p>今天参考 <a href="">roife.github.io </a>上的做法，学习了 Verilog 字符串自动机的一点骚操作</p>
 <p>对于后缀自动机，我们可以不去做状态转移，而是考虑建立一个字符缓冲区 <code>reg [127:0] buffer</code> ，每次读到的字符都存到缓冲区中，然后去时刻检查缓冲区的字符串后缀是否符合题意，这样复杂的状态机问题就被简化成了简单的字符串匹配问题了（之前的感觉都白学了…）</p>
 <p>但是这个方法好像不是万能的，目前来看只能匹配定长的、不连续的字符串，下举两例说明：</p>
-<p>比如 <code>[a-zA-Z]+[0-9]+ </code>这样的不定长匹配就不行（因为你不知道输入究竟有多长）<br>比如上次 Pre 课上的 <code> cscore</code> 匹配问题，如果输入是 <code>cscorecscore</code> ，是要一次匹配完的，这种就不行，因为 buffer 的后缀中会出现 <code>recsc</code> 这种情况，没办法跟 <code>cscorerecscore</code> 这种情况区分<br>把用缓冲区做的 BlockChecker 代码贴一下</p>
+<p>比如 <code>[a-zA-Z]+[0-9]+ </code>这样的不定长匹配就不行（因为你不知道输入究竟有多长）</p>
+<p>比如上次 Pre 课上的 <code> cscore</code> 匹配问题，如果输入是 <code>cscorecscore</code> ，是要一次匹配完的，这种就不行，因为 buffer 的后缀中会出现 <code>recsc</code> 这种情况，没办法跟 <code>cscorerecscore</code> 这种情况区分</p>
+<p>把用缓冲区做的 BlockChecker 代码贴一下</p>
 <pre class="line-numbers language-none"><code class="language-none">`timescale 1ns / 1ps
 module BlockChecker(
     input clk,
@@ -510,43 +512,43 @@ endmodule<span aria-hidden="true" class="line-numbers-rows"><span></span><span><
 <pre class="line-numbers language-none"><code class="language-none">`timescale 1ns / 1ps
 module BlockChecker_tb;
 
-	// Inputs
-	reg clk;
-	reg reset;
-	reg [7:0] in;
+    // Inputs
+    reg clk;
+    reg reset;
+    reg [7:0] in;
 
-	// Outputs
-	wire result;
+    // Outputs
+    wire result;
 
-	reg [0:1023] data;
-	integer i = 0;
+    reg [0:1023] data;
+    integer i = 0;
 
-	// Instantiate the Unit Under Test (UUT)
-	BlockChecker uut (
-		.clk(clk), 
-		.reset(reset), 
-		.in(in), 
-		.result(result)
-	);
+    // Instantiate the Unit Under Test (UUT)
+    BlockChecker uut (
+        .clk(clk), 
+        .reset(reset), 
+        .in(in), 
+        .result(result)
+    );
 
-	always #1 clk = ~clk;
+    always #1 clk = ~clk;
 
-	initial begin
-		// Initialize Inputs
-		clk = 0;
-		reset = 1;
-		in = 0;
-		data = "begin enDbegin xyzz eNd BeGin begin end endbegin end ";
-		while(!data[0:7]) data = data &lt;&lt; 8;
-		#2;
-		reset = 0;
-		for(i = 0; i &lt; 53; i=i+1) begin
-			in[7:0] = data[0:7];
-			data = data &lt;&lt; 8;
-			#2;
-		end
-		$finish;
-	end
+    initial begin
+        // Initialize Inputs
+        clk = 0;
+        reset = 1;
+        in = 0;
+        data = "begin enDbegin xyzz eNd BeGin begin end endbegin end ";
+        while(!data[0:7]) data = data &lt;&lt; 8;
+        #2;
+        reset = 0;
+        for(i = 0; i &lt; 53; i=i+1) begin
+            in[7:0] = data[0:7];
+            data = data &lt;&lt; 8;
+            #2;
+        end
+        $finish;
+    end
 endmodule<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>可以看到，定义了一个 <code>reg [0:1023] data </code>（注意，这里一定是从小端开始，否则你读到 <code>in</code> 端口里面的数据就是反过来的 ASCII 码就不对了），然后给 <code>data </code>用一串优雅的字符串直接赋上初值，由于我们赋值默认被挤到了最右端，所以用 <code>while(!data[0:7]) data = data &lt;&lt; 8</code>; 一直移位，直到找到我们想要的数据为止，然后用一个 <code>for</code> 循环，直接开始把值打到 <code>in</code> 端口里面去，非常的方便</p>
