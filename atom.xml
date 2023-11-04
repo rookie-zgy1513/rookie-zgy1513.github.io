@@ -6,7 +6,7 @@
   <link href="http://www.luckyzmj.cn/atom.xml" rel="self"/>
   
   <link href="http://www.luckyzmj.cn/"/>
-  <updated>2023-10-18T13:32:57.914Z</updated>
+  <updated>2023-11-04T08:37:14.461Z</updated>
   <id>http://www.luckyzmj.cn/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>OOPre学期总结</title>
+    <link href="http://www.luckyzmj.cn/posts/7bf398de.html"/>
+    <id>http://www.luckyzmj.cn/posts/7bf398de.html</id>
+    <published>2023-11-04T04:04:59.000Z</published>
+    <updated>2023-11-04T08:37:14.461Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="OOPre学期总结"><a href="#OOPre学期总结" class="headerlink" title="OOPre学期总结"></a>OOPre学期总结</h1><h2 id="项目架构"><a href="#项目架构" class="headerlink" title="项目架构"></a>项目架构</h2><table><thead><tr><th align="center">类名</th><th align="center">描述</th><th align="center">功能介绍</th></tr></thead><tbody><tr><td align="center">Main</td><td align="center">主类</td><td align="center">用于解析输入，并将所需信息交由下属各类处理完成功能</td></tr><tr><td align="center">Bottle</td><td align="center">药水类</td><td align="center">储存药水相关性质，完成药水基础属性更迭，下属Recover Bottle，Reinforced Bottle，Regular Bottle三个子类分别重写相关方法实现相应功能</td></tr><tr><td align="center">Food</td><td align="center">食物类</td><td align="center">实现食物相关功能，包含基础属性的获取</td></tr><tr><td align="center">Equipment</td><td align="center">装备类</td><td align="center">实现装备相关功能，包含使用，装备升星，下属RegularEquipment，CritEquipment，EpicEquipment三个子类，重写父类方法实现各自特性功能</td></tr><tr><td align="center">Fight</td><td align="center">日志类</td><td align="center">实现战斗日志相关功能，包含日志的存储，获取等</td></tr><tr><td align="center">Backpack</td><td align="center">背包类</td><td align="center">实现背包相关功能，包括相关物品的携带，删除，判断具体物品是否携带，使用等等</td></tr><tr><td align="center">Store</td><td align="center">商店类</td><td align="center">作为单例，实现商店相应功能，包括交易记录，售卖，购买等等功能</td></tr><tr><td align="center">Adventurer</td><td align="center">冒险者类</td><td align="center">实现冒险者的一系列操作，并进行一部分输出</td></tr></tbody></table><p>下附项目uml图：</p><p><img src="D:\OOpre\hw7\src\uml1.png"></p><p>详细版：</p><p><img src="D:\OOpre\hw7\src\uml.png"></p><hr><h2 id="迭代日志"><a href="#迭代日志" class="headerlink" title="迭代日志"></a>迭代日志</h2><h3 id="第二周作业"><a href="#第二周作业" class="headerlink" title="第二周作业"></a>第二周作业</h3><p>添加了<code>Main</code>，<code>Adventurer</code>，<code>Bottle</code>，<code>Equipment</code>类，实现了基本的物品增删等功能。</p><p><strong>感触：</strong>积累了基础的面向对象编程思想，注意到，这时我的主要想法仍是怎样完成一个便捷的函数（方法），主要仍是面向过程编程，对于类的封装和<strong>java</strong>语言内部优秀的数据结构类型认识不足。</p><h3 id="第三周作业"><a href="#第三周作业" class="headerlink" title="第三周作业"></a>第三周作业</h3><p>添加了<code>Backpack</code>类，与<code>Adventurer</code>类实现交互，通过新增方法来处理新增开发需求，基本完成了基础架构。</p><p><strong>感触：</strong>在本次迭代任务中，我首次采用了组合数据结构的办法，进行了<strong>HashMap与TreeSet</strong>的组合使用，大大提升了程序的性能，而不是想办法在方法上大做文章，可以说实现了思想上的初步转变。同时，由于checkstyle的要求，我在主类里也采用了多加方法类来避免超出方法行数要求的办法，这也会为之后的隐患埋下伏笔。</p><h3 id="第四周作业"><a href="#第四周作业" class="headerlink" title="第四周作业"></a>第四周作业</h3><p>添加<code>Fight</code>类，进行战斗日志的记录和查询。</p><p><strong>感触：</strong>最痛苦的一周，主要在于两点。一是本周初学了正则表达式，在程序编写模式上带来了一定挑战，其次是由于Junit行覆盖率以及分支覆盖率的要求，导致我原来在主类里解析输入在转交处理的“偷懒办法”彻底无法使用，最终不得不统一解析输入，在交由主类里的处理中枢来传到各类进行功能实现，这也是我唯一一次大的重构，耗费了我大量的时间。</p><h3 id="第六周作业"><a href="#第六周作业" class="headerlink" title="第六周作业"></a>第六周作业</h3><p>分别添加<code>Bottle</code>，<code>Equipment</code>类的三个子类，在子类中重写父类方法支持相应需求。</p><p>同时构建<code>Commodity</code>接口，来进行价格计算的统一规划。</p><p><strong>感触：</strong>在第四周后，其实每周的工作量都不是很大了，这一方面是由于我对于面向对象的开发要求越来越熟悉，另一方面是由于前几次吃过的亏，我在项目的架构上变得尤为谨慎，最终避免了大的重构。</p><h3 id="第七周作业（最后一次迭代）"><a href="#第七周作业（最后一次迭代）" class="headerlink" title="第七周作业（最后一次迭代）"></a>第七周作业（最后一次迭代）</h3><p>添加了<code>Store</code>类，采用单例模式，来处理买卖物品需求。同时对于冒险者间的雇佣关系进一步扩展，增加了援助系统。</p><p><strong>感触：</strong>在最后一周，代码的开发也变得更加轻松了，感觉和第三周工程量相仿，但是我对于面向对象开发时得具体模式有了更深的理解，也尝试使用了简单的两个模式。</p><hr><h2 id="Junit使用心得"><a href="#Junit使用心得" class="headerlink" title="Junit使用心得"></a>Junit使用心得</h2><p><del>讲道理，对于我而言，花在编写Junit测试上的时间可能会比项目开发时间还多，我认为这和我对于Junit的认识不足有关。</del></p><p>基于我的粗浅认识，我总结一下</p><ul><li>首先，Junit测试无疑能够帮助检查出代码里的问题，尤其是在满足分支覆盖率的前提下，各种<strong>Exception</strong>会很容易被找出来。这对于时间充足的开发者无疑大有裨益！！！</li><li>但是，要编写满足各种复杂分支的测试样例（即测试代码），也无疑会占用大量时间，这直接导致我后几次时间不足时编写的<strong>Junit</strong>程序完全是为了凑覆盖率搞的，只能说有利有弊吧……</li></ul><hr><h2 id="总体心得体会"><a href="#总体心得体会" class="headerlink" title="总体心得体会"></a>总体心得体会</h2><p>每一次开发的心得体会可以见前文的迭代日志。</p><p>总体而言，我初步接触了面向对象的开发流程，经过自己的上手，也对于何为“面向对象”有了一个大概的认识，可以看到，在一次次迭代中，我的代码结构愈发规整，对于如何构建优秀方法的关注也逐渐转移到如何构建一个好的类上，这无疑是值得肯定的。</p><p>最大的遗憾在于，囿于时间不足，我无法腾出手对代码进行再一次大刀阔斧的修改，即彻底解放主类，建立输入解析类和方法统筹类，这无疑会使得整体结构更加漂亮，也希望助教未来能放出所有强测样例，让我在计组课程结束后再对于重构程序进行测试，不胜感激！！！</p><p>另插一句：对于面向对象的认识再我CPU的设计与架构中也有不少益处。什么模块应当组合，又如何封装电路来减轻课上后续开发负担，如果没有OOpre的经验，我计组课上会通过的困难许多。</p><hr><h2 id="对课程的建议"><a href="#对课程的建议" class="headerlink" title="对课程的建议"></a>对课程的建议</h2><ul><li>首先是可以完善一下课程指导书上的细节，再特定要求处可以改换字体颜色，进行加粗。同时对于一些边界情况的要求也应该更加清晰准确。</li><li>课上可以多花一点时间讲下程序的架构问题，这样我们在后续开发中可以少走不少弯路！！！</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;\assets\css\APlayer.min.css&quot;&gt;&lt;script src=&quot;\assets\js\APlayer.min.js&quot; cla</summary>
+      
+    
+    
+    
+    <category term="OO" scheme="http://www.luckyzmj.cn/categories/OO/"/>
+    
+    
+    <category term="OO" scheme="http://www.luckyzmj.cn/tags/OO/"/>
+    
+  </entry>
   
   <entry>
     <title>字符自动机新理解</title>

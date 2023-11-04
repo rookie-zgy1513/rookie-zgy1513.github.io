@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="字符自动机新理解, RooKie_Z 计算机科学与技术">
-    <meta name="description" content="近期对于字符自动机的新理解">
+    <meta name="keywords" content="OOPre学期总结, RooKie_Z 计算机科学与技术">
+    <meta name="description" content="对于本学期OOPre课程的总结与心得">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>字符自动机新理解 | RooKie_Z</title>
+    <title>OOPre学期总结 | RooKie_Z</title>
     <link rel="icon" type="image/jpeg" href="/medias/avatar.jpg">
     
 
@@ -337,12 +337,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/4.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/6.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">字符自动机新理解</h1>
+                    <h1 class="description center-align post-title">OOPre学期总结</h1>
                 </div>
             </div>
         </div>
@@ -366,16 +366,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E8%AE%A1%E7%BB%84/">
-                                <span class="chip bg-color">计组</span>
-                            </a>
-                        
-                            <a href="/tags/P1/">
-                                <span class="chip bg-color">P1</span>
-                            </a>
-                        
-                            <a href="/tags/Verilog/">
-                                <span class="chip bg-color">Verilog</span>
+                            <a href="/tags/OO/">
+                                <span class="chip bg-color">OO</span>
                             </a>
                         
                     </div>
@@ -386,8 +378,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/%E8%AE%A1%E7%BB%84/" class="post-category">
-                                计组
+                            <a href="/categories/OO/" class="post-category">
+                                OO
                             </a>
                         
                     </div>
@@ -399,21 +391,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2023-10-16
+                    2023-11-04
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-10-18
+                    2023-11-04
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    805
+                    1.6k
                 </div>
                 
 
@@ -438,120 +430,88 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="字符自动机"><a href="#字符自动机" class="headerlink" title="字符自动机"></a>字符自动机</h1><p>今天参考 <a href="">roife.github.io </a>上的做法，学习了 Verilog 字符串自动机的一点骚操作</p>
-<p>对于后缀自动机，我们可以不去做状态转移，而是考虑建立一个字符缓冲区 <code>reg [127:0] buffer</code> ，每次读到的字符都存到缓冲区中，然后去时刻检查缓冲区的字符串后缀是否符合题意，这样复杂的状态机问题就被简化成了简单的字符串匹配问题了（之前的感觉都白学了…）</p>
-<p>但是这个方法好像不是万能的，目前来看只能匹配定长的、不连续的字符串，下举两例说明：</p>
-<p>比如 <code>[a-zA-Z]+[0-9]+ </code>这样的不定长匹配就不行（因为你不知道输入究竟有多长）</p>
-<p>比如上次 Pre 课上的 <code> cscore</code> 匹配问题，如果输入是 <code>cscorecscore</code> ，是要一次匹配完的，这种就不行，因为 buffer 的后缀中会出现 <code>recsc</code> 这种情况，没办法跟 <code>cscorerecscore</code> 这种情况区分</p>
-<p>把用缓冲区做的 BlockChecker 代码贴一下</p>
-<pre class="line-numbers language-none"><code class="language-none">`timescale 1ns / 1ps
-module BlockChecker(
-    input clk,
-    input reset,
-    input [7:0] in,
-    output reg result
-    );
-
-    function [7:0] lower;
-    input [7:0] in;
-        if(in &gt;= "a" &amp;&amp; in &lt;= "z") lower = in;
-        else if(in &gt;= "A" &amp;&amp; in &lt;= "Z") lower[7:0] = in[7:0] + ("a" - "A");
-        else lower = in;
-    endfunction
-
-    reg [127:0] buffer;
-    reg [31:0] mismatch_cnt;
-    reg fail;
-
-    initial begin
-        buffer = " ";
-        mismatch_cnt = 0;
-        fail = 0;
-        result = 1;
-    end
-
-    always @(posedge clk or posedge reset) begin
-        if(reset) begin
-            buffer &lt;= " ";
-            result &lt;= 1;
-            fail &lt;= 0;
-            mismatch_cnt &lt;= 0;
-        end else begin
-            buffer &lt;= {buffer[119:0], lower(in)};
-        end
-    end
-
-    always @(*) begin
-        if(!fail) begin
-            if(buffer[47:0] == " begin") mismatch_cnt = mismatch_cnt + 1;
-            else if(buffer[55:8] == " begin" &amp;&amp; buffer[7:0] != " ") mismatch_cnt = mismatch_cnt - 1;
-            else if(buffer[31:0] == " end") mismatch_cnt = mismatch_cnt - 1;
-            else if(buffer[39:8] == " end" &amp;&amp; buffer[7:0] != " ") mismatch_cnt = mismatch_cnt + 1;
-            else if(buffer[39:8] == " end" &amp;&amp; buffer[7:0] == " " &amp;&amp; $signed(mismatch_cnt) &lt; 0) fail = 1;
-            else mismatch_cnt = mismatch_cnt;
-        end
-    end
-
-    always @(*) begin
-        result = ~fail &amp;&amp; (mismatch_cnt == 0);
-    end
-endmodule<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<h2 id="字符串自动机的-Testbench-简单写法"><a href="#字符串自动机的-Testbench-简单写法" class="headerlink" title="字符串自动机的 Testbench 简单写法"></a>字符串自动机的 Testbench 简单写法</h2><p>每次写字符串自动机的 testbench 都得写成这样</p>
-<pre class="line-numbers language-none"><code class="language-none">#2; reset = 0; in = "B";
-#2; in = "e";
-#2; in = "g";
-#2; in = "I";
-#2; in = "n";
-#2; in = " ";
-#2; in = " ";
-#2; in = "e";
-//... 此处省略 40 + 行<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p>非常的讨厌，所以今天 get 到了简单用循环移位去做的简单写法（以 BlockerChecker 的 Testbench 为例）</p>
-<pre class="line-numbers language-none"><code class="language-none">`timescale 1ns / 1ps
-module BlockChecker_tb;
-
-    // Inputs
-    reg clk;
-    reg reset;
-    reg [7:0] in;
-
-    // Outputs
-    wire result;
-
-    reg [0:1023] data;
-    integer i = 0;
-
-    // Instantiate the Unit Under Test (UUT)
-    BlockChecker uut (
-        .clk(clk), 
-        .reset(reset), 
-        .in(in), 
-        .result(result)
-    );
-
-    always #1 clk = ~clk;
-
-    initial begin
-        // Initialize Inputs
-        clk = 0;
-        reset = 1;
-        in = 0;
-        data = "begin enDbegin xyzz eNd BeGin begin end endbegin end ";
-        while(!data[0:7]) data = data &lt;&lt; 8;
-        #2;
-        reset = 0;
-        for(i = 0; i &lt; 53; i=i+1) begin
-            in[7:0] = data[0:7];
-            data = data &lt;&lt; 8;
-            #2;
-        end
-        $finish;
-    end
-endmodule<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p>可以看到，定义了一个 <code>reg [0:1023] data </code>（注意，这里一定是从小端开始，否则你读到 <code>in</code> 端口里面的数据就是反过来的 ASCII 码就不对了），然后给 <code>data </code>用一串优雅的字符串直接赋上初值，由于我们赋值默认被挤到了最右端，所以用 <code>while(!data[0:7]) data = data &lt;&lt; 8</code>; 一直移位，直到找到我们想要的数据为止，然后用一个 <code>for</code> 循环，直接开始把值打到 <code>in</code> 端口里面去，非常的方便</p>
+                <h1 id="OOPre学期总结"><a href="#OOPre学期总结" class="headerlink" title="OOPre学期总结"></a>OOPre学期总结</h1><h2 id="项目架构"><a href="#项目架构" class="headerlink" title="项目架构"></a>项目架构</h2><table>
+<thead>
+<tr>
+<th align="center">类名</th>
+<th align="center">描述</th>
+<th align="center">功能介绍</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Main</td>
+<td align="center">主类</td>
+<td align="center">用于解析输入，并将所需信息交由下属各类处理完成功能</td>
+</tr>
+<tr>
+<td align="center">Bottle</td>
+<td align="center">药水类</td>
+<td align="center">储存药水相关性质，完成药水基础属性更迭，下属Recover Bottle，Reinforced Bottle，Regular Bottle三个子类分别重写相关方法实现相应功能</td>
+</tr>
+<tr>
+<td align="center">Food</td>
+<td align="center">食物类</td>
+<td align="center">实现食物相关功能，包含基础属性的获取</td>
+</tr>
+<tr>
+<td align="center">Equipment</td>
+<td align="center">装备类</td>
+<td align="center">实现装备相关功能，包含使用，装备升星，下属RegularEquipment，CritEquipment，EpicEquipment三个子类，重写父类方法实现各自特性功能</td>
+</tr>
+<tr>
+<td align="center">Fight</td>
+<td align="center">日志类</td>
+<td align="center">实现战斗日志相关功能，包含日志的存储，获取等</td>
+</tr>
+<tr>
+<td align="center">Backpack</td>
+<td align="center">背包类</td>
+<td align="center">实现背包相关功能，包括相关物品的携带，删除，判断具体物品是否携带，使用等等</td>
+</tr>
+<tr>
+<td align="center">Store</td>
+<td align="center">商店类</td>
+<td align="center">作为单例，实现商店相应功能，包括交易记录，售卖，购买等等功能</td>
+</tr>
+<tr>
+<td align="center">Adventurer</td>
+<td align="center">冒险者类</td>
+<td align="center">实现冒险者的一系列操作，并进行一部分输出</td>
+</tr>
+</tbody></table>
+<p>下附项目uml图：</p>
+<p><img src="D:\OOpre\hw7\src\uml1.png"></p>
+<p>详细版：</p>
+<p><img src="D:\OOpre\hw7\src\uml.png"></p>
+<hr>
+<h2 id="迭代日志"><a href="#迭代日志" class="headerlink" title="迭代日志"></a>迭代日志</h2><h3 id="第二周作业"><a href="#第二周作业" class="headerlink" title="第二周作业"></a>第二周作业</h3><p>添加了<code>Main</code>，<code>Adventurer</code>，<code>Bottle</code>，<code>Equipment</code>类，实现了基本的物品增删等功能。</p>
+<p><strong>感触：</strong>积累了基础的面向对象编程思想，注意到，这时我的主要想法仍是怎样完成一个便捷的函数（方法），主要仍是面向过程编程，对于类的封装和<strong>java</strong>语言内部优秀的数据结构类型认识不足。</p>
+<h3 id="第三周作业"><a href="#第三周作业" class="headerlink" title="第三周作业"></a>第三周作业</h3><p>添加了<code>Backpack</code>类，与<code>Adventurer</code>类实现交互，通过新增方法来处理新增开发需求，基本完成了基础架构。</p>
+<p><strong>感触：</strong>在本次迭代任务中，我首次采用了组合数据结构的办法，进行了<strong>HashMap与TreeSet</strong>的组合使用，大大提升了程序的性能，而不是想办法在方法上大做文章，可以说实现了思想上的初步转变。同时，由于checkstyle的要求，我在主类里也采用了多加方法类来避免超出方法行数要求的办法，这也会为之后的隐患埋下伏笔。</p>
+<h3 id="第四周作业"><a href="#第四周作业" class="headerlink" title="第四周作业"></a>第四周作业</h3><p>添加<code>Fight</code>类，进行战斗日志的记录和查询。</p>
+<p><strong>感触：</strong>最痛苦的一周，主要在于两点。一是本周初学了正则表达式，在程序编写模式上带来了一定挑战，其次是由于Junit行覆盖率以及分支覆盖率的要求，导致我原来在主类里解析输入在转交处理的“偷懒办法”彻底无法使用，最终不得不统一解析输入，在交由主类里的处理中枢来传到各类进行功能实现，这也是我唯一一次大的重构，耗费了我大量的时间。</p>
+<h3 id="第六周作业"><a href="#第六周作业" class="headerlink" title="第六周作业"></a>第六周作业</h3><p>分别添加<code>Bottle</code>，<code>Equipment</code>类的三个子类，在子类中重写父类方法支持相应需求。</p>
+<p>同时构建<code>Commodity</code>接口，来进行价格计算的统一规划。</p>
+<p><strong>感触：</strong>在第四周后，其实每周的工作量都不是很大了，这一方面是由于我对于面向对象的开发要求越来越熟悉，另一方面是由于前几次吃过的亏，我在项目的架构上变得尤为谨慎，最终避免了大的重构。</p>
+<h3 id="第七周作业（最后一次迭代）"><a href="#第七周作业（最后一次迭代）" class="headerlink" title="第七周作业（最后一次迭代）"></a>第七周作业（最后一次迭代）</h3><p>添加了<code>Store</code>类，采用单例模式，来处理买卖物品需求。同时对于冒险者间的雇佣关系进一步扩展，增加了援助系统。</p>
+<p><strong>感触：</strong>在最后一周，代码的开发也变得更加轻松了，感觉和第三周工程量相仿，但是我对于面向对象开发时得具体模式有了更深的理解，也尝试使用了简单的两个模式。</p>
+<hr>
+<h2 id="Junit使用心得"><a href="#Junit使用心得" class="headerlink" title="Junit使用心得"></a>Junit使用心得</h2><p><del>讲道理，对于我而言，花在编写Junit测试上的时间可能会比项目开发时间还多，我认为这和我对于Junit的认识不足有关。</del></p>
+<p>基于我的粗浅认识，我总结一下</p>
+<ul>
+<li>首先，Junit测试无疑能够帮助检查出代码里的问题，尤其是在满足分支覆盖率的前提下，各种<strong>Exception</strong>会很容易被找出来。这对于时间充足的开发者无疑大有裨益！！！</li>
+<li>但是，要编写满足各种复杂分支的测试样例（即测试代码），也无疑会占用大量时间，这直接导致我后几次时间不足时编写的<strong>Junit</strong>程序完全是为了凑覆盖率搞的，只能说有利有弊吧……</li>
+</ul>
+<hr>
+<h2 id="总体心得体会"><a href="#总体心得体会" class="headerlink" title="总体心得体会"></a>总体心得体会</h2><p>每一次开发的心得体会可以见前文的迭代日志。</p>
+<p>总体而言，我初步接触了面向对象的开发流程，经过自己的上手，也对于何为“面向对象”有了一个大概的认识，可以看到，在一次次迭代中，我的代码结构愈发规整，对于如何构建优秀方法的关注也逐渐转移到如何构建一个好的类上，这无疑是值得肯定的。</p>
+<p>最大的遗憾在于，囿于时间不足，我无法腾出手对代码进行再一次大刀阔斧的修改，即彻底解放主类，建立输入解析类和方法统筹类，这无疑会使得整体结构更加漂亮，也希望助教未来能放出所有强测样例，让我在计组课程结束后再对于重构程序进行测试，不胜感激！！！</p>
+<p>另插一句：对于面向对象的认识再我CPU的设计与架构中也有不少益处。什么模块应当组合，又如何封装电路来减轻课上后续开发负担，如果没有OOpre的经验，我计组课上会通过的困难许多。</p>
+<hr>
+<h2 id="对课程的建议"><a href="#对课程的建议" class="headerlink" title="对课程的建议"></a>对课程的建议</h2><ul>
+<li>首先是可以完善一下课程指导书上的细节，再特定要求处可以改换字体颜色，进行加粗。同时对于一些边界情况的要求也应该更加清晰准确。</li>
+<li>课上可以多花一点时间讲下程序的架构问题，这样我们在后续开发中可以少走不少弯路！！！</li>
+</ul>
 
                 
             </div>
@@ -578,7 +538,7 @@ endmodule<span aria-hidden="true" class="line-numbers-rows"><span></span><span><
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://www.luckyzmj.cn/posts/5e53c868.html">http://www.luckyzmj.cn/posts/5e53c868.html</a>
+                    <a href="http://www.luckyzmj.cn/posts/7bf398de.html">http://www.luckyzmj.cn/posts/7bf398de.html</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -616,16 +576,8 @@ endmodule<span aria-hidden="true" class="line-numbers-rows"><span></span><span><
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E8%AE%A1%E7%BB%84/">
-                                    <span class="chip bg-color">计组</span>
-                                </a>
-                            
-                                <a href="/tags/P1/">
-                                    <span class="chip bg-color">P1</span>
-                                </a>
-                            
-                                <a href="/tags/Verilog/">
-                                    <span class="chip bg-color">Verilog</span>
+                                <a href="/tags/OO/">
+                                    <span class="chip bg-color">OO</span>
                                 </a>
                             
                         </div>
@@ -704,9 +656,10 @@ endmodule<span aria-hidden="true" class="line-numbers-rows"><span></span><span><
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/posts/7bf398de.html">
                     <div class="card-image">
@@ -724,9 +677,9 @@ endmodule<span aria-hidden="true" class="line-numbers-rows"><span></span><span><
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2023-11-04
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-11-04
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -739,6 +692,7 @@ endmodule<span aria-hidden="true" class="line-numbers-rows"><span></span><span><
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -757,32 +711,52 @@ endmodule<span aria-hidden="true" class="line-numbers-rows"><span></span><span><
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/posts/4a17b156.html">
+                <a href="/posts/5e53c868.html">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="Hello World">
+                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="字符自动机新理解">
                         
-                        <span class="card-title">Hello World</span>
+                        <span class="card-title">字符自动机新理解</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            
+                            近期对于字符自动机的新理解
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-10-14
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-10-16
                             </span>
                         <span class="publish-author">
                             
-                            <i class="fas fa-user fa-fw"></i>
-                            RooKie_Z
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E8%AE%A1%E7%BB%84/" class="post-category">
+                                    计组
+                                </a>
+                            
                             
                         </span>
                     </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E8%AE%A1%E7%BB%84/">
+                        <span class="chip bg-color">计组</span>
+                    </a>
+                    
+                    <a href="/tags/P1/">
+                        <span class="chip bg-color">P1</span>
+                    </a>
+                    
+                    <a href="/tags/Verilog/">
+                        <span class="chip bg-color">Verilog</span>
+                    </a>
+                    
                 </div>
                 
             </div>
