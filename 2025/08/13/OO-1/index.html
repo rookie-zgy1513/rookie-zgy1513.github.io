@@ -1,0 +1,682 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>RooKieZ的小窝</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="RooKieZ的小窝"><meta name="msapplication-TileImage" content="/img/favicon.svg"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="RooKieZ的小窝"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="title:OO第一单元总结 tags:OO date:2025&amp;#x2F;8&amp;#x2F;13 17:15:00OO第一单元总结前言复杂度分析使用IDEA的 MetricsReloaded插件 代码规模分析利用IDEA的 static插件 UML类图使用IDEA绘图，再自行调整 任务概览作业要求 作业1：根据形式化定义解析输入的表达式，输出恒等变形展开括号后的表达式。 作业2：形式化定义加入指数"><meta property="og:type" content="blog"><meta property="og:title" content="RooKieZ的小窝"><meta property="og:url" content="https://rookie-zgy1513.github.io/2025/08/13/OO-1/"><meta property="og:site_name" content="RooKieZ的小窝"><meta property="og:description" content="title:OO第一单元总结 tags:OO date:2025&amp;#x2F;8&amp;#x2F;13 17:15:00OO第一单元总结前言复杂度分析使用IDEA的 MetricsReloaded插件 代码规模分析利用IDEA的 static插件 UML类图使用IDEA绘图，再自行调整 任务概览作业要求 作业1：根据形式化定义解析输入的表达式，输出恒等变形展开括号后的表达式。 作业2：形式化定义加入指数"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://rookie-zgy1513.github.io/hw1.png"><meta property="og:image" content="https://saltyfishyjk.github.io/2022/03/25/%E3%80%8CBUAA-OO-Unit-1-HW4%E3%80%8D%E7%AC%AC%E4%B8%80%E5%8D%95%E5%85%83%E6%80%BB%E7%BB%93/%E6%9C%AA%E5%91%BD%E5%90%8D%E6%96%87%E4%BB%B6.png"><meta property="article:published_time" content="2025-08-13T12:57:26.637Z"><meta property="article:modified_time" content="2025-08-13T13:01:24.159Z"><meta property="article:author" content="RooKieZ"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://rookie-zgy1513.github.io/hw1.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://rookie-zgy1513.github.io/2025/08/13/OO-1/"},"headline":"RooKieZ的小窝","image":["https://rookie-zgy1513.github.io/hw1.png","https://saltyfishyjk.github.io/2022/03/25/%E3%80%8CBUAA-OO-Unit-1-HW4%E3%80%8D%E7%AC%AC%E4%B8%80%E5%8D%95%E5%85%83%E6%80%BB%E7%BB%93/%E6%9C%AA%E5%91%BD%E5%90%8D%E6%96%87%E4%BB%B6.png"],"datePublished":"2025-08-13T12:57:26.637Z","dateModified":"2025-08-13T13:01:24.159Z","author":{"@type":"Person","name":"RooKieZ"},"publisher":{"@type":"Organization","name":"RooKieZ的小窝","logo":{"@type":"ImageObject","url":"https://rookie-zgy1513.github.io/img/logo.svg"}},"description":"title:OO第一单元总结 tags:OO date:2025&#x2F;8&#x2F;13 17:15:00OO第一单元总结前言复杂度分析使用IDEA的 MetricsReloaded插件 代码规模分析利用IDEA的 static插件 UML类图使用IDEA绘图，再自行调整 任务概览作业要求 作业1：根据形式化定义解析输入的表达式，输出恒等变形展开括号后的表达式。 作业2：形式化定义加入指数"}</script><link rel="canonical" href="https://rookie-zgy1513.github.io/2025/08/13/OO-1/"><link rel="icon" href="/img/favicon.svg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link data-pjax rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link data-pjax rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><script data-ad-client="aaa" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" async></script><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const id = '#' + CSS.escape(location.hash.substring(1));
+          const $tabMenu = document.querySelector(`.tabs a[href="${id}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(id);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.svg" alt="RooKieZ的小窝" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2025-08-13T12:57:26.637Z" title="2025/8/13 20:57:26">2025-08-13</time>发表</span><span class="level-item"><time dateTime="2025-08-13T13:01:24.159Z" title="2025/8/13 21:01:24">2025-08-13</time>更新</span><span class="level-item">25 分钟读完 (大约3729个字)</span></div></div><div class="content"><hr>
+<p>title:OO第一单元总结</p>
+<p>tags:OO</p>
+<h2 id="date-2025-8-13-17-15-00"><a href="#date-2025-8-13-17-15-00" class="headerlink" title="date:2025&#x2F;8&#x2F;13 17:15:00"></a>date:2025&#x2F;8&#x2F;13 17:15:00</h2><h1 id="OO第一单元总结"><a href="#OO第一单元总结" class="headerlink" title="OO第一单元总结"></a>OO第一单元总结</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>复杂度分析使用IDEA的 <code>MetricsReloaded</code>插件</p>
+<p>代码规模分析利用IDEA的 <code>static</code>插件</p>
+<p><code>UML</code>类图使用IDEA绘图，再自行调整</p>
+<h3 id="任务概览"><a href="#任务概览" class="headerlink" title="任务概览"></a>任务概览</h3><h4 id="作业要求"><a href="#作业要求" class="headerlink" title="作业要求"></a>作业要求</h4><ul>
+<li>作业1：根据形式化定义解析输入的表达式，输出恒等变形展开括号后的表达式。</li>
+<li>作业2：形式化定义加入指数函数和自定义函数。</li>
+<li>作业3：支持自定义函数嵌套并加入求导算子。</li>
+</ul>
+<h2 id="第一次作业"><a href="#第一次作业" class="headerlink" title="第一次作业"></a>第一次作业</h2><p>第一次作业为对包含幂函数与常数的表达式进行化简，涉及相对简单的嵌套，UML类图如下所示。</p>
+<p><img src="/hw1.png"></p>
+<h3 id="架构分析"><a href="#架构分析" class="headerlink" title="架构分析"></a>架构分析</h3><p>通过分析 <code>Expr</code>与 <code>Term</code>的结构。我们不难发现，一个基本的 <code>Expr</code>可以看成又一个个基元构成，即</p>
+<p>$$<br>Expr  &#x3D;  \sum a \times x ^ b<br>$$</p>
+<p>数据存储上，依照形式化表达设计为 <code>Expr-&gt;Term-&gt;Factor</code>。<code>Parser</code>和 <code>Lexer</code>作为工具类，分别承担句法分析和词法分析的功能。</p>
+<p>值得注意的是，架构中事实上没有区分 <code>Num</code>和 <code>Power</code>，而是将其统一为 <code>Unit</code>类，存储一个形如$a \times x ^ b$的因子。</p>
+<p>在读取和存储过程中，<code>Parser</code>和 <code>Lexer</code>合作，构建了一棵多叉表达式树。</p>
+<p><code>Factor</code>接口为因子类的公共接口，所有的因子都实现了这个接口，所有的非 <code>Unit</code>类通过 <code>Poly</code>，即多项式类进行运算，最后通过 <code>Poly</code>类调用 <code>Unit</code>类的 <code>toString</code>方法实现输出。</p>
+<p>下图展示了这种读取和存储的过程的一个例子：</p>
+<p><img src="https://saltyfishyjk.github.io/2022/03/25/%E3%80%8CBUAA-OO-Unit-1-HW4%E3%80%8D%E7%AC%AC%E4%B8%80%E5%8D%95%E5%85%83%E6%80%BB%E7%BB%93/%E6%9C%AA%E5%91%BD%E5%90%8D%E6%96%87%E4%BB%B6.png" alt="img"></p>
+<p>具体而言，获得答案的计算过程是和读取解析相<strong>解耦合</strong>的。在调用顶层 <code>Expr</code>对象的 <code>extend()</code>方法后，逐层向下调用 <code>extend()</code>方法，得到展开式。这其中，得益于 <code>Unit</code>类的统一性，每一层向上返回的都是一个 <code>Unit</code>对象的集合，达到了形式上和接口的统一。</p>
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><p>本次作业部分方法复杂度如下图，其余方法复杂度较低，未在图中体现。</p>
+<p>可以看到，<code>Parser</code>中的 <code>parseFactor()</code>方法复杂度较高，分析原因知，设计该方法时对于常数和幂函数的解析都全部列在其中，没有分别抽象为分别的方法；<code>Unit</code>中的 <code>toString()</code>方法复杂度较高，为了优化输出的长度导致特判较多，复杂度较高。</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>CogC</th>
+<th>ev(G)</th>
+<th>iv(G)</th>
+<th>v(G)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Parser.parseFactor()</td>
+<td>14</td>
+<td>1</td>
+<td>8</td>
+<td>8</td>
+</tr>
+<tr>
+<td>Parser.parseExpr()</td>
+<td>8</td>
+<td>1</td>
+<td>6</td>
+<td>6</td>
+</tr>
+<tr>
+<td>expr.Unit.toString()</td>
+<td>7</td>
+<td>1</td>
+<td>6</td>
+<td>7</td>
+</tr>
+<tr>
+<td>Lexer.next()</td>
+<td>6</td>
+<td>2</td>
+<td>4</td>
+<td>6</td>
+</tr>
+<tr>
+<td>expr.Expr.extend()</td>
+<td>6</td>
+<td>2</td>
+<td>6</td>
+<td>6</td>
+</tr>
+<tr>
+<td>expr.Poly.toString()</td>
+<td>5</td>
+<td>4</td>
+<td>3</td>
+<td>5</td>
+</tr>
+<tr>
+<td>expr.Term.extend()</td>
+<td>5</td>
+<td>1</td>
+<td>4</td>
+<td>4</td>
+</tr>
+<tr>
+<td>Parser.parseTerm()</td>
+<td>4</td>
+<td>1</td>
+<td>4</td>
+<td>4</td>
+</tr>
+<tr>
+<td>expr.Poly.multiUnit(Unit)</td>
+<td>4</td>
+<td>1</td>
+<td>3</td>
+<td>3</td>
+</tr>
+<tr>
+<td>expr.Poly.Merge()</td>
+<td>3</td>
+<td>1</td>
+<td>3</td>
+<td>3</td>
+</tr>
+<tr>
+<td>expr.Poly.adjustUnit()</td>
+<td>3</td>
+<td>3</td>
+<td>2</td>
+<td>3</td>
+</tr>
+<tr>
+<td>expr.Poly.multiExpr(Poly)</td>
+<td>3</td>
+<td>1</td>
+<td>3</td>
+<td>3</td>
+</tr>
+<tr>
+<td>Lexer.getNumber()</td>
+<td>2</td>
+<td>1</td>
+<td>3</td>
+<td>3</td>
+</tr>
+<tr>
+<td>Parser.getExp()</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Processor.treatPlusMinus()</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+</tr>
+<tr>
+<td>expr.Poly.Negate()</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Lexer.Lexer(String)</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Lexer.peek()</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Main.main(String[])</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Parser.Parser(Lexer)</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Processor.adjustSign()</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Processor.consumeBlank()</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Processor.getString(String)</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Processor.newInput(String)</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Processor.outputString()</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Processor.replaceDoubleStar()</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>expr.Expr.Negate()</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>expr.Expr.addTerm(Term)</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>expr.Expr.equals(Expr)</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>expr.Expr.setExp(BigInteger)</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>expr.Poly.Poly()</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>expr.Poly.add(Poly)</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>expr.Poly.createOne()</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>expr.Poly.unitMulti(Unit, Unit)</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>expr.Term.Negate()</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>expr.Term.addFactor(Factor)</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>expr.Unit.Negate()</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>expr.Unit.Unit(BigInteger)</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>expr.Unit.Unit(Type)</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>expr.Unit.canMerge(Unit)</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>expr.Unit.compareTo(Unit)</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>expr.Unit.getCoff()</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>expr.Unit.getExp()</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>expr.Unit.getType()</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>expr.Unit.merge(Unit)</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>expr.Unit.multiUnit(Unit)</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>expr.Unit.setCoff(BigInteger)</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>expr.Unit.setExp(BigInteger)</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="Bug分析"><a href="#Bug分析" class="headerlink" title="Bug分析"></a>Bug分析</h3><p>本次作业没有出现bug。</p>
+<p>在对room内其他同学互测时，发现两个bug：一个是没有处理$0$的输出；另一个是没有妥善处理表达式里的 <code>\t</code>和空格。</p>
+<p>同时，我在此次作业中设计并实现了一个自动化评测机，这对检验程序的正确性有不小的帮助，也帮助我实现了hack，详细的分析将在<strong>评测部分</strong>介绍。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>“工欲善其事，必先利其器”</p>
+<p>在写本次作业之初，我设计过很多架构，在设计阶段就推倒重来若干次。尽管在Pre中的冒险者游戏中已经我初步领会了面向对象的思想，但是面对较为抽象的表达式解析仍然显得捉襟见肘。</p>
+<p>尽管如此，得益于 <code>training</code>部分提供的 <code>Parser</code>和 <code>Lexer</code>思路，我最终得以确定这个较为面向对象的设计。但是，这个架构依然存在相当的不足，在后面的迭代开发介绍中将会着重介绍。</p>
+<hr>
+<h2 id="第二次作业"><a href="#第二次作业" class="headerlink" title="第二次作业"></a>第二次作业</h2><p>相比于第一次作业，第二次作业新增了<strong>自定义函数</strong>与<strong>指数函数</strong>相关的内容，同时支持嵌套括号的解析。</p>
+<p>相比第一次作业，增加了 <code>Func</code>类处理自定义函数，同时增加了 <code>Exp</code>类处理指数函数，<strong>UML</strong>类图如下：</p>
+<p>![](&#x2F;Users&#x2F;zhengguangyi&#x2F;Library&#x2F;Application Support&#x2F;typora-user-images&#x2F;image-20240319220101050.png)</p>
+<h3 id="架构分析-1"><a href="#架构分析-1" class="headerlink" title="架构分析"></a>架构分析</h3><p>相较于上一次作业以及未来的第三次作业，本次作业的工作量无疑是最大的，也难怪纪一鹏老师说这次作业很有可能会是本学期<strong>OO</strong>的难度巅峰。</p>
+<p>对于本次作业的两个新增要求，我先完成了自定义函数的实现，再完成了指数函数的部分。</p>
+<h5 id="自定义函数部分"><a href="#自定义函数部分" class="headerlink" title="自定义函数部分"></a>自定义函数部分</h5><p>自定义函数分为两个部分，一是读入，二是调用。</p>
+<p><strong>有关读入</strong>，由于函数定义式依然符合我们的多项式语意，且定义式内不允许循环定义，故而直接沿用上一次的 <code>Lexer</code>和 <code>Parser</code>来解析。</p>
+<p><strong>有关调用</strong>，我在读入表达式时，就建立了参数与实参的Map，在解析时利用Map中的Map.Entry接口进行替换，效果不错，但是相较正则表达式替换的方法，虽然正确性上有保障，但是时间复杂度较高。</p>
+<h4 id="指数函数部分"><a href="#指数函数部分" class="headerlink" title="指数函数部分"></a>指数函数部分</h4><p>通过分析本次式子可知，本次基元有所更新</p>
+<p>$$<br>Expr  &#x3D;  \sum a \times x ^ b \times exp(Factor) ^ c<br>$$</p>
+<p>由于指数函数的特殊性，故我直接在初始化指数函数时直接将基元变形成如下式子，便于后续计算：</p>
+<p>$$<br>Expr  &#x3D;  \sum a \times x ^ b \times exp(Factor \times c)<br>$$</p>
+<p>同样，我利用Poly类的 <code>toString</code>方法和String类的equals方法判断exp内的Factor是否相等，来进行后续合并。</p>
+<h3 id="复杂度分析-1"><a href="#复杂度分析-1" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><p>| Method                              | CogC | ev(G) | iv(G) | v(G) |</p>
+<p>|———————————–|—-|—–|—–|—-|</p>
+<p>| Term.replace(HashMap&lt;Type, Factor&gt;) | 30   | 1     | 8     | 8    |</p>
+<p>| Parser.parseFactor()                | 19   | 1     | 12    | 12   |</p>
+<p>| Unit.isSimple()                     | 11   | 7     | 9     | 15   |</p>
+<p>| Unit.toString()                     | 11   | 1     | 9     | 10   |</p>
+<p>| Unit.setExp(BigInteger)             | 10   | 1     | 4     | 8    |</p>
+<p>| Lexer.next()                        | 9    | 2     | 5     | 7    |</p>
+<p>| Parser.parseExpr()                  | 8    | 1     | 6     | 6    |</p>
+<p>| Unit.compareTo(Unit)                | 8    | 7     | 7     | 8    |</p>
+<p>| Exp.ifOne()                         | 7    | 5     | 2     | 5    |</p>
+<p>| Expr.extend()                       | 6    | 2     | 6     | 6    |</p>
+<p>| Poly.Merge()                        | 6    | 1     | 5     | 5    |</p>
+<p>| Func.invoke(List <code>&lt;Factor&gt;</code>)           | 5    | 1     | 2     | 4    |</p>
+<p>| Poly.toString()                     | 5    | 4     | 3     | 5    |</p>
+<p>| Term.extend()                       | 5    | 1     | 4     | 4    |</p>
+<p>| Parser.parseTerm()                  | 4    | 1     | 4     | 4    |</p>
+<p>| Poly.multiUnit(Unit)                | 4    | 1     | 3     | 3    |</p>
+<p>| Poly.unitMulti(Unit, Unit)          | 4    | 1     | 5     | 5    |</p>
+<p>| Unit.multiUnit(Unit)                | 4    | 1     | 4     | 5    |</p>
+<p>| Unit.wipeExp()                      | 4    | 4     | 1     | 5    |</p>
+<p>| Exp.Exp(Factor)                     | 3    | 1     | 3     | 4    |</p>
+<p>| Exp.toString()                      | 3    | 1     | 3     | 3    |</p>
+<p>| Poly.adjustUnit()                   | 3    | 3     | 2     | 3    |</p>
+<p>| Poly.multiExpr(Poly)                | 3    | 1     | 3     | 3    |</p>
+<p>| Unit.Unit(Type)                     | 3    | 1     | 1     | 4    |</p>
+<p>| Unit.replace(HashMap&lt;Type, Factor&gt;) | 3    | 3     | 3     | 4    |</p>
+<p>| Exp.replace(HashMap&lt;Type, Factor&gt;)  | 2    | 1     | 2     | 2    |</p>
+<p>| Lexer.getNumber()                   | 2    | 1     | 3     | 3    |</p>
+<p>| Parser.parseFuncDef()               | 2    | 1     | 3     | 3    |</p>
+<p>| Poly.isSimple()                     | 2    | 3     | 1     | 3    |</p>
+<p>| Unit.clone()                        | 2    | 1     | 3     | 3    |</p>
+<p>| Expr.clone()                        | 1    | 1     | 2     | 2    |</p>
+<p>| Expr.pow(BigInteger)                | 1    | 1     | 2     | 2    |</p>
+<p>| Expr.replace(HashMap&lt;Type, Factor&gt;) | 1    | 1     | 2     | 2    |</p>
+<p>| Main.main(String[])                 | 1    | 1     | 2     | 2    |</p>
+<p>| Parser.getExp()                     | 1    | 1     | 2     | 2    |</p>
+<p>| Parser.parseFunc()                  | 1    | 1     | 2     | 2    |</p>
+<p>| Poly.Negate()                       | 1    | 1     | 2     | 2    |</p>
+<p>| Poly.clone()                        | 1    | 1     | 2     | 2    |</p>
+<p>| Poly.pow(BigInteger)                | 1    | 1     | 2     | 2    |</p>
+<p>| Processor.treatPlusMinus()          | 1    | 1     | 2     | 2    |</p>
+<p>| Term.clone()                        | 1    | 1     | 2     | 2    |</p>
+<p>| Exp.clone()                         | 0    | 1     | 1     | 1    |</p>
+<p>| Exp.compareTo(Exp)                  | 0    | 1     | 1     | 1    |</p>
+<p>| Exp.equals(Exp)                     | 0    | 1     | 1     | 1    |</p>
+<p>| Exp.getExponent()                   | 0    | 1     | 1     | 1    |</p>
+<p>| Exp.isSimple()                      | 0    | 1     | 1     | 1    |</p>
+<p>| Exp.multExp(Exp)                    | 0    | 1     | 1     | 1    |</p>
+<p>| Exp.pow(BigInteger)                 | 0    | 1     | 1     | 1    |</p>
+<p>| Exp.setExponent(BigInteger)         | 0    | 1     | 1     | 1    |</p>
+<p>| Expr.Negate()                       | 0    | 1     | 1     | 1    |</p>
+<p>| Expr.addExpr(Expr)                  | 0    | 1     | 1     | 1    |</p>
+<p>| Expr.addTerm(Term)                  | 0    | 1     | 1     | 1    |</p>
+<p>| Expr.equals(Expr)                   | 0    | 1     | 1     | 1    |</p>
+<p>| Expr.setExp(BigInteger)             | 0    | 1     | 1     | 1    |</p>
+<p>| Func.Func(String, Character[])      | 0    | 1     | 1     | 1    |</p>
+<p>| Lexer.Lexer(String)                 | 0    | 1     | 1     | 1    |</p>
+<p>| Lexer.peek()                        | 0    | 1     | 1     | 1    |</p>
+<p>| Parser.Parser(Lexer)                | 0    | 1     | 1     | 1    |</p>
+<p>| Poly.Poly()                         | 0    | 1     | 1     | 1    |</p>
+<p>| Poly.add(Poly)                      | 0    | 1     | 1     | 1    |</p>
+<p>| Poly.createOne()                    | 0    | 1     | 1     | 1    |</p>
+<p>| Poly.isEmpty()                      | 0    | 1     | 1     | 1    |</p>
+<p>| Processor.adjustSign()              | 0    | 1     | 1     | 1    |</p>
+<p>| Processor.consumeBlank()            | 0    | 1     | 1     | 1    |</p>
+<p>| Processor.getString(String)         | 0    | 1     | 1     | 1    |</p>
+<p>| Processor.newInput(String)          | 0    | 1     | 1     | 1    |</p>
+<p>| Processor.outputString()            | 0    | 1     | 1     | 1    |</p>
+<p>| Processor.replaceDoubleStar()       | 0    | 1     | 1     | 1    |</p>
+<p>| Term.Negate()                       | 0    | 1     | 1     | 1    |</p>
+<p>| Term.addFactor(Factor)              | 0    | 1     | 1     | 1    |</p>
+<p>| Term.pow(BigInteger)                | 0    | 1     | 1     | 1    |</p>
+<p>| Unit.Negate()                       | 0    | 1     | 1     | 1    |</p>
+<p>| Unit.Unit(BigInteger)               | 0    | 1     | 1     | 1    |</p>
+<p>| Unit.Unit(Type, Factor)             | 0    | 1     | 1     | 1    |</p>
+<p>| Unit.canMerge(Unit)                 | 0    | 1     | 1     | 1    |</p>
+<p>| Unit.getCoff()                      | 0    | 1     | 1     | 1    |</p>
+<p>| Unit.getExp()                       | 0    | 1     | 1     | 1    |</p>
+<p>| Unit.getExpFunc()                   | 0    | 1     | 1     | 1    |</p>
+<p>| Unit.getType()                      | 0    | 1     | 1     | 1    |</p>
+<p>| Unit.merge(Unit)                    | 0    | 1     | 1     | 1    |</p>
+<p>| Unit.pow(BigInteger)                | 0    | 1     | 1     | 1    |</p>
+<p>| Unit.setCoff(BigInteger)            | 0    | 1     | 1     | 1    |</p>
+<p>| Unit.setExpFunc(Exp)                | 0    | 1     | 1     | 1    |</p>
+<p>| Unit.setType(Type)                  | 0    | 1     | 1     | 1    |</p>
+<p>可以看出，本次架构在Term类中实现自定义函数的替换部分的 <code>replace</code>方法复杂度极高，在Debug过程中，也同样是这个方法耗去了我大量的时间，可见越复杂，越易错！！！</p>
+<h3 id="Bug分析-1"><a href="#Bug分析-1" class="headerlink" title="Bug分析"></a>Bug分析</h3><p>本次作业没有出现bug。</p>
+<p>在对room内其他同学互测时，发现两个bug：一个是对于exp的括号化简出错；另一个是自定义函数中exp函数替换出错。</p>
+<p>在本次hack过程中，我着重查看了同屋同学代码架构的复杂程度进行了分析，对于明显架构复杂的代码进行hack，都得到了成功。</p>
+<p>具体的hack方法则是利用cxc同学的评测机，对于可疑代码进行评测，得到错误输出后针对数据进行化简使其符合互测数据限制，最终hack成功。</p>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>第二次作业是我在第一单元中花费时间<strong>最长</strong>的一次，尤其是指数函数的引入与化简合并，在Debug时给我造成了不小的困难，由于在完成本次作业时流感发烧，因此我在优化方面仅仅做了合并同类项和去exp函数的多余括号，但性能分上取得了 <code>97.5</code>分，可以说是十分侥幸的。同时，由于储存基元时采用了ArrayList，因此在合并同类项与Unit运算时被迫使用深克隆，而由于身体状态不佳，处于正确性考虑，我大量使用克隆，这也使我的程序运行时间大大增长。</p>
+<hr>
+<h2 id="第三次作业"><a href="#第三次作业" class="headerlink" title="第三次作业"></a>第三次作业</h2><p>本次作业引入了求导因子。本以为是最痛苦的一集，没想到成了最速的一集。UML类图如下所示：</p>
+<p>![image-20240319231919806](&#x2F;Users&#x2F;zhengguangyi&#x2F;Library&#x2F;Application Support&#x2F;typora-user-images&#x2F;image-20240319231919806.png)</p>
+<h3 id="架构分析-2"><a href="#架构分析-2" class="headerlink" title="架构分析"></a>架构分析</h3><p>与第二次作业相比，本次作业架构几乎没有发生变化，没有引入新的类。对于求导操作，与求字符串相似，在每一个相关的类中引入<strong>getDerivative()<strong>方法，返回</strong>Poly</strong>多项式类。对于带函数的求导，采用将自定义函数完全展开后再进行求导的方法。</p>
+<h3 id="复杂度分析-2"><a href="#复杂度分析-2" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><p>| Method                              | CogC | ev(G) | iv(G) | v(G) |</p>
+<p>|———————————–|—-|—–|—–|—-|</p>
+<p>| Term.replace(HashMap&lt;Type, Factor&gt;) | 30   | 1     | 8     | 8    |</p>
+<p>| Parser.parseFactor()                | 20   | 1     | 13    | 13   |</p>
+<p>| Unit.isSimple()                     | 11   | 7     | 9     | 15   |</p>
+<p>| Unit.toString()                     | 11   | 1     | 9     | 10   |</p>
+<p>| Lexer.next()                        | 10   | 2     | 6     | 8    |</p>
+<p>| Unit.setExp(BigInteger)             | 10   | 1     | 4     | 8    |</p>
+<p>| Parser.parseExpr()                  | 8    | 1     | 6     | 6    |</p>
+<p>| Unit.compareTo(Unit)                | 8    | 7     | 7     | 8    |</p>
+<p>| Exp.ifOne()                         | 7    | 5     | 2     | 5    |</p>
+<p>| Expr.extend()                       | 6    | 2     | 6     | 6    |</p>
+<p>| Poly.Merge()                        | 6    | 1     | 5     | 5    |</p>
+<p>| Func.invoke(List <code>&lt;Factor&gt;</code>)           | 5    | 1     | 2     | 4    |</p>
+<p>| Main.main(String[])                 | 5    | 3     | 4     | 5    |</p>
+<p>| Poly.toString()                     | 5    | 4     | 3     | 5    |</p>
+<p>| Term.extend()                       | 5    | 1     | 4     | 4    |</p>
+<p>| Parser.parseTerm()                  | 4    | 1     | 4     | 4    |</p>
+<p>| Poly.multiUnit(Unit)                | 4    | 1     | 3     | 3    |</p>
+<p>| Unit.multiUnit(Unit)                | 4    | 1     | 4     | 5    |</p>
+<p>| Unit.wipeExp()                      | 4    | 4     | 1     | 5    |</p>
+<p>| Exp.Exp(Factor)                     | 3    | 1     | 3     | 4    |</p>
+<p>| Exp.toString()                      | 3    | 1     | 3     | 3    |</p>
+<p>| Parser.parseDerivative()            | 3    | 1     | 4     | 4    |</p>
+<p>| Poly.adjustUnit()                   | 3    | 3     | 2     | 3    |</p>
+<p>| Poly.compareTo(Poly)                | 3    | 3     | 3     | 3    |</p>
+<p>| Poly.multiExpr(Poly)                | 3    | 1     | 3     | 3    |</p>
+<p>| Unit.Unit(Type)                     | 3    | 1     | 1     | 4    |</p>
+<p>| Unit.replace(HashMap&lt;Type, Factor&gt;) | 3    | 3     | 3     | 4    |</p>
+<p>| Exp.clone()                         | 2    | 1     | 1     | 2    |</p>
+<p>| Exp.replace(HashMap&lt;Type, Factor&gt;)  | 2    | 1     | 2     | 2    |</p>
+<p>| Lexer.getNumber()                   | 2    | 1     | 3     | 3    |</p>
+<p>| Parser.parseFuncDef()               | 2    | 1     | 3     | 3    |</p>
+<p>| Poly.isSimple()                     | 2    | 3     | 1     | 3    |</p>
+<p>| Unit.clone()                        | 2    | 1     | 3     | 3    |</p>
+<p>| Unit.getDerivative(Type)            | 2    | 1     | 3     | 3    |</p>
+<p>| Exp.getDerivative(Type)             | 1    | 2     | 1     | 2    |</p>
+<p>| Expr.clone()                        | 1    | 1     | 2     | 2    |</p>
+<p>| Expr.pow(BigInteger)                | 1    | 1     | 2     | 2    |</p>
+<p>| Expr.replace(HashMap&lt;Type, Factor&gt;) | 1    | 1     | 2     | 2    |</p>
+<p>| Parser.getExp()                     | 1    | 1     | 2     | 2    |</p>
+<p>| Parser.parseFunc()                  | 1    | 1     | 2     | 2    |</p>
+<p>| Poly.Negate()                       | 1    | 1     | 2     | 2    |</p>
+<p>| Poly.clone()                        | 1    | 1     | 2     | 2    |</p>
+<p>| Poly.getDerivative(Type)            | 1    | 1     | 2     | 2    |</p>
+<p>| Poly.pow(BigInteger)                | 1    | 1     | 2     | 2    |</p>
+<p>| Poly.toTerms()                      | 1    | 1     | 2     | 2    |</p>
+<p>| Processor.treatPlusMinus()          | 1    | 1     | 2     | 2    |</p>
+<p>| Term.clone()                        | 1    | 1     | 2     | 2    |</p>
+<p>| Exp.compareTo(Exp)                  | 0    | 1     | 1     | 1    |</p>
+<p>| Exp.equals(Exp)                     | 0    | 1     | 1     | 1    |</p>
+<p>| Exp.getExponent()                   | 0    | 1     | 1     | 1    |</p>
+<p>| Exp.isSimple()                      | 0    | 1     | 1     | 1    |</p>
+<p>| Exp.multExp(Exp)                    | 0    | 1     | 1     | 1    |</p>
+<p>| Exp.pow(BigInteger)                 | 0    | 1     | 1     | 1    |</p>
+<p>| Exp.setExponent(BigInteger)         | 0    | 1     | 1     | 1    |</p>
+<p>| Expr.Expr()                         | 0    | 1     | 1     | 1    |</p>
+<p>| Expr.Expr(Poly)                     | 0    | 1     | 1     | 1    |</p>
+<p>| Expr.Negate()                       | 0    | 1     | 1     | 1    |</p>
+<p>| Expr.addExpr(Expr)                  | 0    | 1     | 1     | 1    |</p>
+<p>| Expr.addTerm(Term)                  | 0    | 1     | 1     | 1    |</p>
+<p>| Expr.equals(Expr)                   | 0    | 1     | 1     | 1    |</p>
+<p>| Expr.getDerivative(Type)            | 0    | 1     | 1     | 1    |</p>
+<p>| Expr.setExp(BigInteger)             | 0    | 1     | 1     | 1    |</p>
+<p>| Func.Func(String, Character[])      | 0    | 1     | 1     | 1    |</p>
+<p>| Lexer.Lexer(String)                 | 0    | 1     | 1     | 1    |</p>
+<p>| Lexer.peek()                        | 0    | 1     | 1     | 1    |</p>
+<p>| Parser.Parser(Lexer)                | 0    | 1     | 1     | 1    |</p>
+<p>| Poly.Poly()                         | 0    | 1     | 1     | 1    |</p>
+<p>| Poly.add(Poly)                      | 0    | 1     | 1     | 1    |</p>
+<p>| Poly.addUnit(Unit)                  | 0    | 1     | 1     | 1    |</p>
+<p>| Poly.createOne()                    | 0    | 1     | 1     | 1    |</p>
+<p>| Poly.isEmpty()                      | 0    | 1     | 1     | 1    |</p>
+<p>| Poly.unitMulti(Unit, Unit)          | 0    | 1     | 1     | 1    |</p>
+<p>| Processor.adjustSign()              | 0    | 1     | 1     | 1    |</p>
+<p>| Processor.consumeBlank()            | 0    | 1     | 1     | 1    |</p>
+<p>| Processor.getString(String)         | 0    | 1     | 1     | 1    |</p>
+<p>| Processor.newInput(String)          | 0    | 1     | 1     | 1    |</p>
+<p>| Processor.outputString()            | 0    | 1     | 1     | 1    |</p>
+<p>| Processor.replaceDoubleStar()       | 0    | 1     | 1     | 1    |</p>
+<p>| Term.Negate()                       | 0    | 1     | 1     | 1    |</p>
+<p>| Term.addFactor(Factor)              | 0    | 1     | 1     | 1    |</p>
+<p>| Term.pow(BigInteger)                | 0    | 1     | 1     | 1    |</p>
+<p>| Unit.Negate()                       | 0    | 1     | 1     | 1    |</p>
+<p>| Unit.Unit(BigInteger)               | 0    | 1     | 1     | 1    |</p>
+<p>| Unit.Unit(Type, Factor)             | 0    | 1     | 1     | 1    |</p>
+<p>| Unit.canMerge(Unit)                 | 0    | 1     | 1     | 1    |</p>
+<p>| Unit.getCoff()                      | 0    | 1     | 1     | 1    |</p>
+<p>| Unit.getExp()                       | 0    | 1     | 1     | 1    |</p>
+<p>| Unit.getExpFunc()                   | 0    | 1     | 1     | 1    |</p>
+<p>| Unit.getType()                      | 0    | 1     | 1     | 1    |</p>
+<p>| Unit.merge(Unit)                    | 0    | 1     | 1     | 1    |</p>
+<p>| Unit.pow(BigInteger)                | 0    | 1     | 1     | 1    |</p>
+<p>| Unit.setCoff(BigInteger)            | 0    | 1     | 1     | 1    |</p>
+<p>| Unit.setExpFunc(Exp)                | 0    | 1     | 1     | 1    |</p>
+<p>| Unit.setType(Type)                  | 0    | 1     | 1     | 1    |</p>
+<p>| Unit.simpleClone()                  | 0    | 1     | 1     | 1    |</p>
+<p>与第二次作业中复杂度较高的方法相同，原因一致。</p>
+<h3 id="Bug分析-2"><a href="#Bug分析-2" class="headerlink" title="Bug分析"></a>Bug分析</h3><p>本次作业在强测中未出现Bug，但是在互测中由于TLE中刀，原因正如我在第二次作业总结中写的那样——无脑克隆，而克隆方法本身需要递归，导致最终超时，这也是由于我个人的侥幸心理，认为互测数据不强，在明知有超时风险时，选择写OS作业，未进行优化。虽然强测侥幸过关，但是在互测中还是漏了马脚，果然还是这个道理。</p>
+<blockquote>
+<p>She was still too young to know that life never gives anything for nothing, and that a price is always exacted for what fate bestows.</p>
+</blockquote>
+<blockquote>
+<p>那时候她还太年轻，不知道所有命运馈赠的礼物，早已在暗中标好了价格。</p>
+</blockquote>
+<blockquote>
+<p>——茨威格</p>
+</blockquote>
+<h3 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h3><p>第三次作业不仅没有想象中可怕，还是三次作业中耗时最少的一次。得益于层次化结构的设计，新增求导运算的升级过程非常顺利，唯一的注意点是数学上的求导法则，需要在编码时严格遵守。只是可惜我的侥幸心理导致互测中刀，现在想来仍然感到深深可惜！！！</p>
+<hr>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>本单元由于身体状况与个人时间的关系，只在第一次作业搭建了评测机，后续使用了cxc同学的评测机，这里再次感谢cxc同学！！！</p>
+<p>在个人搭建评测机的过程中，我主要还是使用模拟递归下降的过程构建测试数据，并利用 <code>Python</code>中的 <code>Sympy</code>包来达到化简表达式并判断正误的效果，唯一的缺点是速度太慢。同时，我在构建评测数据时特意加入了诸如 <code>x-x</code>,<code>+00000</code>等数据，来保证随机生成数据的特殊性，但是只是可惜评测机hack效果不佳，更多还是靠手动构建数据。</p>
+<hr>
+<h2 id="心得体会"><a href="#心得体会" class="headerlink" title="心得体会"></a>心得体会</h2><p>第一单元就这样痛并快乐地坚持了过去，但是和同学们投入的时间相比，我好像完成得还算轻松（?）</p>
+<p>通过表达式解析的练习，我深刻体会了面向对象的设计思想，了解了递归下降的解析方法，初步尝试了层次化的类设计，这也为OS的Lab1提供了一些帮助。</p>
+<p>最后还是感慨：设计为先，一个好的设计能为后续的编码工作省去不少麻烦；就比如，每次作业前，我都要花上一天半来进行设计，而不是基于上手编码，否则代码必然是漏洞百出。此外，还必须注重可扩展性，即在当前设计中打一个提前量，给未来可能引入的设计提前预留一些空间。</p>
+<p>打个比方，我的程序在第一次就支持括号嵌套，第二次就支持自定义函数嵌套，现在第三次作业的程序还支持多变量运算与求导等等。</p>
+<hr>
+<h2 id="未来方向"><a href="#未来方向" class="headerlink" title="未来方向"></a>未来方向</h2><p>总体而言，我认为课程组对于第一单元的设置已相对完备，但是第三次作业相较前两次明显过于轻松，我认为可以加入多变量运算与求导等要求。同样，我认为强测应该设置专门数据来卡时间复杂度，这样就能狠狠整治向我这样心存侥幸的同学！！！</p>
+</div><div class="article-licensing box"><div class="licensing-title"><p><a href="https://rookie-zgy1513.github.io/2025/08/13/OO-1/">https://rookie-zgy1513.github.io/2025/08/13/OO-1/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>作者</h6><p>RooKieZ</p></div></div><div class="level-item is-narrow"><div><h6>发布于</h6><p>2025-08-13</p></div></div><div class="level-item is-narrow"><div><h6>更新于</h6><p>2025-08-13</p></div></div><div class="level-item is-narrow"><div><h6>许可协议</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="notification is-danger">You need to set <code>install_url</code> to use ShareThis. Please set it in <code>_config.yml</code>.</div></article></div><div class="card"><div class="card-content"><h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3><div class="buttons is-centered"><a class="button donate" href="/" target="_blank" rel="noopener" data-type="afdian"><span class="icon is-small"><i class="fas fa-charging-station"></i></span><span>爱发电</span></a><a class="button donate" data-type="alipay"><span class="icon is-small"><i class="fab fa-alipay"></i></span><span>支付宝</span><span class="qrcode"><img src="/" alt="支付宝"></span></a><a class="button donate" href="/" target="_blank" rel="noopener" data-type="buymeacoffee"><span class="icon is-small"><i class="fas fa-coffee"></i></span><span>送我杯咖啡</span></a><a class="button donate" href="/" target="_blank" rel="noopener" data-type="patreon"><span class="icon is-small"><i class="fab fa-patreon"></i></span><span>Patreon</span></a><div class="notification is-danger">You forgot to set the <code>business</code> or <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.</div><a class="button donate" data-type="wechat"><span class="icon is-small"><i class="fab fa-weixin"></i></span><span>微信</span><span class="qrcode"><img src="/" alt="微信"></span></a></div></div></div><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2025/08/13/BUAA%20OO%20Unit3%20%E5%8D%95%E5%85%83%E6%80%BB%E7%BB%93/"><span class="level-item">OO第三单元总结</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card" id="comments"><div class="card-content"><h3 class="title is-5">评论</h3><div class="notification is-danger">You forgot to set the <code>shortname</code> for Disqus. Please set it in <code>_config.yml</code>.</div></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/avatar.png" alt="Your name"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Your name</p><p class="is-size-6 is-block">Your title</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>Your location</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives/"><p class="title">5</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories/"><p class="title">0</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags/"><p class="title">1</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/ppoffice" target="_blank" rel="me noopener">关注我</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Github" href="https://github.com/ppoffice"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Facebook" href="https://facebook.com"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Twitter" href="https://twitter.com"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Dribbble" href="https://dribbble.com"><i class="fab fa-dribbble"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="RSS" href="/"><i class="fas fa-rss"></i></a></div></div></div><!--!--><div class="card widget" data-type="links"><div class="card-content"><div class="menu"><h3 class="menu-label">链接</h3><ul class="menu-list"><li><a class="level is-mobile" href="https://hexo.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li><li><a class="level is-mobile" href="https://bulma.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Bulma</span></span><span class="level-right"><span class="level-item tag">bulma.io</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2025-08-13T12:57:26.637Z">2025-08-13</time></p><p class="title"><a href="/2025/08/13/OO-1/"> </a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2025-08-13T09:15:00.000Z">2025-08-13</time></p><p class="title"><a href="/2025/08/13/BUAA%20OO%20Unit3%20%E5%8D%95%E5%85%83%E6%80%BB%E7%BB%93/">OO第三单元总结</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2025-08-13T09:15:00.000Z">2025-08-13</time></p><p class="title"><a href="/2025/08/13/BUAA%20OO%20Unit4%20%E5%8D%95%E5%85%83%E6%80%BB%E7%BB%93%E6%9A%A8%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/">OO第四单元总结暨课程总结</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2025-08-13T09:15:00.000Z">2025-08-13</time></p><p class="title"><a href="/2025/08/13/BUAA%20OO%20Unit2%20%E5%8D%95%E5%85%83%E6%80%BB%E7%BB%93/">OO第二单元总结</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2025-08-13T08:41:17.597Z">2025-08-13</time></p><p class="title"><a href="/2025/08/13/hello-world/">Hello World</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">归档</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2025/08/"><span class="level-start"><span class="level-item">八月 2025</span></span><span class="level-end"><span class="level-item tag">5</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/OO/"><span class="tag">OO</span><span class="tag">3</span></a></div></div></div></div></div><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">订阅更新</h3><form action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open(&#039;https://feedburner.google.com/fb/a/mailverify?uri=&#039;,&#039;popupwindow&#039;,&#039;scrollbars=yes,width=550,height=520&#039;);return true"><input type="hidden" value="" name="uri"><input type="hidden" name="loc" value="en_US"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="订阅"></div></div></form></div></div></div><div class="card widget" data-type="adsense"><div class="card-content"><div class="menu"><h3 class="menu-label">广告</h3><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><ins class="adsbygoogle" style="display:block" data-ad-client="aaa" data-ad-slot="aaa" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div></div></div><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">follow.it</h3><form action="" method="post" target="_blank"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="订阅"></div></div></form></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.svg" alt="RooKieZ的小窝" height="28"></a><p class="is-size-7"><span>&copy; 2025 RooKieZ</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p><p class="is-size-7">© 2019</p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-cn");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script data-pjax src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script data-pjax src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "此网站使用Cookie来改善您的体验。",
+          dismiss: "知道了！",
+          allow: "允许使用Cookie",
+          deny: "拒绝",
+          link: "了解更多",
+          policy: "Cookie政策",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script src="/js/pjax.js"></script><!--!--><!--!--><!--!--><script data-pjax src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script data-pjax src="/js/insight.js" defer></script><script data-pjax>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
