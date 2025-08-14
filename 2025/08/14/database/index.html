@@ -1,0 +1,1549 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>学海伴航——教辅平台系统设计文档 - RooKie_Z的小窝</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="RooKie_Z的小窝"><meta name="msapplication-TileImage" content="/img/favicon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="RooKie_Z的小窝"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="&amp;#x2F;* 常用颜色类 *&amp;#x2F; .text-cadetblue { color: CadetBlue !important; } .text-blue { color: #007bff !important; } .text-green { color: #28a745 !important; } .text-red { color: #DC143C !important; } .text-orange"><meta property="og:type" content="blog"><meta property="og:title" content="学海伴航——教辅平台系统设计文档"><meta property="og:url" content="https://rookie-zgy1513.github.io/2025/08/14/database/"><meta property="og:site_name" content="RooKie_Z的小窝"><meta property="og:description" content="&amp;#x2F;* 常用颜色类 *&amp;#x2F; .text-cadetblue { color: CadetBlue !important; } .text-blue { color: #007bff !important; } .text-green { color: #28a745 !important; } .text-red { color: #DC143C !important; } .text-orange"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://rookie-zgy1513.github.io/images/database.png"><meta property="article:published_time" content="2025-08-14T15:46:07.000Z"><meta property="article:modified_time" content="2025-08-14T16:04:55.315Z"><meta property="article:author" content="RooKie_Z"><meta property="article:tag" content="database"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://rookie-zgy1513.github.io/images/database.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://rookie-zgy1513.github.io/2025/08/14/database/"},"headline":"学海伴航——教辅平台系统设计文档","image":["https://rookie-zgy1513.github.io/images/database.png"],"datePublished":"2025-08-14T15:46:07.000Z","dateModified":"2025-08-14T16:04:55.315Z","author":{"@type":"Person","name":"RooKie_Z"},"publisher":{"@type":"Organization","name":"RooKie_Z的小窝","logo":{"@type":"ImageObject","url":"https://rookie-zgy1513.github.io/img/logo.png"}},"description":"&#x2F;* 常用颜色类 *&#x2F; .text-cadetblue { color: CadetBlue !important; } .text-blue { color: #007bff !important; } .text-green { color: #28a745 !important; } .text-red { color: #DC143C !important; } .text-orange"}</script><link rel="canonical" href="https://rookie-zgy1513.github.io/2025/08/14/database/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link data-pjax rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link data-pjax rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const id = '#' + CSS.escape(location.hash.substring(1));
+          const $tabMenu = document.querySelector(`.tabs a[href="${id}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(id);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.png" alt="RooKie_Z的小窝" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">主页</a><a class="navbar-item" href="/archives">归档</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/tags">标签</a><a class="navbar-item" href="/about">关于</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/rookie-zgy1513"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a><a class="navbar-item night" id="night-nav" title="Night Mode" href="javascript:;"><i class="fas fa-lightbulb" id="night-icon"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="fill" src="/images/database.png" alt="学海伴航——教辅平台系统设计文档"></span></div><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2025-08-14T15:46:07.000Z" title="2025/8/14 23:46:07">2025-08-14</time>发表</span><span class="level-item"><time dateTime="2025-08-14T16:04:55.315Z" title="2025/8/15 00:04:55">2025-08-15</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E4%B8%8A/">大三上课上</a></span><span class="level-item">1 小时读完 (大约8762个字)</span></div></div><h1 class="title is-3 is-size-4-mobile">学海伴航——教辅平台系统设计文档</h1><div class="content"><style>
+/* 常用颜色类 */
+.text-cadetblue { color: CadetBlue !important; }
+.text-blue { color: #007bff !important; }
+.text-green { color: #28a745 !important; }
+.text-red { color: #DC143C !important; }
+.text-orange { color: #fd7e14 !important; }
+.text-purple { color: #6f42c1 !important; }
+
+.text-emphasis { color: #007bff; font-weight: bold; }
+.text-warning { color: #ffc107; font-weight: bold; }
+.text-success { color: #28a745; font-weight: bold; }
+.text-danger { color: #7835dc; font-weight: bold; }
+
+/* 警告框样式 */
+blockquote {
+    position: relative;
+    margin: 20px 0;
+    padding: 16px 20px;
+    border-left: 4px solid #007bff;
+    background: #f8f9fa;
+    border-radius: 0 6px 6px 0;
+    font-style: normal;
+}
+
+blockquote[data-callout="important"] {
+    border-left-color: #7835dc;
+    background: rgb(242, 241, 251);
+    border-left-width: 6px;
+}
+
+blockquote[data-callout="important"]::before {
+    content: "💬 重要";
+    display: block;
+    font-weight: bold;
+    color: #7835dc;
+    margin-bottom: 8px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+blockquote[data-callout="caution"] {
+    border-left-color: #ffc107;
+    background: #fffbf0;
+    border-left-width: 6px;
+}
+
+blockquote[data-callout="caution"]::before {
+    content: "⚠️ 注意";
+    display: block;
+    font-weight: bold;
+    color: #b8860b;
+    margin-bottom: 8px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+blockquote[data-callout="note"] {
+    border-left-color: #17a2b8;
+    background: #f0f9ff;
+    border-left-width: 6px;
+}
+
+blockquote[data-callout="note"]::before {
+    content: "ℹ️ 提示";
+    display: block;
+    font-weight: bold;
+    color: #17a2b8;
+    margin-bottom: 8px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+</style>
+
+<script>
+// 处理警告框
+document.addEventListener('DOMContentLoaded', function() {
+    const blockquotes = document.querySelectorAll('blockquote');
+    blockquotes.forEach(function(blockquote) {
+        const firstParagraph = blockquote.querySelector('p:first-child');
+        if (firstParagraph) {
+            const text = firstParagraph.textContent;
+            const calloutMatch = text.match(/\[!(IMPORTANT|CAUTION|NOTE)\]/i);
+
+            if (calloutMatch) {
+                const calloutType = calloutMatch[1].toLowerCase();
+                blockquote.setAttribute('data-callout', calloutType);
+                
+                // 移除标记文本
+                const cleanText = text.replace(/\[![^\]]+\]\s*/, '');
+                firstParagraph.textContent = cleanText;
+            }
+        }
+    });
+});
+</script>
+
+<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>这是学海伴航——教辅平台的系统设计文档，源于大三上数据库课程大作业。本项目由<strong>RooKie_Z,Galaxy_Jew, LPF</strong>三人一同完成，在最终的展示后取得了 <strong><span class="text-cadetblue">满分💯的成绩。</span></strong></p>
+<h3 id="系统实现报告"><a href="#系统实现报告" class="headerlink" title="系统实现报告"></a><a href="/pdf/%E7%B3%BB%E7%BB%9F%E5%AE%9E%E7%8E%B0%E6%8A%A5%E5%91%8A.pdf"><strong>系统实现报告</strong></a></h3><span id="more"></span>
+
+<h2 id="一、需求分析"><a href="#一、需求分析" class="headerlink" title="一、需求分析"></a>一、需求分析</h2><h3 id="1-1-需求描述"><a href="#1-1-需求描述" class="headerlink" title="1.1 需求描述"></a>1.1 需求描述</h3><h4 id="1-1-1-背景调研"><a href="#1-1-1-背景调研" class="headerlink" title="1.1.1 背景调研"></a>1.1.1 背景调研</h4><p>通过<strong>积极调研新生需求</strong>，<strong>了解学院教学需要</strong>，同时与辅导员老师沟通，我们发现<strong>传统的微信QQ群学习小组的答疑教辅模式已不再高效</strong>。建立功能更丰富，交互更便捷，上手更简单，连接更紧密的教辅平台需求迫在眉睫。</p>
+<p>以下为<strong>传源书院</strong>计划开发的微信答疑小程序：</p>
+<p><img src="/2025/08/14/database/image-20240929154422582.png"></p>
+<h4 id="1-1-2-用户调研"><a href="#1-1-2-用户调研" class="headerlink" title="1.1.2 用户调研"></a>1.1.2 用户调研</h4><p>对于学生与辅导师的诉求，我们通过联系传源书院的辅导员，获取了他们问卷调查的数据，初步总结需求如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center">学生</th>
+<th align="center">辅导师</th>
+<th align="center">管理人员</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">提出问题，并得到及时回答</td>
+<td align="center">避免过度同质化的提问</td>
+<td align="center">了解同学们的学习情况</td>
+</tr>
+<tr>
+<td align="center">获取各科目资料集合，进行自学自测</td>
+<td align="center">避免答疑活动对课下生活的打扰</td>
+<td align="center">了解同学们的学习诉求</td>
+</tr>
+<tr>
+<td align="center">看见其他同学的答疑内容</td>
+<td align="center">便于组织模拟考试并加以批改</td>
+<td align="center">统计辅导师的工作量</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">开展模拟考试</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">发布公告</td>
+</tr>
+</tbody></table>
+<h4 id="1-1-3-需求总结"><a href="#1-1-3-需求总结" class="headerlink" title="1.1.3 需求总结"></a>1.1.3 需求总结</h4><h5 id="对于需要获取学业帮扶的学生"><a href="#对于需要获取学业帮扶的学生" class="headerlink" title="对于需要获取学业帮扶的学生"></a>对于需要获取学业帮扶的学生</h5><p>他们需要一款产品，能够：</p>
+<ul>
+<li>提出课业上的问题，并获得及时准确的回答。</li>
+<li>看见其它同学的答疑内容。</li>
+<li>获取各科习题资料，包括往年资料。</li>
+<li>有条理地获取自己的学习做题记录。</li>
+<li>参与模拟测试，并及时获取答题情况。</li>
+</ul>
+<h5 id="对于辅导师"><a href="#对于辅导师" class="headerlink" title="对于辅导师"></a>对于辅导师</h5><p>他们需要一款产品，能够：</p>
+<ul>
+<li>避免对日常生活的过度打扰。</li>
+<li>避免过度同质化的提问。</li>
+<li>获得同学们对回答的反馈。</li>
+<li>及时更新题库</li>
+<li>发布模拟考试并加以批改</li>
+</ul>
+<h5 id="对于学业支持中心-导员"><a href="#对于学业支持中心-导员" class="headerlink" title="对于学业支持中心&#x2F;导员"></a>对于学业支持中心&#x2F;导员</h5><p>他们需要一款产品，能够：</p>
+<ul>
+<li>直观了解辅导师工作情况，方便监督。</li>
+<li>自动统计辅导师的工作量并换算为志愿时长。</li>
+<li>开展模拟考试等集体学习活动，并发布公告。</li>
+</ul>
+<h4 id="1-1-4-项目优势"><a href="#1-1-4-项目优势" class="headerlink" title="1.1.4 项目优势"></a>1.1.4 项目优势</h4><p>通过上述需求分析，可见，<strong>学海伴航</strong>具有庞大的需求空间，光明的应用前景，具有开发的价值，通过我们的平台，<strong>三类目标用户</strong>可以在多种场景下获得利好：</p>
+<h5 id="从学生的角度"><a href="#从学生的角度" class="headerlink" title="从学生的角度"></a>从学生的角度</h5><ul>
+<li>共享学习资料：平台统一整合学习资料，方便同学查阅下载。</li>
+<li>共享问题与解答：所有问题均公开共享，同学可以搜索自己困惑的相似的问题，从其他人的已解决问题和回答得到启发。</li>
+<li>自主学习：平台组织统一模拟测试，学生获取模拟情况，指导自主学习。</li>
+<li>激励学习：可视化自己解决的问题数量，同时在主页获取推荐题目，学习更有动力，更有积极性。</li>
+<li>减少微信私聊数量：学生反馈群聊数量过多的问题，一个线下答疑活动需要建立很多的群聊，大群、小组群、互助群，影响日常的消息接收，带来不必要的麻烦。通过平台进行信息整合，交流与信息统一化。</li>
+</ul>
+<h5 id="从小导师角度"><a href="#从小导师角度" class="headerlink" title="从小导师角度"></a>从小导师角度</h5><ul>
+<li>辅导积极性更高：基于回答问题，上传题目，组织考试，批改试题的次数分配志愿时长，奖励机制更加公平合理，增强辅导师的解答积极性。</li>
+<li>在平台统一答疑，避免占用辅导师过多课下私人时间。</li>
+</ul>
+<h5 id="从学院组织者角度"><a href="#从学院组织者角度" class="headerlink" title="从学院组织者角度"></a>从学院组织者角度</h5><ul>
+<li>活动推进：可视化活动活跃度情况，学生参与度情况，有效推进活动开展。</li>
+<li>氛围营造：通过平台统一管理活动，定期发布相关学习公告，营造良好的学习氛围。</li>
+</ul>
+<h3 id="1-2-数据流图"><a href="#1-2-数据流图" class="headerlink" title="1.2 数据流图"></a>1.2 数据流图</h3><h4 id="1-2-1-总体数据流图"><a href="#1-2-1-总体数据流图" class="headerlink" title="1.2.1 总体数据流图"></a>1.2.1 总体数据流图</h4><p><img src="/2025/08/14/database/%E6%80%BB%E4%BD%93%E6%95%B0%E6%8D%AE%E6%B5%81%E5%9B%BE.png"></p>
+<h4 id="1-2-2-用户管理部分数据流图"><a href="#1-2-2-用户管理部分数据流图" class="headerlink" title="1.2.2 用户管理部分数据流图"></a>1.2.2 用户管理部分数据流图</h4><p><img src="/2025/08/14/database/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86%E6%95%B0%E6%8D%AE%E6%B5%81%E5%9B%BE.png"></p>
+<h4 id="1-2-3-消息公告部分数据流图"><a href="#1-2-3-消息公告部分数据流图" class="headerlink" title="1.2.3 消息公告部分数据流图"></a>1.2.3 消息公告部分数据流图</h4><p><img src="/2025/08/14/database/message_dataflow.png"></p>
+<h4 id="1-2-4-题目题库部分数据流图"><a href="#1-2-4-题目题库部分数据流图" class="headerlink" title="1.2.4 题目题库部分数据流图"></a>1.2.4 题目题库部分数据流图</h4><p><img src="/2025/08/14/database/question_dataflow.png"></p>
+<h4 id="1-2-5-模拟考试部分数据流图"><a href="#1-2-5-模拟考试部分数据流图" class="headerlink" title="1.2.5 模拟考试部分数据流图"></a>1.2.5 模拟考试部分数据流图</h4><p><img src="/2025/08/14/database/exam_dataflow.png"></p>
+<h4 id="1-2-6-讨论区部分数据流图"><a href="#1-2-6-讨论区部分数据流图" class="headerlink" title="1.2.6 讨论区部分数据流图"></a>1.2.6 讨论区部分数据流图</h4><p><img src="/2025/08/14/database/dis_dataflow.png"></p>
+<h4 id="1-2-7-用户主页部分数据流图"><a href="#1-2-7-用户主页部分数据流图" class="headerlink" title="1.2.7 用户主页部分数据流图"></a>1.2.7 用户主页部分数据流图</h4><p><img src="/2025/08/14/database/board_dataflow.png"></p>
+<h3 id="1-3-数据元素表"><a href="#1-3-数据元素表" class="headerlink" title="1.3 数据元素表"></a>1.3 数据元素表</h3><h4 id="1-3-1-用户管理部分"><a href="#1-3-1-用户管理部分" class="headerlink" title="1.3.1 用户管理部分"></a>1.3.1 用户管理部分</h4><h5 id="用户表"><a href="#用户表" class="headerlink" title="用户表"></a><strong>用户表</strong></h5><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>数据类型</th>
+<th>可否为空</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>int</td>
+<td>NO</td>
+<td>用户id，主键</td>
+</tr>
+<tr>
+<td>user_id</td>
+<td>varchar</td>
+<td>NO</td>
+<td>学号</td>
+</tr>
+<tr>
+<td>pass_word</td>
+<td>varchar</td>
+<td>NO</td>
+<td>密码</td>
+</tr>
+<tr>
+<td>mail</td>
+<td>varchar</td>
+<td>NO</td>
+<td>邮箱</td>
+</tr>
+<tr>
+<td>college</td>
+<td>varchar</td>
+<td>NO</td>
+<td>学院</td>
+</tr>
+<tr>
+<td>entryYear</td>
+<td>varchar</td>
+<td>NO</td>
+<td>入学年份</td>
+</tr>
+<tr>
+<td>avatar</td>
+<td>varchar</td>
+<td>NO</td>
+<td>头像</td>
+</tr>
+<tr>
+<td>user_role</td>
+<td>varchar</td>
+<td>NO</td>
+<td>用户身份（学生&#x2F;辅导师）</td>
+</tr>
+</tbody></table>
+<h4 id="1-3-2-消息部分"><a href="#1-3-2-消息部分" class="headerlink" title="1.3.2 消息部分"></a>1.3.2 消息部分</h4><h5 id="消息表"><a href="#消息表" class="headerlink" title="消息表"></a><strong>消息表</strong></h5><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>数据类型</th>
+<th>可否为空</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>int</td>
+<td>NO</td>
+<td>消息id，主键</td>
+</tr>
+<tr>
+<td>sender</td>
+<td>int</td>
+<td>NO</td>
+<td>外键，发送消息学生编号</td>
+</tr>
+<tr>
+<td>sender_avatar</td>
+<td>varchar</td>
+<td>NO</td>
+<td>发送者头像</td>
+</tr>
+<tr>
+<td>sent_at</td>
+<td>date</td>
+<td>NO</td>
+<td>发送时间</td>
+</tr>
+<tr>
+<td>receiver</td>
+<td>int</td>
+<td>NO</td>
+<td>外键，接收消息学生编号</td>
+</tr>
+<tr>
+<td>content</td>
+<td>varchar</td>
+<td>NO</td>
+<td>消息内容</td>
+</tr>
+<tr>
+<td>is_read</td>
+<td>boolean</td>
+<td>NO</td>
+<td>是否已阅</td>
+</tr>
+</tbody></table>
+<h4 id="1-3-3-公告部分"><a href="#1-3-3-公告部分" class="headerlink" title="1.3.3 公告部分"></a>1.3.3 公告部分</h4><h5 id="公告表"><a href="#公告表" class="headerlink" title="公告表"></a><strong>公告表</strong></h5><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>数据类型</th>
+<th>可否为空</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>int</td>
+<td>NO</td>
+<td>公告id，主键</td>
+</tr>
+<tr>
+<td>sender</td>
+<td>int</td>
+<td>NO</td>
+<td>外键，发布者编号</td>
+</tr>
+<tr>
+<td>sender_avatar</td>
+<td>varchar</td>
+<td>NO</td>
+<td>发布者头像</td>
+</tr>
+<tr>
+<td>sent_at</td>
+<td>date</td>
+<td>NO</td>
+<td>发布时间</td>
+</tr>
+<tr>
+<td>last_updated</td>
+<td>date</td>
+<td>NO</td>
+<td>时间</td>
+</tr>
+<tr>
+<td>content</td>
+<td>varchar</td>
+<td>NO</td>
+<td>公告内容</td>
+</tr>
+<tr>
+<td>title</td>
+<td>varchar</td>
+<td>NO</td>
+<td>公告标题</td>
+</tr>
+</tbody></table>
+<h4 id="1-3-4-题目部分"><a href="#1-3-4-题目部分" class="headerlink" title="1.3.4 题目部分"></a>1.3.4 题目部分</h4><h5 id="题目表"><a href="#题目表" class="headerlink" title="题目表"></a><strong>题目表</strong></h5><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>数据类型</th>
+<th>可否为空</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>int</td>
+<td>NO</td>
+<td>题目id，主键</td>
+</tr>
+<tr>
+<td>type</td>
+<td>varchar</td>
+<td>NO</td>
+<td>题目类型</td>
+</tr>
+<tr>
+<td>content</td>
+<td>varchar</td>
+<td>NO</td>
+<td>题目内容</td>
+</tr>
+<tr>
+<td>subject</td>
+<td>varchar</td>
+<td>NO</td>
+<td>题目所属科目</td>
+</tr>
+<tr>
+<td>added_at</td>
+<td>date</td>
+<td>NO</td>
+<td>上传时间</td>
+</tr>
+<tr>
+<td>source</td>
+<td>varchar</td>
+<td>NO</td>
+<td>题目来源</td>
+</tr>
+<tr>
+<td>tags</td>
+<td>json</td>
+<td>YES</td>
+<td>题目标签</td>
+</tr>
+<tr>
+<td>difficulty</td>
+<td>int</td>
+<td>NO</td>
+<td>题目难度</td>
+</tr>
+<tr>
+<td>added_by</td>
+<td>int</td>
+<td>NO</td>
+<td>题目添加者id</td>
+</tr>
+<tr>
+<td>question_banks</td>
+<td>json</td>
+<td>YES</td>
+<td>外键，题目所属题库</td>
+</tr>
+<tr>
+<td>option_count</td>
+<td>int</td>
+<td>NO</td>
+<td>题目选项数量</td>
+</tr>
+</tbody></table>
+<h5 id="题库表"><a href="#题库表" class="headerlink" title="题库表"></a><strong>题库表</strong></h5><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>数据类型</th>
+<th>可否为空</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>int</td>
+<td>NO</td>
+<td>题库id，主键</td>
+</tr>
+<tr>
+<td>subject</td>
+<td>varchar</td>
+<td>NO</td>
+<td>题库所属科目</td>
+</tr>
+<tr>
+<td>estimated_time</td>
+<td>date</td>
+<td>NO</td>
+<td>题库预计完成时间</td>
+</tr>
+<tr>
+<td>created_at</td>
+<td>date</td>
+<td>NO</td>
+<td>题库创建时间</td>
+</tr>
+<tr>
+<td>creator</td>
+<td>int</td>
+<td>NO</td>
+<td>题库创建者id</td>
+</tr>
+<tr>
+<td>description</td>
+<td>varchar</td>
+<td>NO</td>
+<td>题库描述</td>
+</tr>
+<tr>
+<td>question_count</td>
+<td>int</td>
+<td>NO</td>
+<td>题库题目数量</td>
+</tr>
+</tbody></table>
+<h5 id="题目讨论区表"><a href="#题目讨论区表" class="headerlink" title="题目讨论区表"></a><strong>题目讨论区表</strong></h5><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>数据类型</th>
+<th>可否为空</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>int</td>
+<td>NO</td>
+<td>题目讨论区id，主键</td>
+</tr>
+<tr>
+<td>question</td>
+<td>int</td>
+<td>NO</td>
+<td>题目id，外键</td>
+</tr>
+<tr>
+<td>created_at</td>
+<td>date</td>
+<td>NO</td>
+<td>题目创建时间</td>
+</tr>
+<tr>
+<td>creator</td>
+<td>int</td>
+<td>NO</td>
+<td>题目创建者id</td>
+</tr>
+<tr>
+<td>content</td>
+<td>varchar</td>
+<td>NO</td>
+<td>题目讨论区内容</td>
+</tr>
+</tbody></table>
+<h5 id="题目讨论区讨论表"><a href="#题目讨论区讨论表" class="headerlink" title="题目讨论区讨论表"></a><strong>题目讨论区讨论表</strong></h5><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>数据类型</th>
+<th>可否为空</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>int</td>
+<td>NO</td>
+<td>题目讨论区id，主键</td>
+</tr>
+<tr>
+<td>question</td>
+<td>int</td>
+<td>NO</td>
+<td>题目id，外键</td>
+</tr>
+<tr>
+<td>created_at</td>
+<td>date</td>
+<td>NO</td>
+<td>题目创建时间</td>
+</tr>
+<tr>
+<td>creator</td>
+<td>int</td>
+<td>NO</td>
+<td>题目创建者id</td>
+</tr>
+<tr>
+<td>content</td>
+<td>varchar</td>
+<td>NO</td>
+<td>题目讨论区内容</td>
+</tr>
+</tbody></table>
+<h5 id="做题记录表"><a href="#做题记录表" class="headerlink" title="做题记录表"></a><strong>做题记录表</strong></h5><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>数据类型</th>
+<th>可否为空</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>int</td>
+<td>NO</td>
+<td>做题记录id，主键</td>
+</tr>
+<tr>
+<td>user</td>
+<td>int</td>
+<td>NO</td>
+<td>做题者用户id，外键</td>
+</tr>
+<tr>
+<td>question</td>
+<td>int</td>
+<td>NO</td>
+<td>题目id，外键</td>
+</tr>
+<tr>
+<td>attempted_at</td>
+<td>date</td>
+<td>NO</td>
+<td>做题时间</td>
+</tr>
+<tr>
+<td>is_correct</td>
+<td>boolean</td>
+<td>NO</td>
+<td>是否做对本题</td>
+</tr>
+</tbody></table>
+<h4 id="1-3-5-模拟考试部分"><a href="#1-3-5-模拟考试部分" class="headerlink" title="1.3.5 模拟考试部分"></a>1.3.5 模拟考试部分</h4><h5 id="考试表"><a href="#考试表" class="headerlink" title="考试表"></a><strong>考试表</strong></h5><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>数据类型</th>
+<th>可否为空</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>int</td>
+<td>NO</td>
+<td>模拟考试id，主键</td>
+</tr>
+<tr>
+<td>title</td>
+<td>varchar</td>
+<td>NO</td>
+<td>模拟考试标题</td>
+</tr>
+<tr>
+<td>subject</td>
+<td>varchar</td>
+<td>NO</td>
+<td>题目所属科目</td>
+</tr>
+<tr>
+<td>description</td>
+<td>varchar</td>
+<td>NO</td>
+<td>模拟考试描述</td>
+</tr>
+<tr>
+<td>created_at</td>
+<td>date</td>
+<td>NO</td>
+<td>考试创建时间</td>
+</tr>
+<tr>
+<td>start_time</td>
+<td>date</td>
+<td>NO</td>
+<td>考试开始时间</td>
+</tr>
+<tr>
+<td>duration</td>
+<td>int</td>
+<td>NO</td>
+<td>考试持续时间</td>
+</tr>
+<tr>
+<td>end_time</td>
+<td>date</td>
+<td>NO</td>
+<td>考试结束时间</td>
+</tr>
+<tr>
+<td>created_by</td>
+<td>int</td>
+<td>NO</td>
+<td>考试创建者id，外键</td>
+</tr>
+<tr>
+<td>students</td>
+<td>json</td>
+<td>YES</td>
+<td>外键，模拟考试所有报名学生</td>
+</tr>
+<tr>
+<td>questions</td>
+<td>json</td>
+<td>NO</td>
+<td>外键，模拟考试所有题目</td>
+</tr>
+</tbody></table>
+<h5 id="模拟考试作答表"><a href="#模拟考试作答表" class="headerlink" title="模拟考试作答表"></a><strong>模拟考试作答表</strong></h5><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>数据类型</th>
+<th>可否为空</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>int</td>
+<td>NO</td>
+<td>做题记录id，主键</td>
+</tr>
+<tr>
+<td>exam</td>
+<td>int</td>
+<td>NO</td>
+<td>作答所属考试id，外键</td>
+</tr>
+<tr>
+<td>user</td>
+<td>int</td>
+<td>NO</td>
+<td>做答用户id，外键</td>
+</tr>
+<tr>
+<td>question</td>
+<td>int</td>
+<td>NO</td>
+<td>作答题目id，外键</td>
+</tr>
+<tr>
+<td>submitted_answer</td>
+<td>varchar</td>
+<td>NO</td>
+<td>最后做答答案</td>
+</tr>
+<tr>
+<td>submitted_at</td>
+<td>date</td>
+<td>NO</td>
+<td>最后做答时间</td>
+</tr>
+<tr>
+<td>is_correct</td>
+<td>boolean</td>
+<td>NO</td>
+<td>是否做对本题</td>
+</tr>
+</tbody></table>
+<h4 id="1-3-6-讨论区部分"><a href="#1-3-6-讨论区部分" class="headerlink" title="1.3.6 讨论区部分"></a>1.3.6 讨论区部分</h4><h5 id="讨论帖表"><a href="#讨论帖表" class="headerlink" title="讨论帖表"></a><strong>讨论帖表</strong></h5><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>数据类型</th>
+<th>可否为空</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>int</td>
+<td>NO</td>
+<td>题目讨论区id，主键</td>
+</tr>
+<tr>
+<td>title</td>
+<td>varchar</td>
+<td>NO</td>
+<td>讨论帖标题</td>
+</tr>
+<tr>
+<td>content</td>
+<td>varchar</td>
+<td>NO</td>
+<td>讨论帖内容</td>
+</tr>
+<tr>
+<td>publisher</td>
+<td>int</td>
+<td>NO</td>
+<td>发帖者id，外键</td>
+</tr>
+<tr>
+<td>avatar</td>
+<td>varchar</td>
+<td>NO</td>
+<td>发帖者头像</td>
+</tr>
+<tr>
+<td>publish_time</td>
+<td>date</td>
+<td>NO</td>
+<td>发帖时间</td>
+</tr>
+<tr>
+<td>last_updated</td>
+<td>date</td>
+<td>NO</td>
+<td>讨论帖最后更新时间</td>
+</tr>
+<tr>
+<td>tag</td>
+<td>varchar</td>
+<td>NO</td>
+<td>讨论帖标签</td>
+</tr>
+<tr>
+<td>subscribers</td>
+<td>json</td>
+<td>YES</td>
+<td>订阅者id集合</td>
+</tr>
+<tr>
+<td>likes</td>
+<td>json</td>
+<td>YES</td>
+<td>喜爱者id集合</td>
+</tr>
+<tr>
+<td>is_marked</td>
+<td>boolean</td>
+<td>NO</td>
+<td>帖子是否为精华帖</td>
+</tr>
+</tbody></table>
+<h5 id="帖子回复表"><a href="#帖子回复表" class="headerlink" title="帖子回复表"></a><strong>帖子回复表</strong></h5><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>数据类型</th>
+<th>可否为空</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>int</td>
+<td>NO</td>
+<td>题目讨论区id，主键</td>
+</tr>
+<tr>
+<td>discussion</td>
+<td>int</td>
+<td>NO</td>
+<td>回帖所属讨论帖id，外键</td>
+</tr>
+<tr>
+<td>content</td>
+<td>varchar</td>
+<td>NO</td>
+<td>回复内容</td>
+</tr>
+<tr>
+<td>publisher</td>
+<td>int</td>
+<td>NO</td>
+<td>回帖者id，外键</td>
+</tr>
+<tr>
+<td>avatar</td>
+<td>varchar</td>
+<td>NO</td>
+<td>回帖者头像</td>
+</tr>
+<tr>
+<td>publish_time</td>
+<td>date</td>
+<td>NO</td>
+<td>回帖时间</td>
+</tr>
+<tr>
+<td>last_updated</td>
+<td>date</td>
+<td>NO</td>
+<td>回帖最后更新时间</td>
+</tr>
+<tr>
+<td>likes</td>
+<td>json</td>
+<td>YES</td>
+<td>回帖喜爱者id集合</td>
+</tr>
+</tbody></table>
+<h2 id="⼆、数据库概念模式设计"><a href="#⼆、数据库概念模式设计" class="headerlink" title="⼆、数据库概念模式设计"></a>⼆、数据库概念模式设计</h2><h3 id="2-1-系统初步-ER-图"><a href="#2-1-系统初步-ER-图" class="headerlink" title="2.1 系统初步 ER 图"></a><strong>2.1</strong> 系统初步 <strong>ER</strong> 图</h3><h4 id="2-1-1-实体-ER-图"><a href="#2-1-1-实体-ER-图" class="headerlink" title="2.1.1 实体 ER 图"></a><strong>2.1.1</strong> 实体 <strong>ER</strong> 图</h4><p><img src="/2025/08/14/database/%E5%AE%9E%E4%BD%93.png"></p>
+<h4 id="2-1-2-关系-ER-图"><a href="#2-1-2-关系-ER-图" class="headerlink" title="2.1.2 关系 ER 图"></a><strong>2.1.2</strong> 关系 <strong>ER</strong> 图</h4><p><img src="/2025/08/14/database/%E5%85%B3%E7%B3%BB.png"></p>
+<h3 id="2-2-系统基本-ER-图"><a href="#2-2-系统基本-ER-图" class="headerlink" title="2.2 系统基本 ER 图"></a><strong>2.2</strong> 系统基本 <strong>ER</strong> 图</h3><blockquote>
+<p>[!IMPORTANT]<br>由于实体属性过于复杂，将属性画入<code>ER图</code>内将大大影响图的美观性，故下面<code>ER图</code>内<strong>将不包含属性，只指示关系</strong></p>
+</blockquote>
+<p><img src="/2025/08/14/database/%E5%85%B3%E7%B3%BB.png"></p>
+<h2 id="三、数据库逻辑模式设计与优化"><a href="#三、数据库逻辑模式设计与优化" class="headerlink" title="三、数据库逻辑模式设计与优化"></a><strong>三、数据库逻辑模式设计与优化</strong></h2><h3 id="3-1-数据库关系模式"><a href="#3-1-数据库关系模式" class="headerlink" title="3.1 数据库关系模式"></a><strong>3.1</strong> 数据库关系模式</h3><blockquote>
+<p>[!IMPORTANT]</p>
+<p>关系模式可以形式化表示为<code>R(U, D, DOM, F)</code>。<strong>U</strong>为组成该关系的属性名，<strong>D</strong>为<strong>U</strong>中属性所来⾃的域，<strong>DOM</strong> 指的是属性与域的映射，<strong>F</strong>指的是属性间的依赖关系集合。以下约定<strong>N</strong>表示正整数，<strong>FLOAT</strong> 表示浮点数，<strong>S</strong>为任意字符组成的字符<strong>S</strong>，<strong>T</strong>表示时间，<strong>B</strong>表示布尔值，<strong>J</strong>表示<code>json</code>类型。码以下划线标识。</p>
+</blockquote>
+<p>以下是由 <code>E-R 图</code>得到的关系模式。</p>
+<h4 id="3-1-1-实体"><a href="#3-1-1-实体" class="headerlink" title="3.1.1 实体"></a>3.1.1 实体</h4><ol>
+<li><p>学生</p>
+<p>students({<u>id</u>，头像，邮箱, 密码, 姓名, 学号, 年级，学院，身份}, D, DOM, F)</p>
+<p>D &#x3D; {STR, N}</p>
+<p>DOM &#x3D; {DOM(id) &#x3D; DOM(年级) &#x3D; DOM(身份) &#x3D; N,DOM(头像) &#x3D;  DOM(邮箱) &#x3D; DOM(密码) &#x3D; DOM(姓名) &#x3D; DOM(学号) &#x3D; STR}</p>
+<p>F &#x3D; {id$\to$其他属性}</p>
+</li>
+<li><p>辅导师</p>
+<p>teachers({<u>id</u>，头像，邮箱, 密码, 姓名, 学号, 年级，学院，身份}, D, DOM, F)</p>
+<p>D &#x3D; {STR, N}</p>
+<p>DOM &#x3D; {DOM(年级) &#x3D; DOM(身份) &#x3D; N,DOM(头像) &#x3D;  DOM(邮箱) &#x3D; DOM(密码) &#x3D; DOM(姓名) &#x3D; DOM(学号) &#x3D; STR}</p>
+<p>F &#x3D; {id$\to$其他属性}</p>
+</li>
+<li><p>消息</p>
+<p>messages({<u>id</u>，发送者，发送者头像，发送时间，接收者， 消息内容，是否已阅}，D，DOM，F)</p>
+<p>D &#x3D; {STR, N, B, T}</p>
+<p>DOM &#x3D; {DOM(id) &#x3D; DOM(发送者) &#x3D; DOM(接收者) &#x3D; N， DOM(头像) &#x3D; DOM(内容) &#x3D; STR，DOM(发送时间) &#x3D; T，DOM(是否已阅) &#x3D; B}</p>
+<p>F &#x3D; {id$\to$其他属性}</p>
+</li>
+<li><p>公告</p>
+<p>broadcasts({<u>id</u>，发布者，发布者头像，发布时间，更新时间，公告内容，公告标题}，D，DOM，F)</p>
+<p>D &#x3D; {STR, N，T}</p>
+<p>DOM &#x3D; {DOM(id) &#x3D; DOM(发布者) &#x3D; N， DOM(发布者头像) &#x3D; DOM(内容) &#x3D; DOM(标题) &#x3D; STR，DOM(发布时间) &#x3D; DOM(更新时间) &#x3D; T}</p>
+<p>F &#x3D; {id$\to$其他属性}</p>
+</li>
+<li><p>题库</p>
+<p>quesionbanks({<u>id</u>，科目，预计完成时间，创建时间，创建者，题库描述，题目数量}，D，DOM，F)</p>
+<p>D &#x3D; {STR, N，T}</p>
+<p>DOM &#x3D; {DOM(id) &#x3D; DOM(创建者) &#x3D; DOM(题目数量) &#x3D; N， DOM(科目) &#x3D; DOM(题库描述) &#x3D; STR，DOM(创建时间) &#x3D; DOM(预计完成时间) &#x3D; T}</p>
+<p>F &#x3D; {id$\to$其他属性}</p>
+</li>
+<li><p>题目</p>
+<p>questions({<u>id</u>，类型，内容，科目，上传时间，来源，标签，难度，上传者，选项数量，所属题库，D，DOM，F)</p>
+<p>D &#x3D; {STR, N，T，J}</p>
+<p>DOM &#x3D; {DOM(id) &#x3D; DOM(上传者) &#x3D; DOM(题目难度) &#x3D; DOM(选项数量) &#x3D; DOM(所属题库) &#x3D; N， DOM(科目) &#x3D; DOM(类型) &#x3D; DOM(来源) &#x3D; DOM(内容) &#x3D; STR，DOM(标签) &#x3D; DOM(所属题库) &#x3D; J，DOM(上传时间) &#x3D; T}</p>
+<p>F &#x3D; {id$\to$其他属性}</p>
+</li>
+<li><p>讨论帖</p>
+<p>discussions({<u>id</u>，发布者，发布者头像，发布时间，更新时间，帖子内容，帖子标题，帖子标签，订阅者，喜爱者，是否加精}，D，DOM，F)</p>
+<p>D &#x3D; {STR, N，T，J，B}</p>
+<p>DOM &#x3D; {DOM(id) &#x3D; DOM(发布者) &#x3D; N， DOM(发布者头像) &#x3D; DOM(内容) &#x3D; DOM(标题) &#x3D; DOM(标签) &#x3D; STR，DOM(订阅者) &#x3D; DOM(喜爱者) &#x3D; J，DOM(发布时间) &#x3D; DOM(更新时间) &#x3D; T，DOM(是否加精) &#x3D; B}</p>
+<p>F &#x3D; {id$\to$其他属性}</p>
+</li>
+<li><p>回复帖</p>
+<p>replies({<u>id</u>，所属讨论帖，发布者，发布者头像，发布时间，更新时间，帖子内容，喜爱者}，D，DOM，F)</p>
+<p>D &#x3D; {STR, N，T，J}</p>
+<p>DOM &#x3D; {DOM(id) &#x3D; DOM(所属讨论帖) &#x3D; DOM(发布者) &#x3D; N， DOM(发布者头像) &#x3D; DOM(内容) &#x3D; STR，DOM(喜爱者) &#x3D; J，DOM(发布时间) &#x3D; DOM(更新时间) &#x3D; T}</p>
+<p>F &#x3D; {id$\to$其他属性}</p>
+</li>
+<li><p>模拟考试</p>
+<p>exams({<u>id</u>，标题，科目，开始时间，持续时间，结束时间，创建时间，创建者，考试描述，考试题目，参考学生}，D，DOM，F)</p>
+<p>D &#x3D; {STR, N，T，J}</p>
+<p>DOM &#x3D; {DOM(id) &#x3D; DOM(创建者) &#x3D; N， DOM(科目) &#x3D; DOM(标题) &#x3D; DOM(考试描述) &#x3D; STR，DOM(考试试题) &#x3D; DOM(参考学生) &#x3D; J，DOM(创建时间) &#x3D; DOM(持续时间) &#x3D; DOM(创开始时间) &#x3D; DOM(结束时间) &#x3D; T}</p>
+<p>F &#x3D; {id$\to$其他属性}</p>
+</li>
+</ol>
+<h4 id="3-1-2-联系"><a href="#3-1-2-联系" class="headerlink" title="3.1.2 联系"></a>3.1.2 联系</h4><blockquote>
+<p>[!IMPORTANT]</p>
+<p>约定以下函数依赖集合省略⾮主属性对码的完全函数依赖。</p>
+</blockquote>
+<h5 id="3-1-2-1-多对多联系"><a href="#3-1-2-1-多对多联系" class="headerlink" title="3.1.2.1 多对多联系"></a>3.1.2.1 多对多联系</h5><ol>
+<li><p>学生——考试</p>
+<p>studentExam({student, exam}, D, DOM, F)</p>
+<p>D &#x3D; {N}</p>
+<p>DOM &#x3D; {DOM(student) &#x3D; DOM(exam) &#x3D; N}</p>
+<p><em>外码</em>：student 对应学⽣表的主码 student.id, course 对应考试表的主码 course.id</p>
+</li>
+<li><p>考试——题目</p>
+<p>questionExam({question, exam}, D, DOM, F)</p>
+<p>D &#x3D; {N}</p>
+<p>DOM &#x3D; {DOM(question) &#x3D; DOM(exam) &#x3D; N}</p>
+<p><em>外码</em>：question 对应题目表的主码 question.id, course 对应考试表的主码 course.id</p>
+</li>
+<li><p>题库——题目</p>
+<p>questionQuestionbank({question, questionbank}, D, DOM, F)</p>
+<p>D &#x3D; {N}</p>
+<p>DOM &#x3D; {DOM(question) &#x3D; DOM(questionbank) &#x3D; N}</p>
+<p><em>外码</em>：question 对应题目表的主码 question.id, questionbank 对应题库表的主码 questionbank.id</p>
+</li>
+<li><p>帖子——订阅</p>
+<p>subscibeDiscussion({student, discussion}, D, DOM, F)</p>
+<p>D &#x3D; {N}</p>
+<p>DOM &#x3D; {DOM(student) &#x3D; DOM(discussion) &#x3D; N}</p>
+<p><em>外码</em>：student 对应学⽣表的主码 student.id, discussion 对应讨论帖表的主码 discussion.id</p>
+</li>
+<li><p>帖子——喜爱</p>
+<p>likeDiscussion({student, discussion}, D, DOM, F)</p>
+<p>D &#x3D; {N}</p>
+<p>DOM &#x3D; {DOM(student) &#x3D; DOM(discussion) &#x3D; N}</p>
+<p><em>外码</em>：student 对应学⽣表的主码 student.id, discussion 对应讨论帖表的主码 discussion.id</p>
+</li>
+<li><p>回复——喜爱</p>
+<p>likeReply({student, reply}, D, DOM, F)</p>
+<p>D &#x3D; {N}</p>
+<p>DOM &#x3D; {DOM(student) &#x3D; DOM(reply) &#x3D; N}</p>
+<p><em>外码</em>：student 对应学⽣表的主码 student.id, reply 对应回复帖表的主码 reply.id</p>
+</li>
+<li><p>学生作答题目</p>
+<p>studentSubmission({student, question, time, submission, is_correct}, D, DOM, F)</p>
+<p>D &#x3D; {STR, N, T, B}</p>
+<p> DOM &#x3D; {DOM(submission) &#x3D; STR,DOM(student) &#x3D; DOM(question) &#x3D; N, DOM(time) &#x3D; T, DOM(is_correct) &#x3D; B}</p>
+<p><em>外码</em>：student 对应学⽣表的主码 student.id, question 对应题目表的主码 question.id</p>
+</li>
+</ol>
+<h5 id="3-1-2-2-一对多联系"><a href="#3-1-2-2-一对多联系" class="headerlink" title="3.1.2.2 一对多联系"></a>3.1.2.2 一对多联系</h5><ol>
+<li><p>学生——发送消息</p>
+<p>sendMessage({<u>message</u>, student}, D, DOM, F)</p>
+<p>D &#x3D; {N}</p>
+<p>DOM &#x3D; {DOM(student) &#x3D; DOM(message) &#x3D; N}</p>
+<p><em>外码</em>：student 对应学⽣表的主码 student.id, message 对应消息表的主码 message.id</p>
+</li>
+<li><p>学生——接收消息</p>
+<p>receiveMessage({<u>message</u>, student}, D, DOM, F)</p>
+<p>D &#x3D; {N}</p>
+<p>DOM &#x3D; {DOM(student) &#x3D; DOM(message) &#x3D; N}</p>
+<p><em>外码</em>：student 对应学⽣表的主码 student.id, message 对应消息表的主码 message.id</p>
+</li>
+<li><p>学生——接收公告</p>
+<p>receiveBroadcast({<u>message</u>, student}, D, DOM, F)</p>
+<p>D &#x3D; {N}</p>
+<p>DOM &#x3D; {DOM(student) &#x3D; DOM(broadcast) &#x3D; N}</p>
+<p><em>外码</em>：student 对应学⽣表的主码 student.id, broadcast 对应公告表的主码 broadcast.id</p>
+</li>
+<li><p>教师——发布公告</p>
+<p>publishBroadcast({<u>message</u>, teacher}, D, DOM, F)</p>
+<p>D &#x3D; {N}</p>
+<p>DOM &#x3D; {DOM(teacher) &#x3D; DOM(broadcast) &#x3D; N}</p>
+<p><em>外码</em>：teacher 对应教师表的主码 teacher.id, broadcast 对应公告表的主码 broadcast.id</p>
+</li>
+<li><p>教师——题库</p>
+<p>teacherQuestionbank({<u>questionbank</u>, teacher}, D, DOM, F)</p>
+<p>D &#x3D; {N}</p>
+<p>DOM &#x3D; {DOM(teacher) &#x3D; DOM(questionbank) &#x3D; N}</p>
+<p><em>外码</em>：teacher 对应教师表的主码 teacher.id, questionbank 对应题库表的主码 questionbank.id</p>
+</li>
+<li><p>教师——题目</p>
+<p>teacherQuestion({<u>question</u>, teacher}, D, DOM, F)</p>
+<p>D &#x3D; {N}</p>
+<p>DOM &#x3D; {DOM(teacher) &#x3D; DOM(question) &#x3D; N}</p>
+<p><em>外码</em>：teacher 对应教师表的主码 teacher.id, question 对应题库表的主码 question.id</p>
+</li>
+<li><p>教师——考试</p>
+<p>teacherExam({<u>exam</u>, teacher}, D, DOM, F)</p>
+<p>D &#x3D; {N}</p>
+<p>DOM &#x3D; {DOM(teacher) &#x3D; DOM(exam) &#x3D; N}</p>
+<p><em>外码</em>：teacher 对应教师表的主码 teacher.id, exam 对应考试表的主码 exam.id</p>
+</li>
+<li><p>学生——讨论</p>
+<p>studentDiscussion({<u>discussion</u>, student}, D, DOM, F)</p>
+<p>D &#x3D; {N}</p>
+<p>DOM &#x3D; {DOM(student) &#x3D; DOM(discussion) &#x3D; N}</p>
+<p><em>外码</em>：student 对应学⽣表的主码 student.id, discussion对应讨论表的主码 discussion.id</p>
+</li>
+<li><p>学生——回复</p>
+<p>studentReply({<u>reply</u>, student}, D, DOM, F)</p>
+<p>D &#x3D; {N}</p>
+<p>DOM &#x3D; {DOM(student) &#x3D; DOM(reply) &#x3D; N}</p>
+<p><em>外码</em>：student 对应学⽣表的主码 student.id, reply对应回复表的主码 reply.id</p>
+</li>
+<li><p>讨论帖——回复</p>
+<p>discussionReply({<u>reply</u>, discussion}, D, DOM, F)    </p>
+<p>D &#x3D; {N}</p>
+<p>DOM &#x3D; {DOM(reply) &#x3D; DOM(discussion) &#x3D; N}</p>
+<p><em>外码</em>：discussion对应讨论表的主码 discussion.id, reply对应回复表的主码 reply.id</p>
+</li>
+</ol>
+<h3 id="3-2-关系模式范式等级的判定与规范"><a href="#3-2-关系模式范式等级的判定与规范" class="headerlink" title="3.2 关系模式范式等级的判定与规范"></a><strong>3.2</strong> 关系模式范式等级的判定与规范</h3><blockquote>
+<p>[!NOTE]</p>
+<p>分别对上述表进⾏范式等级判断，然后将未达到 3NF 的表规范到 3NF。</p>
+</blockquote>
+<h4 id="3-2-1-实体"><a href="#3-2-1-实体" class="headerlink" title="3.2.1 实体"></a><strong>3.2.1</strong> 实体</h4><ol>
+<li><p>学生</p>
+<p>students({<u>id</u>，头像，邮箱, 密码, 姓名, 学号, 年级，学院，身份}, D, DOM, F)</p>
+<p>D &#x3D; {STR, N}</p>
+<p>DOM &#x3D; {DOM(id) &#x3D; DOM(年级) &#x3D; DOM(身份) &#x3D; N,DOM(头像) &#x3D;  DOM(邮箱) &#x3D; DOM(密码) &#x3D; DOM(姓名) &#x3D; DOM(学号) &#x3D; STR}</p>
+<p>F &#x3D; {id$\to$其他属性}</p>
+<p><strong>对于学生表，id是主码，⾮主属性仅仅依赖于唯⼀的主码，所以学生表$\in BCNF$，学生表$\in 3NF$</strong></p>
+</li>
+<li><p>辅导师</p>
+<p>teachers({<u>id</u>，头像，邮箱, 密码, 姓名, 学号, 年级，学院，身份}, D, DOM, F)</p>
+<p>D &#x3D; {STR, N}</p>
+<p>DOM &#x3D; {DOM(年级) &#x3D; DOM(身份) &#x3D; N,DOM(头像) &#x3D;  DOM(邮箱) &#x3D; DOM(密码) &#x3D; DOM(姓名) &#x3D; DOM(学号) &#x3D; STR}</p>
+<p>F &#x3D; {id$\to$其他属性}</p>
+<p><strong>对于辅导师表，id是主码，⾮主属性仅仅依赖于唯⼀的主码，所以辅导师表$\in BCNF$，辅导师表$\in 3NF$</strong></p>
+</li>
+<li><p>消息</p>
+<p>messages({<u>id</u>，发送者，发送者头像，发送时间，接收者， 消息内容，是否已阅}，D，DOM，F)</p>
+<p>D &#x3D; {STR, N, B, T}</p>
+<p>DOM &#x3D; {DOM(id) &#x3D; DOM(发送者) &#x3D; DOM(接收者) &#x3D; N， DOM(头像) &#x3D; DOM(内容) &#x3D; STR，DOM(发送时间) &#x3D; T，DOM(是否已阅) &#x3D; B}</p>
+<p>F &#x3D; {id$\to$其他属性}</p>
+<p><strong>对于消息表，id是主码，⾮主属性仅仅依赖于唯⼀的主码，所以消息表$\in BCNF$，消息表$\in 3NF$</strong></p>
+</li>
+<li><p>公告</p>
+<p>broadcasts({<u>id</u>，发布者，发布者头像，发布时间，更新时间，公告内容，公告标题}，D，DOM，F)</p>
+<p>D &#x3D; {STR, N，T}</p>
+<p>DOM &#x3D; {DOM(id) &#x3D; DOM(发布者) &#x3D; N， DOM(发布者头像) &#x3D; DOM(内容) &#x3D; DOM(标题) &#x3D; STR，DOM(发布时间) &#x3D; DOM(更新时间) &#x3D; T}</p>
+<p>F &#x3D; {id$\to$其他属性}</p>
+<p><strong>对于公告表，id是主码，⾮主属性仅仅依赖于唯⼀的主码，所以公告表$\in BCNF$，公告表$\in 3NF$</strong></p>
+</li>
+<li><p>题库</p>
+<p>quesionbanks({<u>id</u>，科目，预计完成时间，创建时间，创建者，题库描述，题目数量}，D，DOM，F)</p>
+<p>D &#x3D; {STR, N，T}</p>
+<p>DOM &#x3D; {DOM(id) &#x3D; DOM(创建者) &#x3D; DOM(题目数量) &#x3D; N， DOM(科目) &#x3D; DOM(题库描述) &#x3D; STR，DOM(创建时间) &#x3D; DOM(预计完成时间) &#x3D; T}</p>
+<p>F &#x3D; {id$\to$其他属性}</p>
+<p><strong>对于题库表，id是主码，⾮主属性仅仅依赖于唯⼀的主码，所以题库表$\in BCNF$，题库表$\in 3NF$</strong></p>
+</li>
+<li><p>题目</p>
+<p>questions({<u>id</u>，类型，内容，科目，上传时间，来源，标签，难度，上传者，选项数量，所属题库，D，DOM，F)</p>
+<p>D &#x3D; {STR, N，T，J}</p>
+<p>DOM &#x3D; {DOM(id) &#x3D; DOM(上传者) &#x3D; DOM(题目难度) &#x3D; DOM(选项数量) &#x3D; DOM(所属题库) &#x3D; N， DOM(科目) &#x3D; DOM(类型) &#x3D; DOM(来源) &#x3D; DOM(内容) &#x3D; STR，DOM(标签) &#x3D; DOM(所属题库) &#x3D; J，DOM(上传时间) &#x3D; T}</p>
+<p>F &#x3D; {id$\to$其他属性}</p>
+<p><strong>对于题目表，id是主码，⾮主属性仅仅依赖于唯⼀的主码，所以题目表$\in BCNF$，题目表$\in 3NF$</strong></p>
+</li>
+<li><p>讨论帖</p>
+<p>discussions({<u>id</u>，发布者，发布者头像，发布时间，更新时间，帖子内容，帖子标题，帖子标签，订阅者，喜爱者，是否加精}，D，DOM，F)</p>
+<p>D &#x3D; {STR, N，T，J，B}</p>
+<p>DOM &#x3D; {DOM(id) &#x3D; DOM(发布者) &#x3D; N， DOM(发布者头像) &#x3D; DOM(内容) &#x3D; DOM(标题) &#x3D; DOM(标签) &#x3D; STR，DOM(订阅者) &#x3D; DOM(喜爱者) &#x3D; J，DOM(发布时间) &#x3D; DOM(更新时间) &#x3D; T，DOM(是否加精) &#x3D; B}</p>
+<p>F &#x3D; {id$\to$其他属性}</p>
+<p><strong>对于讨论帖表，id是主码，⾮主属性仅仅依赖于唯⼀的主码，所以讨论帖表$\in BCNF$，讨论帖表$\in 3NF$</strong></p>
+</li>
+<li><p>回复帖</p>
+<p>replies({<u>id</u>，所属讨论帖，发布者，发布者头像，发布时间，更新时间，帖子内容，喜爱者}，D，DOM，F)</p>
+<p>D &#x3D; {STR, N，T，J}</p>
+<p>DOM &#x3D; {DOM(id) &#x3D; DOM(所属讨论帖) &#x3D; DOM(发布者) &#x3D; N， DOM(发布者头像) &#x3D; DOM(内容) &#x3D; STR，DOM(喜爱者) &#x3D; J，DOM(发布时间) &#x3D; DOM(更新时间) &#x3D; T}</p>
+<p>F &#x3D; {id$\to$其他属性}</p>
+<p><strong>对于回复帖表，id是主码，⾮主属性仅仅依赖于唯⼀的主码，所以回复帖表$\in BCNF$，回复帖表$\in 3NF$</strong></p>
+</li>
+<li><p>模拟考试</p>
+<p>exams({<u>id</u>，标题，科目，开始时间，持续时间，结束时间，创建时间，创建者，考试描述，考试题目，参考学生}，D，DOM，F)</p>
+<p>D &#x3D; {STR, N，T，J}</p>
+<p>DOM &#x3D; {DOM(id) &#x3D; DOM(创建者) &#x3D; N， DOM(科目) &#x3D; DOM(标题) &#x3D; DOM(考试描述) &#x3D; STR，DOM(考试试题) &#x3D; DOM(参考学生) &#x3D; J，DOM(创建时间) &#x3D; DOM(持续时间) &#x3D; DOM(创开始时间) &#x3D; DOM(结束时间) &#x3D; T}</p>
+<p>F &#x3D; {id$\to$其他属性}</p>
+<p><strong>对于模拟考试表，id是主码，⾮主属性仅仅依赖于唯⼀的主码，所以模拟考试表$\in BCNF$，模拟考试表$\in 3NF$</strong></p>
+</li>
+</ol>
+<h4 id="3-2-2-联系"><a href="#3-2-2-联系" class="headerlink" title="3.2.2 联系"></a><strong>3.2.2</strong> 联系</h4><blockquote>
+<p>[!IMPORTANT]</p>
+<p>约定以下函数依赖集合省略⾮主属性对码的完全函数依赖。</p>
+</blockquote>
+<h5 id="3-2-2-1-多对多联系"><a href="#3-2-2-1-多对多联系" class="headerlink" title="3.2.2.1 多对多联系"></a><strong>3.2.2.1</strong> 多对多联系</h5><ol>
+<li><p>学生——考试</p>
+<p>studentExam({student, exam}, D, DOM, F)</p>
+<p>D &#x3D; {N}</p>
+<p>DOM &#x3D; {DOM(student) &#x3D; DOM(exam) &#x3D; N}</p>
+<p><em>外码</em>：student 对应学⽣表的主码 student.id, course 对应考试表的主码 course.id</p>
+<p><strong>对于该表，所有函数依赖左端都是主码，所以$ \in BCNF$，因此也$\in 3NF$。</strong></p>
+</li>
+<li><p>考试——题目</p>
+<p>questionExam({question, exam}, D, DOM, F)</p>
+<p>D &#x3D; {N}</p>
+<p>DOM &#x3D; {DOM(question) &#x3D; DOM(exam) &#x3D; N}</p>
+<p><em>外码</em>：question 对应题目表的主码 question.id, course 对应考试表的主码 course.id</p>
+<p><strong>对于该表，所有函数依赖左端都是主码，所以$ \in BCNF$，因此也$\in 3NF$。</strong></p>
+</li>
+<li><p>题库——题目</p>
+<p>questionQuestionbank({question, questionbank}, D, DOM, F)</p>
+<p>D &#x3D; {N}</p>
+<p>DOM &#x3D; {DOM(question) &#x3D; DOM(questionbank) &#x3D; N}</p>
+<p><em>外码</em>：question 对应题目表的主码 question.id, questionbank 对应题库表的主码 questionbank.id</p>
+<p><strong>对于该表，所有函数依赖左端都是主码，所以$ \in BCNF$，因此也$\in 3NF$。</strong></p>
+</li>
+<li><p>帖子——订阅</p>
+<p>subscibeDiscussion({student, discussion}, D, DOM, F)</p>
+<p>D &#x3D; {N}</p>
+<p>DOM &#x3D; {DOM(student) &#x3D; DOM(discussion) &#x3D; N}</p>
+<p><em>外码</em>：student 对应学⽣表的主码 student.id, discussion 对应讨论帖表的主码 discussion.id</p>
+<p><strong>F &#x3D; {(student, discussion) $\to$ subscribed}</strong></p>
+<p><strong>对于该表，所有函数依赖左端都是主码，所以$ \in BCNF$，因此也$\in 3NF$。</strong></p>
+</li>
+<li><p>帖子——喜爱</p>
+<p>likeDiscussion({student, discussion}, D, DOM, F)</p>
+<p>D &#x3D; {N}</p>
+<p>DOM &#x3D; {DOM(student) &#x3D; DOM(discussion) &#x3D; N}</p>
+<p><em>外码</em>：student 对应学⽣表的主码 student.id, discussion 对应讨论帖表的主码 discussion.id</p>
+<p><strong>F &#x3D; {(student, discussion) $\to$ liked}</strong></p>
+<p><strong>对于该表，所有函数依赖左端都是主码，所以$ \in BCNF$，因此也$\in 3NF$。</strong></p>
+</li>
+<li><p>回复——喜爱</p>
+<p>likeReply({student, reply}, D, DOM, F)</p>
+<p>D &#x3D; {N}</p>
+<p>DOM &#x3D; {DOM(student) &#x3D; DOM(reply) &#x3D; N}</p>
+<p><em>外码</em>：student 对应学⽣表的主码 student.id, reply 对应回复帖表的主码 reply.id</p>
+<p><strong>F &#x3D; {(student, reply) $\to$ liked}</strong></p>
+<p><strong>对于该表，所有函数依赖左端都是主码，所以$ \in BCNF$，因此也$\in 3NF$。</strong></p>
+</li>
+<li><p>学生作答题目</p>
+<p>studentSubmission({student, question, time, submission, is_correct}, D, DOM, F)</p>
+<p>D &#x3D; {STR, N, T, B}</p>
+<p> DOM &#x3D; {DOM(submission) &#x3D; STR,DOM(student) &#x3D; DOM(question) &#x3D; N, DOM(time) &#x3D; T, DOM(is_correct) &#x3D; B}</p>
+<p><em>外码</em>：student 对应学⽣表的主码 student.id, question 对应题目表的主码 question.id</p>
+<p><strong>F &#x3D; {(student, question ) $\to$ is_correct, (student, question ) $\to$ time}</strong></p>
+<p><strong>对于该表，所有函数依赖左端都是主码，所以$ \in BCNF$，因此也$\in 3NF$。</strong></p>
+</li>
+</ol>
+<h5 id="3-2-2-2-⼀对多联系"><a href="#3-2-2-2-⼀对多联系" class="headerlink" title="3.2.2.2 ⼀对多联系"></a><strong>3.2.2.2</strong> ⼀对多联系</h5><ol>
+<li><p>学生——发送消息</p>
+<p>sendMessage({<u>message</u>, student}, D, DOM, F)</p>
+<p>D &#x3D; {N}</p>
+<p>DOM &#x3D; {DOM(student) &#x3D; DOM(message) &#x3D; N}</p>
+<p><em>外码</em>：student 对应学⽣表的主码 student.id, message 对应消息表的主码 message.id</p>
+<p><strong>F &#x3D; {message $\to$ student}</strong></p>
+<p><strong>函数依赖左端仅包含主码，不存在传递函数依赖和部分函数依赖，所以 $\in BCNF$，因此也$\in 3NF$。</strong></p>
+</li>
+<li><p>学生——接收消息</p>
+<p>receiveMessage({<u>message</u>, student}, D, DOM, F)</p>
+<p>D &#x3D; {N}</p>
+<p>DOM &#x3D; {DOM(student) &#x3D; DOM(message) &#x3D; N}</p>
+<p><em>外码</em>：student 对应学⽣表的主码 student.id, message 对应消息表的主码 message.id</p>
+<p><strong>F &#x3D; {message $\to$ student}</strong></p>
+<p><strong>函数依赖左端仅包含主码，不存在传递函数依赖和部分函数依赖，所以 $\in BCNF$，因此也$\in 3NF$。</strong></p>
+</li>
+<li><p>学生——接收公告</p>
+<p>receiveBroadcast({<u>message</u>, student}, D, DOM, F)</p>
+<p>D &#x3D; {N}</p>
+<p>DOM &#x3D; {DOM(student) &#x3D; DOM(broadcast) &#x3D; N}</p>
+<p><em>外码</em>：student 对应学⽣表的主码 student.id, broadcast 对应公告表的主码 broadcast.id</p>
+<p><strong>F &#x3D; {broadcast $\to$ student}</strong></p>
+<p><strong>函数依赖左端仅包含主码，不存在传递函数依赖和部分函数依赖，所以 $\in BCNF$，因此也$\in 3NF$。</strong></p>
+</li>
+<li><p>教师——发布公告</p>
+<p>publishBroadcast({<u>message</u>, teacher}, D, DOM, F)</p>
+<p>D &#x3D; {N}</p>
+<p>DOM &#x3D; {DOM(teacher) &#x3D; DOM(broadcast) &#x3D; N}</p>
+<p><em>外码</em>：teacher 对应教师表的主码 teacher.id, broadcast 对应公告表的主码 broadcast.id</p>
+<p><strong>F &#x3D; {broadcast $\to$ teacher}</strong></p>
+<p><strong>函数依赖左端仅包含主码，不存在传递函数依赖和部分函数依赖，所以 $\in BCNF$，因此也$\in 3NF$。</strong></p>
+</li>
+<li><p>教师——题库</p>
+<p>teacherQuestionbank({<u>questionbank</u>, teacher}, D, DOM, F)</p>
+<p>D &#x3D; {N}</p>
+<p>DOM &#x3D; {DOM(teacher) &#x3D; DOM(questionbank) &#x3D; N}</p>
+<p><em>外码</em>：teacher 对应教师表的主码 teacher.id, questionbank 对应题库表的主码 questionbank.id</p>
+<p><strong>F &#x3D; {questionbank $\to$ teacher}</strong></p>
+<p><strong>函数依赖左端仅包含主码，不存在传递函数依赖和部分函数依赖，所以 $\in BCNF$，因此也$\in 3NF$。</strong></p>
+</li>
+<li><p>教师——题目</p>
+<p>teacherQuestion({<u>question</u>, teacher}, D, DOM, F)</p>
+<p>D &#x3D; {N}</p>
+<p>DOM &#x3D; {DOM(teacher) &#x3D; DOM(question) &#x3D; N}</p>
+<p><em>外码</em>：teacher 对应教师表的主码 teacher.id, question 对应题库表的主码 question.id</p>
+<p><strong>F &#x3D; {question $\to$ teacher}</strong></p>
+<p><strong>函数依赖左端仅包含主码，不存在传递函数依赖和部分函数依赖，所以 $\in BCNF$，因此也$\in 3NF$。</strong></p>
+</li>
+<li><p>教师——考试</p>
+<p>teacherExam({<u>exam</u>, teacher}, D, DOM, F)</p>
+<p>D &#x3D; {N}</p>
+<p>DOM &#x3D; {DOM(teacher) &#x3D; DOM(exam) &#x3D; N}</p>
+<p><em>外码</em>：teacher 对应教师表的主码 teacher.id, exam 对应考试表的主码 exam.id</p>
+<p><strong>F &#x3D; {exam $\to$ teacher}</strong></p>
+<p><strong>函数依赖左端仅包含主码，不存在传递函数依赖和部分函数依赖，所以 $\in BCNF$，因此也$\in 3NF$。</strong></p>
+</li>
+<li><p>学生——讨论</p>
+<p>studentDiscussion({<u>discussion</u>, student}, D, DOM, F)</p>
+<p>D &#x3D; {N}</p>
+<p>DOM &#x3D; {DOM(student) &#x3D; DOM(discussion) &#x3D; N}</p>
+<p><em>外码</em>：student 对应学⽣表的主码 student.id, discussion对应讨论表的主码 discussion.id</p>
+<p><strong>F &#x3D; {discussion $\to$ student}</strong></p>
+<p><strong>函数依赖左端仅包含主码，不存在传递函数依赖和部分函数依赖，所以 $\in BCNF$，因此也$\in 3NF$。</strong></p>
+</li>
+<li><p>学生——回复</p>
+<p>studentReply({<u>reply</u>, student}, D, DOM, F)</p>
+<p>D &#x3D; {N}</p>
+<p>DOM &#x3D; {DOM(student) &#x3D; DOM(reply) &#x3D; N}</p>
+<p><em>外码</em>：student 对应学⽣表的主码 student.id, reply对应回复表的主码 reply.id</p>
+<p><strong>F &#x3D; {reply $\to$ student}</strong></p>
+<p><strong>函数依赖左端仅包含主码，不存在传递函数依赖和部分函数依赖，所以 $\in BCNF$，因此也$\in 3NF$。</strong></p>
+</li>
+<li><p>讨论帖——回复</p>
+<p>discussionReply({<u>reply</u>, discussion}, D, DOM, F)    </p>
+<p>D &#x3D; {N}</p>
+<p>DOM &#x3D; {DOM(reply) &#x3D; DOM(discussion) &#x3D; N}</p>
+<p><em>外码</em>：discussion对应讨论表的主码 discussion.id, reply对应回复表的主码 reply.id</p>
+<p><strong>F &#x3D; {reply $\to$ discussion}</strong></p>
+<p><strong>函数依赖左端仅包含主码，不存在传递函数依赖和部分函数依赖，所以 $\in BCNF$，因此也$\in 3NF$。</strong></p>
+</li>
+</ol>
+<h3 id="3-3-数据库关系模式优化"><a href="#3-3-数据库关系模式优化" class="headerlink" title="3.3 数据库关系模式优化"></a>3.3 <strong>数据库关系模式优化</strong></h3><h4 id="3-3-1-使⽤外键"><a href="#3-3-1-使⽤外键" class="headerlink" title="3.3.1 使⽤外键"></a><strong>3.3.1</strong> 使⽤外键</h4><p>使⽤外键来保证数据的关联性并提⾼访问速度，同时在使⽤过程中保证数据的参照完整性。在本项⽬的后端数据库中，各表具有完备的外键联系，通过遵循这种外键关系进⾏实际数据库的建⽴，将从逻辑的⻆度保证数据库的设计功能能够完全正确执⾏到位。</p>
+<h4 id="3-3-2-优化查询语句"><a href="#3-3-2-优化查询语句" class="headerlink" title="3.3.2 优化查询语句"></a><strong>3.3.2</strong> 优化查询语句</h4><p>可以优化的地⽅有如下⼏点：</p>
+<ul>
+<li>能使⽤联表查询的地⽅尽可能使⽤联表查询⽐较⾼效</li>
+<li>尽可能不将查询语句放在循环内</li>
+<li>使⽤高效的 ORM 框架</li>
+</ul>
+<h4 id="3-3-3-合并相同主码的表"><a href="#3-3-3-合并相同主码的表" class="headerlink" title="3.3.3 合并相同主码的表"></a><strong>3.3.3</strong> 合并相同主码的表</h4><p>对于主码相同的表，可以在设计的时候将其合并，例如将<strong>题目创建表和题目表</strong>合并，直接将<strong>题目的上传者和上传时间存⼊题目表</strong>，这样做的好处是在同时需要查询两个表中的数据时，减少了⼀次连接操作，提⾼效率。</p>
+<h4 id="3-3-4-严格约束加⼊数据库的数据"><a href="#3-3-4-严格约束加⼊数据库的数据" class="headerlink" title="3.3.4 严格约束加⼊数据库的数据"></a><strong>3.3.4</strong> 严格约束加⼊数据库的数据</h4><p>通过建表时添加约束、⽤触发器实现约束等⽅法，严格约束对数据库的增删操作，避免将异常数据插⼊数据表。</p>
+<p>建表时可以添加的约束有<strong>主键约束、UNIQUE 约束、外码约束</strong>等。</p>
+<h2 id="四、数据库物理设计"><a href="#四、数据库物理设计" class="headerlink" title="四、数据库物理设计"></a><strong>四、数据库物理设计</strong></h2><h3 id="4-1-存取方法"><a href="#4-1-存取方法" class="headerlink" title="4.1 存取方法"></a>4.1 存取方法</h3><h4 id="存储引擎："><a href="#存储引擎：" class="headerlink" title="存储引擎："></a><strong>存储引擎</strong>：</h4><ul>
+<li>选择支持事务和索引优化的存储引擎——支持MySQL 的 <strong>GAUSSDB</strong>。</li>
+<li><strong>理由</strong>：<strong>GAUSSDB</strong>支持事务和外键约束，可以确保数据一致性，同时<code>MySQL</code>针对复杂查询性能较优。</li>
+</ul>
+<h4 id="分区策略："><a href="#分区策略：" class="headerlink" title="分区策略："></a><strong>分区策略</strong>：</h4><ul>
+<li>垂直分区<ul>
+<li>将核心表（如 <code>User</code>、<code>Question</code> 和 <code>QuestionBank</code>）与非核心表（如 <code>QuestionComment</code> 和 <code>QuestionDiscussion</code>）分开存储。</li>
+<li><strong>理由</strong>：核心表频繁被查询，可以优化存储和查询效率；非核心表如评论和讨论，属于高并发写入的表，可独立优化。</li>
+</ul>
+</li>
+<li>水平分区<ul>
+<li>针对大数据量表（如 <code>Question</code> 和 <code>UserQuestionRecord</code>），根据字段（如 <code>added_by</code> 或 <code>user_id</code>）进行分片。</li>
+<li><strong>理由</strong>：便于高并发环境下的数据分布和扩展性。</li>
+</ul>
+</li>
+</ul>
+<h4 id="数据类型选择："><a href="#数据类型选择：" class="headerlink" title="数据类型选择："></a><strong>数据类型选择</strong>：</h4><ul>
+<li>使用合适的数据类型，如 <code>INTEGER</code>、<code>VARCHAR</code>、<code>DATE</code> 等。</li>
+<li>对于 JSON 格式数据（如 <code>tags</code>），选择利用字符串存储。</li>
+</ul>
+<h3 id="4-2-索引定义"><a href="#4-2-索引定义" class="headerlink" title="4.2 索引定义"></a>4.2 索引定义</h3><p>为提高查询效率，我们设计索引如下：</p>
+<h4 id="1-User-表"><a href="#1-User-表" class="headerlink" title="1. User 表"></a>1. <strong><code>User</code> 表</strong></h4><ul>
+<li>主键索引：<code>id</code>（自动创建）</li>
+<li>唯一索引：<code>student_id</code><ul>
+<li><strong>优点</strong>：学生学号唯一，且常用于查询，加快查询速度</li>
+</ul>
+</li>
+<li>索引：<code>user_role</code><ul>
+<li><strong>优点</strong>：辅导师角色（<code>user_role = 1</code>）在权限检查中频繁使用，加快查询速度</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-Question-表"><a href="#2-Question-表" class="headerlink" title="2. Question 表"></a>2. <strong><code>Question</code> 表</strong></h4><ul>
+<li><p>主键索引：<code>id</code>（自动创建）</p>
+</li>
+<li><p>索引：<code>added_by</code></p>
+<ul>
+<li><strong>优点</strong>：便于根据创建者快速查询</li>
+</ul>
+</li>
+<li><p>索引：<code>type和 subject</code></p>
+<ul>
+<li><strong>优点</strong>：按题目类型和科目分类查询时提升效率</li>
+</ul>
+</li>
+<li><p>索引：<code>added_at</code></p>
+<ul>
+<li><strong>优点</strong>：时间排序查询优化</li>
+</ul>
+</li>
+<li><p>索引：<code>tags</code></p>
+<ul>
+<li><strong>优点</strong>：支持基于关键词的搜索（如 <code>工科数学分析</code>）</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-QuestionBank-表"><a href="#3-QuestionBank-表" class="headerlink" title="3. QuestionBank 表"></a>3. <strong><code>QuestionBank</code> 表</strong></h4><ul>
+<li><p>主键索引：<code>id</code>（自动创建）</p>
+</li>
+<li><p>索引：<code>subject</code></p>
+<ul>
+<li><strong>优点</strong>：按学科分类查询优化</li>
+</ul>
+</li>
+<li><p>索引：<code>creator</code></p>
+<ul>
+<li><strong>优点</strong>：便于按创建者筛选</li>
+</ul>
+</li>
+</ul>
+<h4 id="4-QuestionDiscussion-表"><a href="#4-QuestionDiscussion-表" class="headerlink" title="4. QuestionDiscussion 表"></a>4. <strong><code>QuestionDiscussion</code> 表</strong></h4><ul>
+<li><p>主键索引：<code>id</code>（自动创建）</p>
+</li>
+<li><p>索引：<code>question_id</code></p>
+<ul>
+<li><strong>优点</strong>：按题目快速查询讨论区。</li>
+</ul>
+</li>
+<li><p>索引：<code>created_by</code></p>
+<ul>
+<li><strong>优点</strong>：便于按创建者筛选讨论。</li>
+</ul>
+</li>
+</ul>
+<h4 id="5-QuestionComment-表"><a href="#5-QuestionComment-表" class="headerlink" title="5. QuestionComment 表"></a>5. <strong><code>QuestionComment</code> 表</strong></h4><ul>
+<li><p>主键索引：<code>id</code>（自动创建）</p>
+</li>
+<li><p>索引：<code>discussion_id</code></p>
+<ul>
+<li><strong>优点</strong>：便于按讨论区快速查询评论</li>
+</ul>
+</li>
+<li><p>索引：<code>created_by</code></p>
+<ul>
+<li><strong>优点</strong>：便于按创建者筛选评论</li>
+</ul>
+</li>
+</ul>
+<h4 id="6-UserQuestionRecord-表"><a href="#6-UserQuestionRecord-表" class="headerlink" title="6. UserQuestionRecord 表"></a>6. <strong><code>UserQuestionRecord</code> 表</strong></h4><ul>
+<li><p>主键索引：<code>id</code>（自动创建）</p>
+</li>
+<li><p>唯一复合索引：<code>(user_id, question_id)</code></p>
+<ul>
+<li><strong>优点</strong>：确保每个用户对每道题目只有一个做题记录</li>
+</ul>
+</li>
+<li><p>索引：<code>user_id</code></p>
+<ul>
+<li><strong>优点</strong>：按用户快速筛选做题记录</li>
+</ul>
+</li>
+<li><p>索引：<code>question_id</code></p>
+<ul>
+<li><strong>优点</strong>：按题目快速筛选做题记录</li>
+</ul>
+</li>
+</ul>
+<h4 id="7-ExamRecordRecord-表"><a href="#7-ExamRecordRecord-表" class="headerlink" title="7. ExamRecordRecord 表"></a>7. <code>ExamRecordRecord</code> 表</h4><ul>
+<li><p>主键索引：<code>id</code>（自动创建）</p>
+</li>
+<li><p>唯一复合索引：<code>(student_id, question_id)</code></p>
+<ul>
+<li><strong>优点</strong>：确保每个用户对每道题目只有一个做题记录</li>
+</ul>
+</li>
+<li><p>索引：<code>student_id</code></p>
+<ul>
+<li><strong>优点</strong>：按用户快速筛选做题记录</li>
+</ul>
+</li>
+<li><p>索引：<code>question_id</code></p>
+<ul>
+<li><strong>优点</strong>：按题目快速筛选做题记录</li>
+</ul>
+</li>
+</ul>
+<h4 id="8-Discussion表"><a href="#8-Discussion表" class="headerlink" title="8. Discussion表"></a>8. <code>Discussion</code>表</h4><ul>
+<li><p>主键索引：<code>id</code>（自动创建）</p>
+</li>
+<li><p>索引：<code>publisher</code></p>
+<ul>
+<li><strong>优点</strong>：便于按创建者筛选讨论</li>
+</ul>
+</li>
+</ul>
+<h4 id="9-Reply表"><a href="#9-Reply表" class="headerlink" title="9. Reply表"></a>9. <code>Reply</code>表</h4><ul>
+<li><p>主键索引：<code>id</code>（自动创建）</p>
+</li>
+<li><p>索引：<code>publisher</code></p>
+<ul>
+<li><strong>优点</strong>：便于按创建者筛选讨论</li>
+</ul>
+</li>
+<li><p>索引：<code>discussion</code></p>
+<ul>
+<li><strong>优点</strong>：便于按讨论帖筛选回复</li>
+</ul>
+</li>
+</ul>
+<h4 id="10-Message表"><a href="#10-Message表" class="headerlink" title="10. Message表"></a>10. <code>Message</code>表</h4><ul>
+<li><p>主键索引：<code>id</code>（自动创建）</p>
+</li>
+<li><p>索引：<code>sender</code></p>
+<ul>
+<li><strong>优点</strong>：便于按发送者筛选消息</li>
+</ul>
+</li>
+<li><p>索引：<code>receiver</code></p>
+<ul>
+<li><strong>优点</strong>：便于按接收者筛选消息</li>
+</ul>
+</li>
+</ul>
+<h4 id="11-Broadcast表"><a href="#11-Broadcast表" class="headerlink" title="11. Broadcast表"></a>11. <code>Broadcast</code>表</h4><ul>
+<li><p>主键索引：<code>id</code>（自动创建）</p>
+</li>
+<li><p>索引：<code>sender</code></p>
+<ul>
+<li><strong>优点</strong>：便于按发布者筛选公告</li>
+</ul>
+</li>
+</ul>
+<h4 id="12-外键约束"><a href="#12-外键约束" class="headerlink" title="12. 外键约束"></a>12. <strong>外键约束</strong></h4><ul>
+<li>为外键字段自动创建索引：<ul>
+<li><code>QuestionBank.questions</code> $\to$ <code>Question.id</code></li>
+<li><code>QuestionDiscussion.question</code> $\to$ <code>Question.id</code></li>
+<li><code>QuestionComment.discussion</code> $\to$ <code>QuestionDiscussion.id</code></li>
+<li><code>UserQuestionRecord.question</code> $\to$ <code>Question.id</code></li>
+<li><code>UserQuestionRecord.user</code> $\to$ <code>User.id</code></li>
+</ul>
+</li>
+</ul>
+</div><div class="article-licensing box"><div class="licensing-title"><p>学海伴航——教辅平台系统设计文档</p><p><a href="https://rookie-zgy1513.github.io/2025/08/14/database/">https://rookie-zgy1513.github.io/2025/08/14/database/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>作者</h6><p>RooKie_Z</p></div></div><div class="level-item is-narrow"><div><h6>发布于</h6><p>2025-08-14</p></div></div><div class="level-item is-narrow"><div><h6>更新于</h6><p>2025-08-15</p></div></div><div class="level-item is-narrow"><div><h6>许可协议</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/database/">database</a></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2025/08/14/compiler/"><span class="level-item">RooKie_Z Compiler编译器设计文档</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card" id="comments"><div class="card-content"><h3 class="title is-5">评论</h3><div id="comment-container"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"><script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script><script>var gitalk = new Gitalk({
+            id: "b9a1438a1aea3fedb18886eb41c48dcb",
+            repo: "rookie-zgy1513.github.io",
+            owner: "rookie-zgy1513",
+            clientID: "Ov23li6vyFeMUxsyVjCc",
+            clientSecret: "28debacc0df80666a6064a7f00cdad1cb7ad9248",
+            admin: ["rookie-zgy1513"],
+            createIssueManually: false,
+            distractionFreeMode: false,
+            perPage: 10,
+            pagerDirection: "last",
+            
+            
+            enableHotKey: true,
+            
+        })
+        gitalk.render('comment-container')</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/avatar.png" alt="RooKie_Z"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">RooKie_Z</p><p class="is-size-6 is-block">RooKie_Z的小窝</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>BeiJing China</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives/"><p class="title">8</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories/"><p class="title">2</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags/"><p class="title">4</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/rookie-zgy1513" target="_blank" rel="me noopener">关注我</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Github" href="https://github.com/rookie-zgy1513"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Facebook" href="https://facebook.com"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Twitter" href="https://twitter.com"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Dribbble" href="https://dribbble.com"><i class="fab fa-dribbble"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="RSS" href="/"><i class="fas fa-rss"></i></a></div></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E4%B8%8A/"><span class="level-start"><span class="level-item">大三上课上</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8B%E8%AF%BE%E4%B8%8A/"><span class="level-start"><span class="level-item">大二下课上</span></span><span class="level-end"><span class="level-item tag">5</span></span></a></li></ul></div></div></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2025-08-14T15:46:07.000Z">2025-08-14</time></p><p class="title"><a href="/2025/08/14/database/">学海伴航——教辅平台系统设计文档</a></p><p class="categories"><a href="/categories/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E4%B8%8A/">大三上课上</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2025-08-14T13:06:06.000Z">2025-08-14</time></p><p class="title"><a href="/2025/08/14/compiler/">RooKie_Z Compiler编译器设计文档</a></p><p class="categories"><a href="/categories/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E4%B8%8A/">大三上课上</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2025-08-14T12:37:15.000Z">2025-08-14</time></p><p class="title"><a href="/2025/08/14/challenge-shell/">RooKie_Z challenge-shell实现报告</a></p><p class="categories"><a href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8B%E8%AF%BE%E4%B8%8A/">大二下课上</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2025-08-13T09:15:00.000Z">2025-08-13</time></p><p class="title"><a href="/2025/08/13/OO-4/">OO第四单元总结暨课程总结</a></p><p class="categories"><a href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8B%E8%AF%BE%E4%B8%8A/">大二下课上</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2025-08-13T09:13:00.000Z">2025-08-13</time></p><p class="title"><a href="/2025/08/13/OO-3/">OO第三单元总结</a></p><p class="categories"><a href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8B%E8%AF%BE%E4%B8%8A/">大二下课上</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">归档</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2025/08/"><span class="level-start"><span class="level-item">八月 2025</span></span><span class="level-end"><span class="level-item tag">8</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/OO/"><span class="tag">OO</span><span class="tag">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/OS/"><span class="tag">OS</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/compiler/"><span class="tag">compiler</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/database/"><span class="tag">database</span><span class="tag">1</span></a></div></div></div></div></div><div class="column-right-shadow is-hidden-widescreen is-sticky"></div></div><div class="column column-right is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only order-3 is-sticky"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="level is-mobile" href="#写在前面"><span class="level-left"><span class="level-item">1</span><span class="level-item">写在前面</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#系统实现报告"><span class="level-left"><span class="level-item">1.1</span><span class="level-item">系统实现报告</span></span></a></li></ul></li><li><a class="level is-mobile" href="#一、需求分析"><span class="level-left"><span class="level-item">2</span><span class="level-item">一、需求分析</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#1-1-需求描述"><span class="level-left"><span class="level-item">2.1</span><span class="level-item">1.1 需求描述</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#1-1-1-背景调研"><span class="level-left"><span class="level-item">2.1.1</span><span class="level-item">1.1.1 背景调研</span></span></a></li><li><a class="level is-mobile" href="#1-1-2-用户调研"><span class="level-left"><span class="level-item">2.1.2</span><span class="level-item">1.1.2 用户调研</span></span></a></li><li><a class="level is-mobile" href="#1-1-3-需求总结"><span class="level-left"><span class="level-item">2.1.3</span><span class="level-item">1.1.3 需求总结</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#对于需要获取学业帮扶的学生"><span class="level-left"><span class="level-item">2.1.3.1</span><span class="level-item">对于需要获取学业帮扶的学生</span></span></a></li><li><a class="level is-mobile" href="#对于辅导师"><span class="level-left"><span class="level-item">2.1.3.2</span><span class="level-item">对于辅导师</span></span></a></li><li><a class="level is-mobile" href="#对于学业支持中心-导员"><span class="level-left"><span class="level-item">2.1.3.3</span><span class="level-item">对于学业支持中心/导员</span></span></a></li></ul></li><li><a class="level is-mobile" href="#1-1-4-项目优势"><span class="level-left"><span class="level-item">2.1.4</span><span class="level-item">1.1.4 项目优势</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#从学生的角度"><span class="level-left"><span class="level-item">2.1.4.1</span><span class="level-item">从学生的角度</span></span></a></li><li><a class="level is-mobile" href="#从小导师角度"><span class="level-left"><span class="level-item">2.1.4.2</span><span class="level-item">从小导师角度</span></span></a></li><li><a class="level is-mobile" href="#从学院组织者角度"><span class="level-left"><span class="level-item">2.1.4.3</span><span class="level-item">从学院组织者角度</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#1-2-数据流图"><span class="level-left"><span class="level-item">2.2</span><span class="level-item">1.2 数据流图</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#1-2-1-总体数据流图"><span class="level-left"><span class="level-item">2.2.1</span><span class="level-item">1.2.1 总体数据流图</span></span></a></li><li><a class="level is-mobile" href="#1-2-2-用户管理部分数据流图"><span class="level-left"><span class="level-item">2.2.2</span><span class="level-item">1.2.2 用户管理部分数据流图</span></span></a></li><li><a class="level is-mobile" href="#1-2-3-消息公告部分数据流图"><span class="level-left"><span class="level-item">2.2.3</span><span class="level-item">1.2.3 消息公告部分数据流图</span></span></a></li><li><a class="level is-mobile" href="#1-2-4-题目题库部分数据流图"><span class="level-left"><span class="level-item">2.2.4</span><span class="level-item">1.2.4 题目题库部分数据流图</span></span></a></li><li><a class="level is-mobile" href="#1-2-5-模拟考试部分数据流图"><span class="level-left"><span class="level-item">2.2.5</span><span class="level-item">1.2.5 模拟考试部分数据流图</span></span></a></li><li><a class="level is-mobile" href="#1-2-6-讨论区部分数据流图"><span class="level-left"><span class="level-item">2.2.6</span><span class="level-item">1.2.6 讨论区部分数据流图</span></span></a></li><li><a class="level is-mobile" href="#1-2-7-用户主页部分数据流图"><span class="level-left"><span class="level-item">2.2.7</span><span class="level-item">1.2.7 用户主页部分数据流图</span></span></a></li></ul></li><li><a class="level is-mobile" href="#1-3-数据元素表"><span class="level-left"><span class="level-item">2.3</span><span class="level-item">1.3 数据元素表</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#1-3-1-用户管理部分"><span class="level-left"><span class="level-item">2.3.1</span><span class="level-item">1.3.1 用户管理部分</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#用户表"><span class="level-left"><span class="level-item">2.3.1.1</span><span class="level-item">用户表</span></span></a></li></ul></li><li><a class="level is-mobile" href="#1-3-2-消息部分"><span class="level-left"><span class="level-item">2.3.2</span><span class="level-item">1.3.2 消息部分</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#消息表"><span class="level-left"><span class="level-item">2.3.2.1</span><span class="level-item">消息表</span></span></a></li></ul></li><li><a class="level is-mobile" href="#1-3-3-公告部分"><span class="level-left"><span class="level-item">2.3.3</span><span class="level-item">1.3.3 公告部分</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#公告表"><span class="level-left"><span class="level-item">2.3.3.1</span><span class="level-item">公告表</span></span></a></li></ul></li><li><a class="level is-mobile" href="#1-3-4-题目部分"><span class="level-left"><span class="level-item">2.3.4</span><span class="level-item">1.3.4 题目部分</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#题目表"><span class="level-left"><span class="level-item">2.3.4.1</span><span class="level-item">题目表</span></span></a></li><li><a class="level is-mobile" href="#题库表"><span class="level-left"><span class="level-item">2.3.4.2</span><span class="level-item">题库表</span></span></a></li><li><a class="level is-mobile" href="#题目讨论区表"><span class="level-left"><span class="level-item">2.3.4.3</span><span class="level-item">题目讨论区表</span></span></a></li><li><a class="level is-mobile" href="#题目讨论区讨论表"><span class="level-left"><span class="level-item">2.3.4.4</span><span class="level-item">题目讨论区讨论表</span></span></a></li><li><a class="level is-mobile" href="#做题记录表"><span class="level-left"><span class="level-item">2.3.4.5</span><span class="level-item">做题记录表</span></span></a></li></ul></li><li><a class="level is-mobile" href="#1-3-5-模拟考试部分"><span class="level-left"><span class="level-item">2.3.5</span><span class="level-item">1.3.5 模拟考试部分</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#考试表"><span class="level-left"><span class="level-item">2.3.5.1</span><span class="level-item">考试表</span></span></a></li><li><a class="level is-mobile" href="#模拟考试作答表"><span class="level-left"><span class="level-item">2.3.5.2</span><span class="level-item">模拟考试作答表</span></span></a></li></ul></li><li><a class="level is-mobile" href="#1-3-6-讨论区部分"><span class="level-left"><span class="level-item">2.3.6</span><span class="level-item">1.3.6 讨论区部分</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#讨论帖表"><span class="level-left"><span class="level-item">2.3.6.1</span><span class="level-item">讨论帖表</span></span></a></li><li><a class="level is-mobile" href="#帖子回复表"><span class="level-left"><span class="level-item">2.3.6.2</span><span class="level-item">帖子回复表</span></span></a></li></ul></li></ul></li></ul></li><li><a class="level is-mobile" href="#⼆、数据库概念模式设计"><span class="level-left"><span class="level-item">3</span><span class="level-item">⼆、数据库概念模式设计</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#2-1-系统初步-ER-图"><span class="level-left"><span class="level-item">3.1</span><span class="level-item">2.1 系统初步 ER 图</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#2-1-1-实体-ER-图"><span class="level-left"><span class="level-item">3.1.1</span><span class="level-item">2.1.1 实体 ER 图</span></span></a></li><li><a class="level is-mobile" href="#2-1-2-关系-ER-图"><span class="level-left"><span class="level-item">3.1.2</span><span class="level-item">2.1.2 关系 ER 图</span></span></a></li></ul></li><li><a class="level is-mobile" href="#2-2-系统基本-ER-图"><span class="level-left"><span class="level-item">3.2</span><span class="level-item">2.2 系统基本 ER 图</span></span></a></li></ul></li><li><a class="level is-mobile" href="#三、数据库逻辑模式设计与优化"><span class="level-left"><span class="level-item">4</span><span class="level-item">三、数据库逻辑模式设计与优化</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#3-1-数据库关系模式"><span class="level-left"><span class="level-item">4.1</span><span class="level-item">3.1 数据库关系模式</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#3-1-1-实体"><span class="level-left"><span class="level-item">4.1.1</span><span class="level-item">3.1.1 实体</span></span></a></li><li><a class="level is-mobile" href="#3-1-2-联系"><span class="level-left"><span class="level-item">4.1.2</span><span class="level-item">3.1.2 联系</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#3-1-2-1-多对多联系"><span class="level-left"><span class="level-item">4.1.2.1</span><span class="level-item">3.1.2.1 多对多联系</span></span></a></li><li><a class="level is-mobile" href="#3-1-2-2-一对多联系"><span class="level-left"><span class="level-item">4.1.2.2</span><span class="level-item">3.1.2.2 一对多联系</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#3-2-关系模式范式等级的判定与规范"><span class="level-left"><span class="level-item">4.2</span><span class="level-item">3.2 关系模式范式等级的判定与规范</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#3-2-1-实体"><span class="level-left"><span class="level-item">4.2.1</span><span class="level-item">3.2.1 实体</span></span></a></li><li><a class="level is-mobile" href="#3-2-2-联系"><span class="level-left"><span class="level-item">4.2.2</span><span class="level-item">3.2.2 联系</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#3-2-2-1-多对多联系"><span class="level-left"><span class="level-item">4.2.2.1</span><span class="level-item">3.2.2.1 多对多联系</span></span></a></li><li><a class="level is-mobile" href="#3-2-2-2-⼀对多联系"><span class="level-left"><span class="level-item">4.2.2.2</span><span class="level-item">3.2.2.2 ⼀对多联系</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#3-3-数据库关系模式优化"><span class="level-left"><span class="level-item">4.3</span><span class="level-item">3.3 数据库关系模式优化</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#3-3-1-使⽤外键"><span class="level-left"><span class="level-item">4.3.1</span><span class="level-item">3.3.1 使⽤外键</span></span></a></li><li><a class="level is-mobile" href="#3-3-2-优化查询语句"><span class="level-left"><span class="level-item">4.3.2</span><span class="level-item">3.3.2 优化查询语句</span></span></a></li><li><a class="level is-mobile" href="#3-3-3-合并相同主码的表"><span class="level-left"><span class="level-item">4.3.3</span><span class="level-item">3.3.3 合并相同主码的表</span></span></a></li><li><a class="level is-mobile" href="#3-3-4-严格约束加⼊数据库的数据"><span class="level-left"><span class="level-item">4.3.4</span><span class="level-item">3.3.4 严格约束加⼊数据库的数据</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#四、数据库物理设计"><span class="level-left"><span class="level-item">5</span><span class="level-item">四、数据库物理设计</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#4-1-存取方法"><span class="level-left"><span class="level-item">5.1</span><span class="level-item">4.1 存取方法</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#存储引擎："><span class="level-left"><span class="level-item">5.1.1</span><span class="level-item">存储引擎：</span></span></a></li><li><a class="level is-mobile" href="#分区策略："><span class="level-left"><span class="level-item">5.1.2</span><span class="level-item">分区策略：</span></span></a></li><li><a class="level is-mobile" href="#数据类型选择："><span class="level-left"><span class="level-item">5.1.3</span><span class="level-item">数据类型选择：</span></span></a></li></ul></li><li><a class="level is-mobile" href="#4-2-索引定义"><span class="level-left"><span class="level-item">5.2</span><span class="level-item">4.2 索引定义</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#1-User-表"><span class="level-left"><span class="level-item">5.2.1</span><span class="level-item">1. User 表</span></span></a></li><li><a class="level is-mobile" href="#2-Question-表"><span class="level-left"><span class="level-item">5.2.2</span><span class="level-item">2. Question 表</span></span></a></li><li><a class="level is-mobile" href="#3-QuestionBank-表"><span class="level-left"><span class="level-item">5.2.3</span><span class="level-item">3. QuestionBank 表</span></span></a></li><li><a class="level is-mobile" href="#4-QuestionDiscussion-表"><span class="level-left"><span class="level-item">5.2.4</span><span class="level-item">4. QuestionDiscussion 表</span></span></a></li><li><a class="level is-mobile" href="#5-QuestionComment-表"><span class="level-left"><span class="level-item">5.2.5</span><span class="level-item">5. QuestionComment 表</span></span></a></li><li><a class="level is-mobile" href="#6-UserQuestionRecord-表"><span class="level-left"><span class="level-item">5.2.6</span><span class="level-item">6. UserQuestionRecord 表</span></span></a></li><li><a class="level is-mobile" href="#7-ExamRecordRecord-表"><span class="level-left"><span class="level-item">5.2.7</span><span class="level-item">7. ExamRecordRecord 表</span></span></a></li><li><a class="level is-mobile" href="#8-Discussion表"><span class="level-left"><span class="level-item">5.2.8</span><span class="level-item">8. Discussion表</span></span></a></li><li><a class="level is-mobile" href="#9-Reply表"><span class="level-left"><span class="level-item">5.2.9</span><span class="level-item">9. Reply表</span></span></a></li><li><a class="level is-mobile" href="#10-Message表"><span class="level-left"><span class="level-item">5.2.10</span><span class="level-item">10. Message表</span></span></a></li><li><a class="level is-mobile" href="#11-Broadcast表"><span class="level-left"><span class="level-item">5.2.11</span><span class="level-item">11. Broadcast表</span></span></a></li><li><a class="level is-mobile" href="#12-外键约束"><span class="level-left"><span class="level-item">5.2.12</span><span class="level-item">12. 外键约束</span></span></a></li></ul></li></ul></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.png" alt="RooKie_Z的小窝" height="28"></a><p class="is-size-7"><span>&copy; 2025 RooKie_Z</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p><p class="is-size-7">© 2025 RooKie_Z. All rights reserved.</p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/rookie-zgy1513"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-cn");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script data-pjax src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script data-pjax src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "此网站使用Cookie来改善您的体验。",
+          dismiss: "知道了！",
+          allow: "允许使用Cookie",
+          deny: "拒绝",
+          link: "了解更多",
+          policy: "Cookie政策",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script type="text/javascript" id="MathJax-script" async>MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+        fontCache: 'global'
+      },
+      chtml: {
+        matchFontHeight: false
+      }
+    };</script><script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script src="/js/pjax.js"></script><!--!--><!--!--><!--!--><script data-pjax src="/js/main.js" defer></script><script src="/js/night.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script data-pjax src="/js/insight.js" defer></script><script data-pjax>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
