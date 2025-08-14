@@ -100,3 +100,115 @@
     color: white;
     text-decoration: none;
 }
+
+/* 文章底部标签和分类样式 */
+.article-tags,
+.article-categories {
+    margin: 20px 0;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #007bff;
+}
+
+.article-tags h4,
+.article-categories h4 {
+    margin: 0 0 10px 0;
+    color: #495057;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.article-tags .tag,
+.article-categories .category {
+    display: inline-block;
+    background: #007bff;
+    color: white;
+    padding: 4px 12px;
+    margin: 2px 4px 2px 0;
+    border-radius: 20px;
+    font-size: 12px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.article-tags .tag:hover,
+.article-categories .category:hover {
+    background: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.article-categories .category {
+    background: #28a745;
+}
+
+.article-categories .category:hover {
+    background: #1e7e34;
+}
+
+/* 文章元信息样式 */
+.article-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin: 20px 0;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.article-meta .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.article-meta .meta-item i {
+    color: #007bff;
+    width: 16px;
+}
+
+/* Giscus评论系统样式 */
+#giscus-comments {
+    margin-top: 40px;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border: 1px solid #eaecef;
+}
+
+#giscus-comments h3 {
+    margin: 0 0 20px 0;
+    color: #24292e;
+    font-size: 20px;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* 评论加载状态 */
+.giscus-loading {
+    text-align: center;
+    padding: 40px;
+    color: #6a737d;
+}
+
+.giscus-loading::before {
+    content: "🔄 正在加载评论...";
+    font-size: 16px;
+}
+
+/* 评论区域响应式设计 */
+@media (max-width: 768px) {
+    #giscus-comments {
+        margin: 20px 10px;
+        padding: 15px;
+    }
+    
+    #giscus-comments h3 {
+        font-size: 18px;
+    }
+}
