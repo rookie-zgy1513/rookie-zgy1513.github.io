@@ -340,3 +340,94 @@ blockquote p:first-child {
         font-size: 12px;
     }
 }
+
+/* MathJax 样式优化 */
+.MathJax_Display {
+    text-align: center !important;
+    margin: 1em auto !important;
+}
+
+.MathJax {
+    outline: none;
+}
+
+/* 行内公式样式 */
+.MathJax_Display .MathJax {
+    text-align: center !important;
+}
+
+/* 块级公式容器 */
+.MathJax_Display {
+    display: block !important;
+    text-align: center !important;
+    margin: 1em auto !important;
+}
+
+/* 确保公式不被截断 */
+.MathJax_Display .MathJax {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .MathJax_Display {
+        margin: 0.5em auto !important;
+    }
+}
+
+mjx-container[display="true"] {
+    display: block !important;
+    text-align: center !important;
+    margin: 1em auto !important;
+  }
+  
+mjx-container[display="false"] {
+    display: inline-block !important;
+}
+
+/* 列表页/首页摘要中的警告框覆盖 */
+article.media .media-content .content blockquote,
+.article-excerpt .content blockquote {
+  background: rgba(2, 215, 242, 0.15) !important;   /* 蓝色半透明背景，符合 cyberpunk */
+  border: .5px solid #02d7f2 !important;
+  border-left: 5px solid #02d7f2 !important;
+}
+
+/* 文字颜色提亮，避免被通用文字色覆盖 */
+article.media .media-content .content blockquote,
+article.media .media-content .content blockquote p,
+article.media .media-content .content blockquote * ,
+.article-excerpt .content blockquote,
+.article-excerpt .content blockquote p,
+.article-excerpt .content blockquote * {
+  color: #ffffff !important;
+  font-weight: 500 !important;
+  text-shadow: 0 0 2px rgba(0,0,0,.6) !important;
+}
+
+/* 分类型：IMPORTANT / CAUTION / NOTE */
+article.media .media-content .content blockquote[data-callout="important"],
+.article-excerpt .content blockquote[data-callout="important"] {
+  background: rgba(149,97,210,.22) !important;      /* 紫色半透明 */
+  border-left-color: #02d7f2 !important;
+}
+
+article.media .media-content .content blockquote[data-callout="caution"],
+.article-excerpt .content blockquote[data-callout="caution"] {
+  background: rgba(255,142,60,.22) !important;      /* 橙色半透明 */
+  border-left-color: #ff8e3c !important;
+}
+
+article.media .media-content .content blockquote[data-callout="note"],
+.article-excerpt .content blockquote[data-callout="note"] {
+  background: rgba(2,215,242,.20) !important;       /* 蓝色半透明 */
+  border-left-color: #02d7f2 !important;
+}
+
+/* 标题行（::before）提亮 */
+article.media .media-content .content blockquote[data-callout]::before,
+.article-excerpt .content blockquote[data-callout]::before {
+  color: #02d7f2 !important;
+  text-shadow: 0 0 4px rgba(2,215,242,.6) !important;
+}
