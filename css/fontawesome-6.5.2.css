@@ -1,0 +1,16 @@
+/* FontAwesome 6.5.2 CDN */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css');
+
+/* 确保 FontAwesome 6.5.2 优先级最高 */
+.fab.fa-x::before {
+    content: "\f1e3" !important;
+}
+
+.fab.fa-x-twitter::before {
+    content: "\f1e3" !important;
+}
+
+/* 覆盖主题默认的 FontAwesome 版本 */
+.fab.fa-twitter::before {
+    content: "\f099" !important;
+}
