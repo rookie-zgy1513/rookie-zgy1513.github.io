@@ -228,7 +228,7 @@ blockquote {
 blockquote[data-callout="important"],
 blockquote:has(> p:first-child:contains("[!IMPORTANT]")) {
     border-left-color: #7835dc;
-    background: rgb(238, 223, 243);
+    background: rgb(242, 241, 251);
     border-left-width: 6px;
 }
 
