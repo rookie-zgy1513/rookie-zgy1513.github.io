@@ -86,7 +86,7 @@
                                 <h3 style="margin: 0 0 20px 0; color: #24292e; font-size: 20px; font-weight: 600; text-align: center;">
                                     💬 评论
                                 </h3>
-                                <div style="text-align: center; padding: 40px; color: #dc3545;">
+                                <div style="text-align: center; padding: 40px; color: #7835dc;">
                                     ❌ 评论系统加载失败，请刷新页面重试
                                 </div>
                             `;
@@ -100,7 +100,7 @@
                             <h3 style="margin: 0 0 20px 0; color: #24292e; font-size: 20px; font-weight: 600; text-align: center;">
                                 💬 评论
                             </h3>
-                            <div style="text-align: center; padding: 40px; color: #dc3545;">
+                            <div style="text-align: center; padding: 40px; color: #7835dc;">
                                 ❌ 评论系统加载失败: ${error.message}
                             </div>
                         `;

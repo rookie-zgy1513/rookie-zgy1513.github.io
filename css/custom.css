@@ -12,7 +12,7 @@
 }
 
 .text-red {
-    color: #dc3545 !important;
+    color: #7835dc !important;
 }
 
 .text-orange {
@@ -55,7 +55,7 @@
 
 /* 错误文本 */
 .text-danger {
-    color: #dc3545;
+    color: #7835dc;
     font-weight: bold;
 }
 
@@ -210,5 +210,133 @@
     
     #giscus-comments h3 {
         font-size: 18px;
+    }
+}
+
+/* Callout 警告框样式 */
+blockquote {
+    position: relative;
+    margin: 20px 0;
+    padding: 16px 20px;
+    border-left: 4px solid #007bff;
+    background: #f8f9fa;
+    border-radius: 0 6px 6px 0;
+    font-style: normal;
+}
+
+/* IMPORTANT 警告框 */
+blockquote[data-callout="important"],
+blockquote:has(> p:first-child:contains("[!IMPORTANT]")) {
+    border-left-color: #7835dc;
+    background: rgb(238, 223, 243);
+    border-left-width: 6px;
+}
+
+blockquote[data-callout="important"]::before,
+blockquote:has(> p:first-child:contains("[!IMPORTANT]"))::before {
+    content: "💬 重要";
+    display: block;
+    font-weight: bold;
+    color: #7835dc;
+    margin-bottom: 8px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* CAUTION 警告框 */
+blockquote[data-callout="caution"],
+blockquote:has(> p:first-child:contains("[!CAUTION]")) {
+    border-left-color: #ffc107;
+    background: #fffbf0;
+    border-left-width: 6px;
+}
+
+blockquote[data-callout="caution"]::before,
+blockquote:has(> p:first-child:contains("[!CAUTION]"))::before {
+    content: "⚠️ 注意";
+    display: block;
+    font-weight: bold;
+    color: #b8860b;
+    margin-bottom: 8px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* NOTE 提示框 */
+blockquote[data-callout="note"],
+blockquote:has(> p:first-child:contains("[!NOTE]")) {
+    border-left-color: #17a2b8;
+    background: #f0f9ff;
+    border-left-width: 6px;
+}
+
+blockquote[data-callout="note"]::before,
+blockquote:has(> p:first-child:contains("[!NOTE]"))::before {
+    content: "ℹ️ 提示";
+    display: block;
+    font-weight: bold;
+    color: #17a2b8;
+    margin-bottom: 8px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* SUCCESS 成功框 */
+blockquote[data-callout="success"],
+blockquote:has(> p:first-child:contains("[!SUCCESS]")) {
+    border-left-color: #28a745;
+    background: #f0fff4;
+    border-left-width: 6px;
+}
+
+blockquote[data-callout="success"]::before,
+blockquote:has(> p:first-child:contains("[!SUCCESS]"))::before {
+    content: "✅ 成功";
+    display: block;
+    font-weight: bold;
+    color: #28a745;
+    margin-bottom: 8px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* WARNING 警告框 */
+blockquote[data-callout="warning"],
+blockquote:has(> p:first-child:contains("[!WARNING]")) {
+    border-left-color: #fd7e14;
+    background: #fff8f0;
+    border-left-width: 6px;
+}
+
+blockquote[data-callout="warning"]::before,
+blockquote:has(> p:first-child:contains("[!WARNING]"))::before {
+    content: "🚨 警告";
+    display: block;
+    font-weight: bold;
+    color: #fd7e14;
+    margin-bottom: 8px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* 移除第一个段落的 [!TYPE] 标记 */
+blockquote p:first-child {
+    margin-top: 0;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    blockquote {
+        margin: 15px 10px;
+        padding: 12px 16px;
+    }
+    
+    blockquote::before {
+        font-size: 12px;
     }
 }
