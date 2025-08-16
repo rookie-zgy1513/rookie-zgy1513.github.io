@@ -1,0 +1,883 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><meta rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css"><title>RooKie_Z P4 Verilog单周期CPU设计文档 - RooKie_Z的小窝</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="RooKie_Z的小窝"><meta name="msapplication-TileImage" content="/img/favicon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="RooKie_Z的小窝"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="&amp;#x2F;* 常用颜色类 *&amp;#x2F; .text-cadetblue { color: CadetBlue !important; } .text-blue { color: #007bff !important; } .text-green { color: #28a745 !important; } .text-red { color: #DC143C !important; } .text-orange"><meta property="og:type" content="blog"><meta property="og:title" content="RooKie_Z P4 Verilog单周期CPU设计文档"><meta property="og:url" content="https://rookie-zgy1513.github.io/2025/08/10/P4-CPU/"><meta property="og:site_name" content="RooKie_Z的小窝"><meta property="og:description" content="&amp;#x2F;* 常用颜色类 *&amp;#x2F; .text-cadetblue { color: CadetBlue !important; } .text-blue { color: #007bff !important; } .text-green { color: #28a745 !important; } .text-red { color: #DC143C !important; } .text-orange"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://rookie-zgy1513.github.io/images/P4_CPU.png"><meta property="article:published_time" content="2025-08-10T03:14:18.000Z"><meta property="article:modified_time" content="2025-08-16T03:43:33.352Z"><meta property="article:author" content="RooKie_Z"><meta property="article:tag" content="CO"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://rookie-zgy1513.github.io/images/P4_CPU.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://rookie-zgy1513.github.io/2025/08/10/P4-CPU/"},"headline":"RooKie_Z P4 Verilog单周期CPU设计文档","image":["https://rookie-zgy1513.github.io/images/P4_CPU.png"],"datePublished":"2025-08-10T03:14:18.000Z","dateModified":"2025-08-16T03:43:33.352Z","author":{"@type":"Person","name":"RooKie_Z"},"publisher":{"@type":"Organization","name":"RooKie_Z的小窝","logo":{"@type":"ImageObject","url":"https://rookie-zgy1513.github.io/img/logo.png"}},"description":"&#x2F;* 常用颜色类 *&#x2F; .text-cadetblue { color: CadetBlue !important; } .text-blue { color: #007bff !important; } .text-green { color: #28a745 !important; } .text-red { color: #DC143C !important; } .text-orange"}</script><link rel="canonical" href="https://rookie-zgy1513.github.io/2025/08/10/P4-CPU/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link data-pjax rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/night-owl.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link data-pjax rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const id = '#' + CSS.escape(location.hash.substring(1));
+          const $tabMenu = document.querySelector(`.tabs a[href="${id}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(id);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.png" alt="RooKie_Z的小窝" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">主页</a><a class="navbar-item" href="/archives">归档</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/tags">标签</a><a class="navbar-item" href="/about">关于</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/rookie-zgy1513"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a><a class="navbar-item night" id="night-nav" title="Night Mode" href="javascript:;"><i class="fas fa-lightbulb" id="night-icon"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="fill" src="/images/P4_CPU.png" alt="RooKie_Z P4 Verilog单周期CPU设计文档"></span></div><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2025-08-10T03:14:18.000Z" title="2025/8/10 11:14:18">2025-08-10</time>发表</span><span class="level-item"><time dateTime="2025-08-16T03:43:33.352Z" title="2025/8/16 11:43:33">2025-08-16</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8A%E8%AF%BE%E4%B8%8A/">大二上课上</a><span> / </span><a class="link-muted" href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8A%E8%AF%BE%E4%B8%8A/CO%E5%AE%9E%E9%AA%8C/">CO实验</a></span><span class="level-item">39 分钟读完 (大约5906个字)</span></div></div><h1 class="title is-3 is-size-4-mobile">RooKie_Z P4 Verilog单周期CPU设计文档</h1><div class="content"><style>
+/* 常用颜色类 */
+.text-cadetblue { color: CadetBlue !important; }
+.text-blue { color: #007bff !important; }
+.text-green { color: #28a745 !important; }
+.text-red { color: #DC143C !important; }
+.text-orange { color: #fd7e14 !important; }
+.text-purple { color: #6f42c1 !important; }
+
+.text-emphasis { color: #007bff; font-weight: bold; }
+.text-warning { color: #ffc107; font-weight: bold; }
+.text-success { color: #28a745; font-weight: bold; }
+.text-danger { color: #7835dc; font-weight: bold; }
+
+/* 警告框样式 */
+blockquote {
+    position: relative;
+    margin: 20px 0;
+    padding: 16px 20px;
+    border-left: 4px solid #007bff;
+    background: #f8f9fa;
+    border-radius: 0 6px 6px 0;
+    font-style: normal;
+}
+
+blockquote[data-callout="important"] {
+    border-left-color: #7835dc;
+    background: rgb(242, 241, 251);
+    border-left-width: 6px;
+}
+
+blockquote[data-callout="important"]::before {
+    content: "💬 重要";
+    display: block;
+    font-weight: bold;
+    color: #7835dc;
+    margin-bottom: 8px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+blockquote[data-callout="caution"] {
+    border-left-color: #ffc107;
+    background: #fffbf0;
+    border-left-width: 6px;
+}
+
+blockquote[data-callout="caution"]::before {
+    content: "⚠️ 注意";
+    display: block;
+    font-weight: bold;
+    color: #b8860b;
+    margin-bottom: 8px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+blockquote[data-callout="note"] {
+    border-left-color: #17a2b8;
+    background: #f0f9ff;
+    border-left-width: 6px;
+}
+
+blockquote[data-callout="note"]::before {
+    content: "ℹ️ 提示";
+    display: block;
+    font-weight: bold;
+    color: #17a2b8;
+    margin-bottom: 8px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+</style>
+
+<script>
+// 处理警告框
+document.addEventListener('DOMContentLoaded', function() {
+    const blockquotes = document.querySelectorAll('blockquote');
+    blockquotes.forEach(function(blockquote) {
+        const firstParagraph = blockquote.querySelector('p:first-child');
+        if (firstParagraph) {
+            const text = firstParagraph.textContent;
+            const calloutMatch = text.match(/\[!(IMPORTANT|CAUTION|NOTE)\]/i);
+
+            if (calloutMatch) {
+                const calloutType = calloutMatch[1].toLowerCase();
+                blockquote.setAttribute('data-callout', calloutType);
+                
+                // 移除标记文本
+                const cleanText = text.replace(/\[![^\]]+\]\s*/, '');
+                firstParagraph.textContent = cleanText;
+            }
+        }
+    });
+});
+</script>
+
+<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>这是RooKie_Z的P4单周期CPU设计文档，在课上测试中本CPU取得了 <strong><span class="text-cadetblue">满分💯的成绩。</span></strong></p>
+<h2 id="总体设计概述"><a href="#总体设计概述" class="headerlink" title="总体设计概述"></a>总体设计概述</h2><p>本次要求实现的指令集为 <strong><code>add, sub, ori, lw, sw, beq, lui, jal, jr, nop</code></strong>，要求与P3相似，考虑到我P3已经实现了这些指令，并且<strong>经过课上测试</strong>，感觉CPU<strong>总体架构</strong>与<strong>模块化</strong>较为清晰完备，故本次<strong>暂不重构</strong>，<strong>直接翻译Logisim电路</strong>。</p>
+<p>同样的，与P3类似本次依然做好了实现 <strong><code>各类branch,jump,link指令和诸如lb,lbu,lh,lhu,sb,sh等指令的工作</code></strong>，以备不时之需，<del>但相较<strong>Logisim</strong>，显然<strong>Verilog</strong>里面的指令可以更加花哨，这时就比较考验写组合逻辑电路的手法了</del>。</p>
+<span id="more"></span>
+
+<hr>
+<p>整体架构仍与与肖利民老师课件中的图类似</p>
+<p><img src="/2025/08/10/P4-CPU/image-20250816110925752.png"></p>
+<hr>
+<p>用<strong>ISE</strong>完成后整体文件树形图如下</p>
+<p><img src="/2025/08/10/P4-CPU/%E6%96%87%E4%BB%B6%E6%A0%91%E5%BD%A2%E5%9B%BE.png"></p>
+<p>仿真模板如下</p>
+<p><img src="/2025/08/10/P4-CPU/%E4%BB%BF%E7%9C%9F%E6%A8%A1%E6%9D%BF.png"></p>
+<hr>
+<h2 id="关键模块介绍"><a href="#关键模块介绍" class="headerlink" title="关键模块介绍"></a>关键模块介绍</h2><h3 id="命名规则"><a href="#命名规则" class="headerlink" title="命名规则"></a>命名规则</h3><ul>
+<li>在顶层模块 <strong><code>mips.v</code></strong>，内，所有实例化元件的命名均为大写字母开头的模块名，如 <strong><code>Ifu, Npc, Alu</code></strong> 等。</li>
+<li><strong><code>wire</code><strong>类电线命名仍采用小驼峰法与下划线结合的方式，力求可读性强，便于扩展，分为几类讨论，如在顶层模块</strong><code>mips.v</code><strong>内采用小驼峰命名法，在不产生重复误会的前提下，力求</strong>wire</strong>名称与实例化后的模块端口名称一致，而在对于易混信号，则采用类似 <strong><code>grf_rd1</code>,<code>RD1_rs</code></strong>,这样的命名法加以区别，在**<code>CTRL</code>**内，对于判断具体指令，则采用指令相同的命名，如<code>add,sub……</code>。</li>
+<li>控制信号如果是控制元件的操作类型以<code>Op</code>结尾，如<code>ALUOp</code>，<code>DMOp</code>等；如果是多路选择器的控制信号，则以<code>Sel</code>结尾，如<code>A3Sel</code>，<code>WDSel</code>等；</li>
+<li>端口命名与<strong>P3</strong>相同</li>
+<li>控制信号的宏定义命名为元件名+下划线+功能，如<code>ALU_add</code>，<code>NPC_jal</code>，<code>DM_w</code>，<code>DM_h</code>等</li>
+<li><code>opcode</code>和<code>funct</code>信号的宏命名为<code>OP</code>&#x2F;<code>FUNC</code>+下划线+小写指令名，如 <strong><code>OP_beq</code></strong>，<strong><code>FUNC_add</code></strong></li>
+</ul>
+<hr>
+<h3 id="宏定义介绍"><a href="#宏定义介绍" class="headerlink" title="宏定义介绍"></a>宏定义介绍</h3><p>“工欲善其事必先利其器”，好的宏定义是规范CPU搭建的前提，否则指令一多，程序可读性便急剧降低。</p>
+<p>因此，本次搭建CPU时特意建立了一个 <strong><code>signal_def.v</code></strong> 的宏定义文件，来统筹管理各个信号定义，具体分为一下几部分</p>
+<ul>
+<li><em>OP_Code and Func_Code</em>，管理各指令的指令编码，便于识别；</li>
+<li><em>GRF signals</em>，管理有关<strong>GRF</strong>的控制信号，包括 <strong><code>WDSel</code><strong>和</strong><code>A3Sel</code></strong> 两块；</li>
+<li><em>DM signals</em>，管理<strong>DM</strong>读写方式的信号，主要供 <strong><code>DMOp</code></strong> 使用；</li>
+<li><em>EXTOp</em>,  管理扩展方式；</li>
+<li><em>NPCOp</em>，管理NPC生成方式；</li>
+<li><em>CMPOp</em>,  管理CMP的比较方式；</li>
+<li><em>ALUSrcB</em>，管理B选择数据来源；</li>
+<li><em>ALUOp</em>，管理ALU的计算方式；</li>
+</ul>
+<p>至此，<strong>宏定义部分</strong>结束，课上添加指令时一定要看好并在<code>signal_def.v</code>的文件里进行增添！</p>
+<p><em>Warning</em>：<strong>define</strong>后不要加<strong>分号</strong>！！！<strong>define</strong>生成的宏使用时要加 <strong>“&#96;”</strong>！！！</p>
+<hr>
+<p>综合考量了课上进行功能拓展的方便程度和适宜<strong>Verilog</strong>语法的需求，我对于P3的<strong>CPU</strong>中的模块进行了重新排列组合，并且参考当时CPU中<strong>BranchDefine</strong>子电路的思想，新增了<strong>CMP</strong>模块，来控制<strong>分支</strong>信号。</p>
+<h3 id="GRF"><a href="#GRF" class="headerlink" title="GRF"></a>GRF</h3><p>直接翻译P3电路</p>
+<h4 id="端口说明"><a href="#端口说明" class="headerlink" title="端口说明"></a><strong>端口说明</strong></h4><table>
+<thead>
+<tr>
+<th align="center">端口名称</th>
+<th align="center">方向</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>A1[4:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center">5位<strong>地址</strong>信号，将其对应寄存器中的值输出到<strong>RD1</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>A2[4:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center">5位<strong>地址</strong>信号，将其对应寄存器中的值输出到<strong>RD2</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>A3[4:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center">5位<strong>地址</strong>信号，将<strong>WD</strong>输入的值<strong>写入</strong>其对应的寄存器中</td>
+</tr>
+<tr>
+<td align="center"><strong>WD[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center">32位<strong>输入</strong>信号，将值写入<strong>A3</strong>对应的寄存器中</td>
+</tr>
+<tr>
+<td align="center"><strong>WE</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center">1位<strong>写使能</strong>信号，<strong>高电平写入</strong>，低电平无事发生</td>
+</tr>
+<tr>
+<td align="center"><strong>RD1[31:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center">32位<strong>输出值</strong>，输出<strong>A1对应寄存器中储存的值</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>RD2[31:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center">32位<strong>输出值</strong>，输出<strong>A2对应寄存器中储存的值</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>clk</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center">时钟信号</td>
+</tr>
+<tr>
+<td align="center"><strong>reset</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>同步复位</strong>信号，<strong>高电平将所有寄存器复位到0</strong>，低电平无事发生</td>
+</tr>
+</tbody></table>
+<h4 id="相关控制信号说明"><a href="#相关控制信号说明" class="headerlink" title="相关控制信号说明"></a>相关控制信号说明</h4><h5 id="1、A3Sel"><a href="#1、A3Sel" class="headerlink" title="1、A3Sel"></a>1、A3Sel</h5><table>
+<thead>
+<tr>
+<th align="center">控制信号值</th>
+<th align="center">功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong><code>A3Sel_rd</code></strong></td>
+<td align="center"><strong>选择待写入寄存器地址来自<code>Instr[15:11]</code> (R Type)</strong></td>
+</tr>
+<tr>
+<td align="center"><strong><code>A3Sel_rt</code></strong></td>
+<td align="center"><strong>选择待写入寄存器地址来自<code>Instr[20:16]</code> (I Type)</strong></td>
+</tr>
+<tr>
+<td align="center"><strong><code>A3Sel_ra</code></strong></td>
+<td align="center"><strong>选择写入寄存器的地址为31(<code>$ra</code>) (含link的指令)</strong></td>
+</tr>
+</tbody></table>
+<h5 id="2、WDSel"><a href="#2、WDSel" class="headerlink" title="2、WDSel"></a>2、WDSel</h5><table>
+<thead>
+<tr>
+<th align="center">控制信号值</th>
+<th align="center">功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong><code>WDSel_DMout</code></strong></td>
+<td align="center"><strong>选择写入寄存器的数据来自DM (<code>lw sw</code>等指令)</strong></td>
+</tr>
+<tr>
+<td align="center"><strong><code>WDSel_ALUout</code></strong></td>
+<td align="center"><strong>选择写入寄存器的数据来自ALU运算结果</strong></td>
+</tr>
+<tr>
+<td align="center"><strong><code>WDSel_PC4</code></strong></td>
+<td align="center"><strong>选择写入寄存器的数据为PC+4 (含link的指令存<code>$ra</code>的值)</strong></td>
+</tr>
+</tbody></table>
+<h3 id="EXT"><a href="#EXT" class="headerlink" title="EXT"></a>EXT</h3><p>将<strong>16位</strong>二进制数进行<strong>零扩展</strong>或<strong>符号扩展</strong>到32位</p>
+<h4 id="控制信号说明"><a href="#控制信号说明" class="headerlink" title="控制信号说明"></a><strong>控制信号说明</strong></h4><table>
+<thead>
+<tr>
+<th align="center"><strong>控制信号值</strong></th>
+<th align="center"><strong>功能</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong><code>EXT_unsigned</code></strong></td>
+<td align="center"><strong>零扩展</strong></td>
+</tr>
+<tr>
+<td align="center"><strong><code>EXT_signed</code></strong></td>
+<td align="center"><strong>符号扩展</strong></td>
+</tr>
+</tbody></table>
+<h3 id="IFU-指令读取单元"><a href="#IFU-指令读取单元" class="headerlink" title="IFU(指令读取单元)"></a>IFU(指令读取单元)</h3><p>与P3不同，考虑到<strong>NPC</strong>需要便于维护，改为将<strong>IM</strong>与<strong>PC</strong>合在一起组成<strong>IFU</strong></p>
+<h4 id="端口说明-1"><a href="#端口说明-1" class="headerlink" title="端口说明"></a>端口说明</h4><table>
+<thead>
+<tr>
+<th align="center"><strong>端口名称</strong></th>
+<th align="center"><strong>方向</strong></th>
+<th align="center"><strong>描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>NPC[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>待写入PC的指令地址</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>clk</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>时钟信号</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>reset</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>同步复位信号，高电平复位PC到32’h0000_3000</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>PC</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>当前指令地址</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>Instr[31:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>32位的指令值</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>rs[4:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>$rs地址</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>rt[4:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>$rt地址</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>rd[4:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>$rd地址</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>imm16[15:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>16位立即数</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>imm[31:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>32位立即数，实际上取26位</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>func[5:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>6位func</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>opcode[5:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>6位opcode</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>shamt[4:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>5位位移量，用于<code>sll，srl</code>等位移指令</strong></td>
+</tr>
+</tbody></table>
+<h3 id="ALU"><a href="#ALU" class="headerlink" title="ALU"></a>ALU</h3><h4 id="端口说明-2"><a href="#端口说明-2" class="headerlink" title="端口说明"></a><strong>端口说明</strong></h4><table>
+<thead>
+<tr>
+<th align="center"><strong>端口名称</strong></th>
+<th align="center"><strong>方向</strong></th>
+<th align="center"><strong>功能描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>A[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>32位输入运算数A</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>B[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>32位输入运算数B</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>shamt[4:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>移位指令所移位数</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>ALUOp[4:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>控制信号</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>ALUout[31:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>32位输出运算结果</strong></td>
+</tr>
+</tbody></table>
+<h4 id="控制信号说明-1"><a href="#控制信号说明-1" class="headerlink" title="控制信号说明"></a><strong>控制信号说明</strong></h4><h5 id="1-ALUOp"><a href="#1-ALUOp" class="headerlink" title="1. ALUOp"></a><strong>1. ALUOp</strong></h5><table>
+<thead>
+<tr>
+<th align="center"><strong>控制信号值</strong></th>
+<th align="center"><strong>功能</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong><code>ALU_add</code></strong></td>
+<td align="center"><strong>执行加法运算</strong></td>
+</tr>
+<tr>
+<td align="center"><strong><code>ALU_sub</code></strong></td>
+<td align="center"><strong>执行减法运算</strong></td>
+</tr>
+<tr>
+<td align="center"><strong><code>ALU_or</code></strong></td>
+<td align="center"><strong>执行逻辑或运算</strong></td>
+</tr>
+<tr>
+<td align="center"><strong><code>ALU_lui</code></strong></td>
+<td align="center"><strong>执行<code>lui</code>指令</strong></td>
+</tr>
+</tbody></table>
+<h5 id="2-ALUBSel"><a href="#2-ALUBSel" class="headerlink" title="2. ALUBSel"></a><strong>2. ALUBSel</strong></h5><table>
+<thead>
+<tr>
+<th align="center"><strong>控制信号值</strong></th>
+<th align="center"><strong>功能</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong><code>SrcB_rt</code></strong></td>
+<td align="center"><strong>选择寄存器中的值进行运算</strong></td>
+</tr>
+<tr>
+<td align="center"><strong><code>SrcB_imm</code></strong></td>
+<td align="center"><strong>选择立即数进行运算</strong></td>
+</tr>
+</tbody></table>
+<h3 id="CMP-分支比较"><a href="#CMP-分支比较" class="headerlink" title="CMP(分支比较)"></a>CMP(分支比较)</h3><p>参考P3中CPU内<strong>BranchDefine</strong>子电路生成的<strong>CMP</strong>模块，来生成<strong>jump</strong>信号，判断分支是否跳转，<strong>link</strong>是否写入</p>
+<p>目前实现了<code>beq, bne, bgtz, bltz</code>等指令</p>
+<h4 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h4><figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">`<span class="keyword">timescale</span> 1ns / 1ps</span></span><br><span class="line"><span class="meta">`<span class="keyword">include</span> &quot;signal_def.v&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">module</span> CMP(</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] rs,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] rt,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">2</span>:<span class="number">0</span>] CMPOp,</span><br><span class="line">    <span class="keyword">output</span> <span class="keyword">reg</span> jump</span><br><span class="line">    );</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">wire</span> eq = (rs == rt);</span><br><span class="line">    <span class="keyword">wire</span> ne = !eq;</span><br><span class="line">    <span class="keyword">wire</span> ltz = (<span class="built_in">$signed</span>(rs) &lt; <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">wire</span> gtz = (<span class="built_in">$signed</span>(rs) &gt; <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">wire</span> eqz = (rs == <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">always</span> @(*) <span class="keyword">begin</span></span><br><span class="line">        <span class="keyword">case</span> (CMPOp)</span><br><span class="line">            `CMP_beq: <span class="keyword">begin</span></span><br><span class="line">                jump = eq ? <span class="number">1</span> : <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">end</span></span><br><span class="line">            `CMP_bne: <span class="keyword">begin</span></span><br><span class="line">                jump = ne ? <span class="number">1</span> : <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">end</span></span><br><span class="line">            `CMP_bltz: <span class="keyword">begin</span></span><br><span class="line">                jump = ltz ? <span class="number">1</span> : <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">end</span></span><br><span class="line">            `CMP_bgtz: <span class="keyword">begin</span></span><br><span class="line">                jump = gtz ? <span class="number">1</span> : <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">end</span></span><br><span class="line">            <span class="keyword">default</span>: jump = <span class="number">1&#x27;b0</span>;</span><br><span class="line">        <span class="keyword">endcase</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">endmodule</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="端口说明-3"><a href="#端口说明-3" class="headerlink" title="端口说明"></a><strong>端口说明</strong></h4><table>
+<thead>
+<tr>
+<th align="center"><strong>端口名称</strong></th>
+<th align="center"><strong>方向</strong></th>
+<th align="center"><strong>功能描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>rs[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong><code>$rs</code>寄存器的值</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>rt[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong><code>$rt</code>寄存器的值</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>CMPOp[2:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>控制信号</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>jump</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>指示分支是否跳转</strong></td>
+</tr>
+</tbody></table>
+<h3 id="NPC-次地址计算"><a href="#NPC-次地址计算" class="headerlink" title="NPC(次地址计算)"></a>NPC(次地址计算)</h3><p>有了<strong>CMP</strong>之后，<strong>NPC</strong>的功能也更加简洁，只需根据<strong>NPCOp</strong>和<strong>jump</strong>信号输出<strong>NPC</strong>信号的值就行</p>
+<h4 id="端口说明-4"><a href="#端口说明-4" class="headerlink" title="端口说明"></a><strong>端口说明</strong></h4><table>
+<thead>
+<tr>
+<th align="center">端口名称</th>
+<th align="center">方向</th>
+<th align="center">功能描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>PC[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>32位输入当前地址</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>imm[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>32位立即数</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>jump</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>指示b类型指令是否跳转</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>NPCOp[2:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>控制信号</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>RD1_rs[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong><code>$ra</code>寄存器保存的32位地址</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>NPC[31:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>32位输出次地址</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>PC4[31:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>输出$PC+4$的值</strong></td>
+</tr>
+</tbody></table>
+<h4 id="控制信号说明-2"><a href="#控制信号说明-2" class="headerlink" title="控制信号说明"></a>控制信号说明</h4><table>
+<thead>
+<tr>
+<th align="center"><strong>控制信号值</strong></th>
+<th align="center"><strong>功能</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong><code>NPC_PC4</code></strong></td>
+<td align="center"><strong>$NPC &#x3D; PC + 4$</strong></td>
+</tr>
+<tr>
+<td align="center"><strong><code>NPC_branch</code></strong></td>
+<td align="center"><strong>执行<code>branch</code>指令</strong></td>
+</tr>
+<tr>
+<td align="center"><strong><code>NPC_jal</code></strong></td>
+<td align="center"><strong>执行<code>j</code>，<code>jal</code>指令</strong></td>
+</tr>
+<tr>
+<td align="center"><strong><code>NPC_jalr</code></strong></td>
+<td align="center"><strong>执行<code>jalr</code>，<code>jr</code>指令</strong></td>
+</tr>
+</tbody></table>
+<h3 id="DM（数据储存器）"><a href="#DM（数据储存器）" class="headerlink" title="DM（数据储存器）"></a>DM（数据储存器）</h3><h4 id="端口说明-5"><a href="#端口说明-5" class="headerlink" title="端口说明"></a><strong>端口说明</strong></h4><table>
+<thead>
+<tr>
+<th align="center"><strong>信号名称</strong></th>
+<th align="center"><strong>方向</strong></th>
+<th align="center"><strong>功能描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>Addr[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>待操作的内存地址</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>WD[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>待写入内存的值</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>clk</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>时钟信号</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>reset</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>同步复位信号</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>DMWr</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>写使能信号；1：写入有效；0：写入无效</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>DMOp[2:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>控制信号</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>DMout[31:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>输入地址指向的内存中储存的值</strong></td>
+</tr>
+</tbody></table>
+<h4 id="控制信号说明-3"><a href="#控制信号说明-3" class="headerlink" title="控制信号说明"></a><strong>控制信号说明</strong></h4><table>
+<thead>
+<tr>
+<th align="center"><strong>控制信号值</strong></th>
+<th align="center"><strong>功能</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong><code>DM_w</code></strong></td>
+<td align="center"><strong>对应<code>lw</code>和<code>sw</code>指令，写入或读取整个字</strong></td>
+</tr>
+<tr>
+<td align="center"><strong><code>DM_h</code></strong></td>
+<td align="center"><strong>对应<code>lh</code>和<code>sh</code>指令，写入或读取半字</strong></td>
+</tr>
+<tr>
+<td align="center"><strong><code>DM_b</code></strong></td>
+<td align="center"><strong>对应<code>lb</code>和<code>sb</code>指令，写入或读取整个字</strong></td>
+</tr>
+<tr>
+<td align="center"><strong><code>DM_hu</code></strong></td>
+<td align="center"><strong>对应<code>lhu</code>指令</strong></td>
+</tr>
+<tr>
+<td align="center"><strong><code>DM_bu</code></strong></td>
+<td align="center"><strong>对应<code>lbu</code>指令</strong></td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="数据通路分析"><a href="#数据通路分析" class="headerlink" title="数据通路分析"></a><strong>数据通路分析</strong></h3><table>
+<thead>
+<tr>
+<th align="center">指令</th>
+<th align="center">opcode</th>
+<th align="center">funct</th>
+<th align="center">NPCOp</th>
+<th align="center">A3Sel</th>
+<th align="center">WDSel</th>
+<th align="center">EXTOp</th>
+<th align="center">GRFWE</th>
+<th align="center">ALUSRCB</th>
+<th align="center">ALUOp</th>
+<th align="center">DMWr</th>
+<th align="center">DMOp</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>add</strong></td>
+<td align="center">000000</td>
+<td align="center">100000</td>
+<td align="center"><code>NPC_PC4</code></td>
+<td align="center"><code>A3Sel_rd</code></td>
+<td align="center"><code>WDSel_ALUout</code></td>
+<td align="center">X</td>
+<td align="center">1</td>
+<td align="center"><code>SrcB_rt</code></td>
+<td align="center"><code>ALU_add</code></td>
+<td align="center">0</td>
+<td align="center">X</td>
+</tr>
+<tr>
+<td align="center"><strong>sub</strong></td>
+<td align="center">000000</td>
+<td align="center">100010</td>
+<td align="center"><code>NPC_PC4</code></td>
+<td align="center"><code>A3Sel_rd</code></td>
+<td align="center"><code>WDSel_ALUout</code></td>
+<td align="center">X</td>
+<td align="center">1</td>
+<td align="center"><code>SrcB_rt</code></td>
+<td align="center"><code>ALU_sub</code></td>
+<td align="center">0</td>
+<td align="center">X</td>
+</tr>
+<tr>
+<td align="center"><strong>ori</strong></td>
+<td align="center">001101</td>
+<td align="center">X</td>
+<td align="center"><code>NPC_PC4</code></td>
+<td align="center"><code>A3Sel_rt</code></td>
+<td align="center"><code>WDSel_ALUout</code></td>
+<td align="center"><code>EXT_unsigned</code></td>
+<td align="center">1</td>
+<td align="center"><code>SrcB_imm</code></td>
+<td align="center"><code>ALU_or</code></td>
+<td align="center">0</td>
+<td align="center">X</td>
+</tr>
+<tr>
+<td align="center"><strong>lw</strong></td>
+<td align="center">100011</td>
+<td align="center">X</td>
+<td align="center"><code>NPC_PC4</code></td>
+<td align="center"><code>A3Sel_rt</code></td>
+<td align="center"><code>WDSel_DMout</code></td>
+<td align="center"><code>EXT_signed</code></td>
+<td align="center">1</td>
+<td align="center"><code>SrcB_imm</code></td>
+<td align="center"><code>ALU_add</code></td>
+<td align="center">0</td>
+<td align="center"><code>DM_w</code></td>
+</tr>
+<tr>
+<td align="center"><strong>sw</strong></td>
+<td align="center">101011</td>
+<td align="center">X</td>
+<td align="center"><code>NPC_PC4</code></td>
+<td align="center">X</td>
+<td align="center"><code>WDSel_DMout</code></td>
+<td align="center"><code>EXT_signed</code></td>
+<td align="center">0</td>
+<td align="center"><code>SrcB_imm</code></td>
+<td align="center"><code>ALU_add</code></td>
+<td align="center">1</td>
+<td align="center"><code>DM_w</code></td>
+</tr>
+<tr>
+<td align="center"><strong>beq</strong></td>
+<td align="center">000100</td>
+<td align="center">X</td>
+<td align="center"><code>NPC_branch</code></td>
+<td align="center">X</td>
+<td align="center">X</td>
+<td align="center">X</td>
+<td align="center">0</td>
+<td align="center">X</td>
+<td align="center">X</td>
+<td align="center">0</td>
+<td align="center">X</td>
+</tr>
+<tr>
+<td align="center"><strong>lui</strong></td>
+<td align="center">001111</td>
+<td align="center">X</td>
+<td align="center"><code>NPC_PC4</code></td>
+<td align="center"><code>A3Sel_rt</code></td>
+<td align="center"><code>WDSel_ALUout</code></td>
+<td align="center">X</td>
+<td align="center">1</td>
+<td align="center"><code>SrcB_imm</code></td>
+<td align="center"><code>ALU_lui</code></td>
+<td align="center">0</td>
+<td align="center">X</td>
+</tr>
+<tr>
+<td align="center"><strong>jal</strong></td>
+<td align="center">000011</td>
+<td align="center">X</td>
+<td align="center"><code>NPC_jal</code></td>
+<td align="center"><code>A3Sel_ra</code></td>
+<td align="center"><code>WDSel_PC4</code></td>
+<td align="center">X</td>
+<td align="center">1</td>
+<td align="center">X</td>
+<td align="center">X</td>
+<td align="center">0</td>
+<td align="center">X</td>
+</tr>
+<tr>
+<td align="center"><strong>jr</strong></td>
+<td align="center">000000</td>
+<td align="center">001000</td>
+<td align="center"><code>NPC_jalr</code></td>
+<td align="center">X</td>
+<td align="center">X</td>
+<td align="center">X</td>
+<td align="center">0</td>
+<td align="center">X</td>
+<td align="center">X</td>
+<td align="center">X</td>
+<td align="center">X</td>
+</tr>
+</tbody></table>
+<h3 id="调试过程记录"><a href="#调试过程记录" class="headerlink" title="调试过程记录"></a>调试过程记录</h3><h4 id="Warnings"><a href="#Warnings" class="headerlink" title="Warnings"></a><em>Warnings</em></h4><ul>
+<li>首先是要看清楚<strong>RTL</strong>语言，这是最重要的。比如说最经典的就是<code>beq</code>指令后面的offset这个偏移量实际上要左移再加上$PC + 4$;</li>
+<li>再就是要区分<strong>RTL</strong>语言中的符号，比如说<strong>注意区分 <code>rt</code> 和<code>$ rt</code> ，前者代表 <code>rt</code> 的地址，后者代表 <code>GPR($rt)</code>(即<code>$rt</code>对应寄存器的值)</strong></li>
+</ul>
+<h4 id="测试方案"><a href="#测试方案" class="headerlink" title="测试方案"></a>测试方案</h4><p>通过弱测后，采用C++程序随机生成较强数据的方法进行测试</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;queue&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;map&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cmath&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdlib&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;set&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unordered_map&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;ctime&gt;</span></span></span><br><span class="line"><span class="keyword">typedef</span> <span class="type">long</span> <span class="type">long</span> ll;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> grf[<span class="number">32</span>];</span><br><span class="line"><span class="type">int</span> reg[] = &#123;<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">31</span>&#125;;</span><br><span class="line"><span class="type">int</span> dm[<span class="number">1024</span>];</span><br><span class="line"><span class="meta">#<span class="keyword">define</span> R reg[rand() % 5]</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> I (rand() + rand())</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> B (rand() % 650)</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">add</span><span class="params">(<span class="type">int</span> rs, <span class="type">int</span> rt, <span class="type">int</span> rd)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;add $%d,$%d,$%d\n&quot;</span>, rd, rt, rs);</span><br><span class="line">	<span class="keyword">if</span> (rd)</span><br><span class="line">		grf[rd] = grf[rs] + grf[rt];</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">sub</span><span class="params">(<span class="type">int</span> rs, <span class="type">int</span> rt, <span class="type">int</span> rd)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;sub $%d,$%d,$%d\n&quot;</span>, rd, rt, rs);</span><br><span class="line">	<span class="keyword">if</span> (rd)</span><br><span class="line">		grf[rd] = grf[rs] - grf[rt];</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ori</span><span class="params">(<span class="type">int</span> rs, <span class="type">int</span> rt, <span class="type">int</span> imm)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;ori $%d,$%d,%d\n&quot;</span>, rt, rs, imm);</span><br><span class="line">	<span class="keyword">if</span> (rt)</span><br><span class="line">		grf[rt] = grf[rs] | imm;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">lui</span><span class="params">(<span class="type">int</span> rs, <span class="type">int</span> rt, <span class="type">int</span> imm)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;lui $%d,%d\n&quot;</span>, rs, imm);</span><br><span class="line">	<span class="keyword">if</span> (rs)</span><br><span class="line">		grf[rs] = <span class="number">1u</span> * imm &lt;&lt; <span class="number">16</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">lw</span><span class="params">(<span class="type">int</span> rs, <span class="type">int</span> rt)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> imm = <span class="built_in">rand</span>() % <span class="number">1024</span> * <span class="number">4</span>;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;lw $%d,%d($0)\n&quot;</span>, rt, imm);</span><br><span class="line">	grf[rt] = dm[imm / <span class="number">4</span>];</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">sw</span><span class="params">(<span class="type">int</span> rs, <span class="type">int</span> rt)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> imm = <span class="built_in">rand</span>() % <span class="number">1024</span> * <span class="number">4</span>;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;sw $%d,%d($0)\n&quot;</span>, rt, imm);</span><br><span class="line">	dm[imm / <span class="number">4</span>] = grf[rt];</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> jump[<span class="number">1010</span>];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">beq</span><span class="params">(<span class="type">int</span> rs, <span class="type">int</span> rt)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> jaddr = B;</span><br><span class="line">	<span class="keyword">while</span> (jump[jaddr])</span><br><span class="line">		jaddr = B;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;beq $%d,$%d,label%d\n&quot;</span>, rs, rt, jaddr);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">j</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> jaddr = B;</span><br><span class="line">	<span class="keyword">while</span> (jump[jaddr])</span><br><span class="line">		jaddr = B;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;j label%d\n&quot;</span>, jaddr);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">jal</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> jaddr = B;</span><br><span class="line">	<span class="keyword">while</span> (jump[jaddr])</span><br><span class="line">		jaddr = B;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;jal label%d\n&quot;</span>, jaddr);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">jr</span><span class="params">(<span class="type">int</span> rs, <span class="type">int</span> rt)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> i;</span><br><span class="line">	vector&lt;<span class="type">int</span>&gt; can;</span><br><span class="line">	can.<span class="built_in">clear</span>();</span><br><span class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++)</span><br><span class="line">		<span class="keyword">if</span> (reg[i] &gt; <span class="number">0x3000</span> &amp;&amp; reg[i] &lt;= <span class="number">0x3700</span>)</span><br><span class="line">			can.<span class="built_in">push_back</span>(reg[i]);</span><br><span class="line">	<span class="keyword">if</span> (can.<span class="built_in">size</span>() == <span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">beq</span>(rs, rt);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	rs = can[<span class="built_in">rand</span>() % can.<span class="built_in">size</span>()];</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;jr $%d\n&quot;</span>, rs);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">nop</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;nop\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> i;</span><br><span class="line">	<span class="built_in">srand</span>(<span class="built_in">time</span>(<span class="literal">NULL</span>));</span><br><span class="line">	<span class="built_in">freopen</span>(<span class="string">&quot;mips_code.txt&quot;</span>, <span class="string">&quot;w&quot;</span>, stdout);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;sub $31,$31,$31\n&quot;</span>); <span class="comment">//���$sp</span></span><br><span class="line">	<span class="type">int</span> last = <span class="number">-1</span>;</span><br><span class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;label%d: &quot;</span>, i);</span><br><span class="line">		<span class="type">int</span> instr = <span class="built_in">rand</span>() % <span class="number">11</span>;</span><br><span class="line">		<span class="keyword">while</span> ((i &lt; <span class="number">300</span> || last == <span class="number">1</span>) &amp;&amp; instr &gt;= <span class="number">6</span> &amp;&amp; instr &lt;= <span class="number">9</span>)</span><br><span class="line">		&#123; <span class="comment">//j+j</span></span><br><span class="line">			instr = <span class="built_in">rand</span>() % <span class="number">11</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="type">int</span> rs = R, rt = R, rd = R, imm = I;</span><br><span class="line">		<span class="keyword">if</span> (instr == <span class="number">0</span>)</span><br><span class="line">			<span class="built_in">add</span>(rs, rt, rd);</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (instr == <span class="number">1</span>)</span><br><span class="line">			<span class="built_in">sub</span>(rs, rt, rd);</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (instr == <span class="number">2</span>)</span><br><span class="line">			<span class="built_in">ori</span>(rs, rt, imm);</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (instr == <span class="number">3</span>)</span><br><span class="line">			<span class="built_in">lui</span>(rs, <span class="number">0</span>, imm);</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (instr == <span class="number">4</span>)</span><br><span class="line">			<span class="built_in">lw</span>(rs, rt);</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (instr == <span class="number">5</span>)</span><br><span class="line">			<span class="built_in">sw</span>(rs, rt);</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (instr == <span class="number">6</span>)</span><br><span class="line">			<span class="built_in">beq</span>(rs, rt);</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (instr == <span class="number">7</span>)</span><br><span class="line">			<span class="built_in">j</span>();</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (instr == <span class="number">8</span>)</span><br><span class="line">			<span class="built_in">jal</span>();</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (instr == <span class="number">9</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="type">int</span> yes = <span class="built_in">jr</span>(rs, rt);</span><br><span class="line">			<span class="keyword">if</span> (!yes)</span><br><span class="line">				instr = <span class="number">6</span>; <span class="comment">//beq</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">			<span class="built_in">nop</span>();</span><br><span class="line">		jump[i] = last = (instr &gt;= <span class="number">6</span> &amp;&amp; instr &lt;= <span class="number">9</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;label:\n beq $0,$0,label\nnop&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>其中一组较强数据：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br></pre></td><td class="code"><pre><span class="line">ori $29,$0,0x22fc</span><br><span class="line">ori $28,$0,0x1800</span><br><span class="line">ori $31,$0,0x3000</span><br><span class="line">label0:nop</span><br><span class="line">label1:sub $6,$7,$18</span><br><span class="line">label2:add $8,$15,$23</span><br><span class="line">label3:add $26,$3,$15</span><br><span class="line">label4:ori $19,$13,0xaa14</span><br><span class="line">label5:nop</span><br><span class="line">label6:ori $11,$0,0x13c</span><br><span class="line">lw $21,28($11)</span><br><span class="line">label7:nop</span><br><span class="line">label8:ori $7,$0,0xd0</span><br><span class="line">lw $2,36($7)</span><br><span class="line">label9:beq $12,$20,label11</span><br><span class="line">label10:beq $18,$3,label187</span><br><span class="line">label11:ori $20,$0,0x14c</span><br><span class="line">sw $27,36($20)</span><br><span class="line">label12:beq $17,$0,label26</span><br><span class="line">label13:add $12,$15,$3</span><br><span class="line">label14:ori $20,$0,0x1c0</span><br><span class="line">sw $4,12($20)</span><br><span class="line">label15:lui $2,0x8226</span><br><span class="line">label16:add $6,$17,$15</span><br><span class="line">label17:nop</span><br><span class="line">label18:nop</span><br><span class="line">label19:add $20,$14,$16</span><br><span class="line">label20:ori $23,$0,0x1b4</span><br><span class="line">sw $4,8($23)</span><br><span class="line">label21:nop</span><br><span class="line">label22:beq $16,$24,label80</span><br><span class="line">label23:nop</span><br><span class="line">label24:ori $14,$0,0x1c4</span><br><span class="line">sw $25,40($14)</span><br><span class="line">label25:add $0,$7,$3</span><br><span class="line">label26:nop</span><br><span class="line">label27:sub $28,$12,$27</span><br><span class="line">label28:ori $3,$0,0x0</span><br><span class="line">sw $27,32($3)</span><br><span class="line">label29:ori $18,$0,0x1b8</span><br><span class="line">sw $26,24($18)</span><br><span class="line">label30:ori $26,$0,0x11c</span><br><span class="line">sw $18,24($26)</span><br><span class="line">label31:ori $23,$0,0x94</span><br><span class="line">sw $19,16($23)</span><br><span class="line">label32:ori $16,$0,0xc4</span><br><span class="line">lw $4,16($16)</span><br><span class="line">label33:ori $26,$0,0x120</span><br><span class="line">lw $20,28($26)</span><br><span class="line">label34:ori $18,$0,0x178</span><br><span class="line">sw $1,16($18)</span><br><span class="line">label35:nop</span><br><span class="line">label36:nop</span><br><span class="line">label37:ori $19,$0,0x140</span><br><span class="line">sw $16,12($19)</span><br><span class="line">label38:nop</span><br><span class="line">label39:lui $11,0xa5e6</span><br><span class="line">label40:lui $22,0xce2e</span><br><span class="line">label41:add $17,$30,$8</span><br><span class="line">label42:ori $17,$0,0x118</span><br><span class="line">lw $25,36($17)</span><br><span class="line">label43:ori $0,$0,0x1dc</span><br><span class="line">sw $15,8($0)</span><br><span class="line">label44:sub $8,$22,$2</span><br><span class="line">label45:ori $14,$0,0x1b8</span><br><span class="line">lw $6,40($14)</span><br><span class="line">label46:nop</span><br><span class="line">label47:nop</span><br><span class="line">label48:add $5,$14,$22</span><br><span class="line">label49:ori $17,$29,0x5cc8</span><br><span class="line">label50:ori $24,$0,0x100</span><br><span class="line">sw $22,16($24)</span><br><span class="line">label51:sub $21,$24,$28</span><br><span class="line">label52:ori $29,$0,0xf8</span><br><span class="line">lw $22,24($29)</span><br><span class="line">label53:sub $19,$2,$23</span><br><span class="line">label54:ori $5,$22,0x4cba</span><br><span class="line">label55:add $7,$22,$9</span><br><span class="line">label56:lui $15,0xa746</span><br><span class="line">label57:add $30,$6,$25</span><br><span class="line">label58:ori $23,$0,0x90</span><br><span class="line">sw $4,8($23)</span><br><span class="line">label59:ori $22,$0,0xfc</span><br><span class="line">sw $6,36($22)</span><br><span class="line">label60:jal label129</span><br><span class="line">label61:beq $1,$21,label184</span><br><span class="line">label62:sub $4,$28,$0</span><br><span class="line">label63:add $7,$17,$12</span><br><span class="line">label64:add $13,$2,$26</span><br><span class="line">label65:lui $24,0x1093</span><br><span class="line">label66:sub $24,$2,$17</span><br><span class="line">label67:ori $16,$0,0x1a4</span><br><span class="line">lw $29,8($16)</span><br><span class="line">label68:ori $24,$0,0x1d0</span><br><span class="line">lw $21,0($24)</span><br><span class="line">label69:sub $17,$27,$17</span><br><span class="line">label70:nop</span><br><span class="line">label71:nop</span><br><span class="line">label72:jr $31</span><br><span class="line">label73:ori $26,$0,0x6c</span><br><span class="line">lw $20,40($26)</span><br><span class="line">label74:nop</span><br><span class="line">label75:ori $17,$0,0x184</span><br><span class="line">lw $4,24($17)</span><br><span class="line">label76:ori $26,$0,0xb8</span><br><span class="line">sw $16,28($26)</span><br><span class="line">label77:ori $3,$0,0xe0</span><br><span class="line">sw $19,24($3)</span><br><span class="line">label78:ori $16,$10,0xdd62</span><br><span class="line">label79:add $21,$23,$15</span><br><span class="line">label80:ori $1,$0,0x98</span><br><span class="line">lw $18,24($1)</span><br><span class="line">label81:beq $25,$19,label127</span><br><span class="line">label82:nop</span><br><span class="line">label83:ori $5,$0,0x1e8</span><br><span class="line">sw $14,36($5)</span><br><span class="line">label84:add $7,$11,$17</span><br><span class="line">label85:ori $21,$0,0x6d65</span><br><span class="line">label86:beq $26,$28,label119</span><br><span class="line">label87:lui $8,0x12ca</span><br><span class="line">label88:ori $8,$0,0x1e0</span><br><span class="line">sw $18,36($8)</span><br><span class="line">label89:add $9,$3,$21</span><br><span class="line">label90:sub $25,$29,$15</span><br><span class="line">label91:lui $3,0x2f2f</span><br><span class="line">label92:beq $26,$14,label196</span><br><span class="line">label93:nop</span><br><span class="line">label94:ori $24,$0,0x8</span><br><span class="line">lw $12,24($24)</span><br><span class="line">label95:jal label161</span><br><span class="line">label96:ori $10,$0,0x2c</span><br><span class="line">sw $13,0($10)</span><br><span class="line">label97:ori $22,$0,0x34</span><br><span class="line">lw $20,36($22)</span><br><span class="line">label98:ori $17,$0,0xec</span><br><span class="line">sw $24,16($17)</span><br><span class="line">label99:sub $1,$21,$7</span><br><span class="line">label100:ori $24,$0,0xc8</span><br><span class="line">sw $30,24($24)</span><br><span class="line">label101:ori $5,$0,0x124</span><br><span class="line">lw $24,4($5)</span><br><span class="line">label102:ori $30,$0,0x16c</span><br><span class="line">lw $20,36($30)</span><br><span class="line">label103:jr $31</span><br><span class="line">label104:sub $29,$1,$7</span><br><span class="line">label105:jal label108</span><br><span class="line">label106:ori $22,$22,0xc2c4</span><br><span class="line">label107:jr $31</span><br><span class="line">label108:ori $1,$0,0x1c0</span><br><span class="line">lw $18,0($1)</span><br><span class="line">label109:nop</span><br><span class="line">label110:nop</span><br><span class="line">label111:ori $18,$0,0xfc</span><br><span class="line">sw $1,24($18)</span><br><span class="line">label112:nop</span><br><span class="line">label113:beq $25,$23,label163</span><br><span class="line">label114:jal label161</span><br><span class="line">label115:sub $27,$1,$19</span><br><span class="line">label116:jr $31</span><br><span class="line">label117:beq $19,$2,label161</span><br><span class="line">label118:ori $1,$6,0xe0c4</span><br><span class="line">label119:sub $27,$24,$5</span><br><span class="line">label120:sub $17,$22,$8</span><br><span class="line">label121:lui $20,0xad45</span><br><span class="line">label122:sub $7,$16,$9</span><br><span class="line">label123:ori $6,$0,0x168</span><br><span class="line">sw $6,36($6)</span><br><span class="line">label124:ori $21,$0,0x1d0</span><br><span class="line">lw $4,24($21)</span><br><span class="line">label125:sub $4,$30,$10</span><br><span class="line">label126:ori $20,$7,0xae65</span><br><span class="line">label127:ori $1,$0,0x1c</span><br><span class="line">sw $17,12($1)</span><br><span class="line">label128:jal label163</span><br><span class="line">label129:ori $13,$0,0x17c</span><br><span class="line">sw $25,36($13)</span><br><span class="line">label130:ori $5,$0,0x1a4</span><br><span class="line">lw $24,0($5)</span><br><span class="line">label131:nop</span><br><span class="line">label132:ori $22,$0,0x198</span><br><span class="line">lw $27,32($22)</span><br><span class="line">label133:ori $16,$0,0xf8</span><br><span class="line">sw $7,28($16)</span><br><span class="line">label134:ori $26,$29,0xc317</span><br><span class="line">label135:beq $2,$14,label172</span><br><span class="line">label136:add $7,$16,$0</span><br><span class="line">label137:beq $6,$14,label190</span><br><span class="line">label138:lui $23,0xe5d7</span><br><span class="line">label139:beq $23,$2,label164</span><br><span class="line">label140:ori $17,$0,0x134</span><br><span class="line">lw $11,32($17)</span><br><span class="line">label141:nop</span><br><span class="line">label142:add $2,$28,$26</span><br><span class="line">label143:beq $7,$22,label197</span><br><span class="line">label144:nop</span><br><span class="line">label145:ori $5,$30,0xbbf8</span><br><span class="line">label146:sub $15,$13,$15</span><br><span class="line">label147:jal label191</span><br><span class="line">label148:jr $31</span><br><span class="line">label149:beq $20,$1,label176</span><br><span class="line">label150:ori $9,$0,0x198</span><br><span class="line">sw $6,40($9)</span><br><span class="line">label151:nop</span><br><span class="line">label152:ori $19,$0,0xf8</span><br><span class="line">sw $13,40($19)</span><br><span class="line">label153:lui $12,0x5e6d</span><br><span class="line">label154:nop</span><br><span class="line">label155:ori $20,$0,0xf4</span><br><span class="line">sw $12,8($20)</span><br><span class="line">label156:ori $15,$2,0xa110</span><br><span class="line">label157:ori $29,$0,0x24</span><br><span class="line">sw $24,0($29)</span><br><span class="line">label158:sub $29,$23,$27</span><br><span class="line">label159:ori $5,$12,0x4d32</span><br><span class="line">label160:ori $2,$0,0xec</span><br><span class="line">sw $25,36($2)</span><br><span class="line">label161:beq $26,$10,label192</span><br><span class="line">label162:lui $17,0xa5b3</span><br><span class="line">label163:nop</span><br><span class="line">label164:jal label195</span><br><span class="line">label165:ori $27,$0,0x14</span><br><span class="line">lw $9,12($27)</span><br><span class="line">label166:jal label178</span><br><span class="line">label167:lui $6,0x64df</span><br><span class="line">label168:jal label195</span><br><span class="line">label169:jal label193</span><br><span class="line">label170:ori $1,$0,0x94</span><br><span class="line">lw $17,24($1)</span><br><span class="line">label171:jr $31</span><br><span class="line">label172:ori $25,$19,0xf861</span><br><span class="line">label173:sub $0,$15,$4</span><br><span class="line">label174:beq $30,$20,label183</span><br><span class="line">label175:nop</span><br><span class="line">label176:beq $22,$21,label187</span><br><span class="line">label177:nop</span><br><span class="line">label178:beq $26,$8,label186</span><br><span class="line">label179:ori $10,$0,0x1e0</span><br><span class="line">lw $12,12($10)</span><br><span class="line">label180:beq $16,$29,label198</span><br><span class="line">label181:nop</span><br><span class="line">label182:add $22,$2,$26</span><br><span class="line">label183:nop</span><br><span class="line">label184:ori $9,$0,0x30</span><br><span class="line">sw $23,4($9)</span><br><span class="line">label185:lui $24,0xe9ab</span><br><span class="line">label186:add $1,$16,$7</span><br><span class="line">label187:ori $26,$0,0x80</span><br><span class="line">sw $19,40($26)</span><br><span class="line">label188:beq $0,$29,label194</span><br><span class="line">label189:sub $4,$19,$19</span><br><span class="line">label190:jal label196</span><br><span class="line">label191:add $27,$19,$7</span><br><span class="line">label192:nop</span><br><span class="line">label193:add $28,$3,$14</span><br><span class="line">label194:jal label199</span><br><span class="line">label195:jal label198</span><br><span class="line">label196:beq $15,$16,label197</span><br><span class="line">label197:sub $1,$20,$5</span><br><span class="line">label198:nop</span><br><span class="line">label199:nop</span><br></pre></td></tr></table></figure>
+
+<p><strong>魔改MARS输出：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line">@00003000: $29 &lt;= 000022fc</span><br><span class="line">@00003004: $28 &lt;= 00001800</span><br><span class="line">@00003008: $31 &lt;= 00003000</span><br><span class="line">@00003010: $ 6 &lt;= 00000000</span><br><span class="line">@00003014: $ 8 &lt;= 00000000</span><br><span class="line">@00003018: $26 &lt;= 00000000</span><br><span class="line">@0000301c: $19 &lt;= 0000aa14</span><br><span class="line">@00003024: $11 &lt;= 0000013c</span><br><span class="line">@00003028: $21 &lt;= 00000000</span><br><span class="line">@00003030: $ 7 &lt;= 000000d0</span><br><span class="line">@00003034: $ 2 &lt;= 00000000</span><br><span class="line">@00003040: $20 &lt;= 0000014c</span><br><span class="line">@00003044: *00000170 &lt;= 00000000</span><br><span class="line">@00003090: $28 &lt;= 00000000</span><br><span class="line">@00003094: $ 3 &lt;= 00000000</span><br><span class="line">@00003098: *00000020 &lt;= 00000000</span><br><span class="line">@0000309c: $18 &lt;= 000001b8</span><br><span class="line">@000030a0: *000001d0 &lt;= 00000000</span><br><span class="line">@000030a4: $26 &lt;= 0000011c</span><br><span class="line">@000030a8: *00000134 &lt;= 000001b8</span><br><span class="line">@000030ac: $23 &lt;= 00000094</span><br><span class="line">@000030b0: *000000a4 &lt;= 0000aa14</span><br><span class="line">@000030b4: $16 &lt;= 000000c4</span><br><span class="line">@000030b8: $ 4 &lt;= 00000000</span><br><span class="line">@000030bc: $26 &lt;= 00000120</span><br><span class="line">@000030c0: $20 &lt;= 00000000</span><br><span class="line">@000030c4: $18 &lt;= 00000178</span><br><span class="line">@000030c8: *00000188 &lt;= 00000000</span><br><span class="line">@000030d4: $19 &lt;= 00000140</span><br><span class="line">@000030d8: *0000014c &lt;= 000000c4</span><br><span class="line">@000030e0: $11 &lt;= a5e60000</span><br><span class="line">@000030e4: $22 &lt;= ce2e0000</span><br><span class="line">@000030e8: $17 &lt;= 00000000</span><br><span class="line">@000030ec: $17 &lt;= 00000118</span><br><span class="line">@000030f0: $25 &lt;= 00000000</span><br><span class="line">@000030f8: *00000008 &lt;= 00000000</span><br><span class="line">@000030fc: $ 8 &lt;= ce2e0000</span><br><span class="line">@00003100: $14 &lt;= 000001b8</span><br><span class="line">@00003104: $ 6 &lt;= 00000000</span><br><span class="line">@00003110: $ 5 &lt;= ce2e01b8</span><br><span class="line">@00003114: $17 &lt;= 00007efc</span><br><span class="line">@00003118: $24 &lt;= 00000100</span><br><span class="line">@0000311c: *00000110 &lt;= ce2e0000</span><br><span class="line">@00003120: $21 &lt;= 00000100</span><br><span class="line">@00003124: $29 &lt;= 000000f8</span><br><span class="line">@00003128: $22 &lt;= ce2e0000</span><br><span class="line">@0000312c: $19 &lt;= ffffff6c</span><br><span class="line">@00003130: $ 5 &lt;= ce2e4cba</span><br><span class="line">@00003134: $ 7 &lt;= ce2e0000</span><br><span class="line">@00003138: $15 &lt;= a7460000</span><br><span class="line">@0000313c: $30 &lt;= 00000000</span><br><span class="line">@00003140: $23 &lt;= 00000090</span><br><span class="line">@00003144: *00000098 &lt;= 00000000</span><br><span class="line">@00003148: $22 &lt;= 000000fc</span><br><span class="line">@0000314c: *00000120 &lt;= 00000000</span><br><span class="line">@00003150: $31 &lt;= 00003154</span><br><span class="line">@000032b8: $13 &lt;= 0000017c</span><br><span class="line">@000032bc: *000001a0 &lt;= 00000000</span><br><span class="line">@000032c0: $ 5 &lt;= 000001a4</span><br><span class="line">@000032c4: $24 &lt;= 00000000</span><br><span class="line">@000032cc: $22 &lt;= 00000198</span><br><span class="line">@000032d0: $27 &lt;= 00000000</span><br><span class="line">@000032d4: $16 &lt;= 000000f8</span><br><span class="line">@000032d8: *00000114 &lt;= ce2e0000</span><br><span class="line">@000032dc: $26 &lt;= 0000c3ff</span><br><span class="line">@000032e4: $ 7 &lt;= 000000f8</span><br><span class="line">@000032ec: $23 &lt;= e5d70000</span><br><span class="line">@000032f4: $17 &lt;= 00000134</span><br><span class="line">@000032f8: $11 &lt;= 00000000</span><br><span class="line">@00003300: $ 2 &lt;= 0000c3ff</span><br><span class="line">@0000330c: $ 5 &lt;= 0000bbf8</span><br><span class="line">@00003310: $15 &lt;= 58ba017c</span><br><span class="line">@00003314: $31 &lt;= 00003318</span><br><span class="line">@000033ec: $27 &lt;= 00000064</span><br><span class="line">@000033f4: $28 &lt;= 000001b8</span><br><span class="line">@000033f8: $31 &lt;= 000033fc</span><br></pre></td></tr></table></figure>
+
+<p><strong>Isim仿真输出</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line">@00003000: $29 &lt;= 000022fc</span><br><span class="line">@00003004: $28 &lt;= 00001800</span><br><span class="line">@00003008: $31 &lt;= 00003000</span><br><span class="line">@00003010: $ 6 &lt;= 00000000</span><br><span class="line">@00003014: $ 8 &lt;= 00000000</span><br><span class="line">@00003018: $26 &lt;= 00000000</span><br><span class="line">@0000301c: $19 &lt;= 0000aa14</span><br><span class="line">@00003024: $11 &lt;= 0000013c</span><br><span class="line">@00003028: $21 &lt;= 00000000</span><br><span class="line">@00003030: $ 7 &lt;= 000000d0</span><br><span class="line">@00003034: $ 2 &lt;= 00000000</span><br><span class="line">@00003040: $20 &lt;= 0000014c</span><br><span class="line">@00003044: *00000170 &lt;= 00000000</span><br><span class="line">@00003090: $28 &lt;= 00000000</span><br><span class="line">@00003094: $ 3 &lt;= 00000000</span><br><span class="line">@00003098: *00000020 &lt;= 00000000</span><br><span class="line">@0000309c: $18 &lt;= 000001b8</span><br><span class="line">@000030a0: *000001d0 &lt;= 00000000</span><br><span class="line">@000030a4: $26 &lt;= 0000011c</span><br><span class="line">@000030a8: *00000134 &lt;= 000001b8</span><br><span class="line">@000030ac: $23 &lt;= 00000094</span><br><span class="line">@000030b0: *000000a4 &lt;= 0000aa14</span><br><span class="line">@000030b4: $16 &lt;= 000000c4</span><br><span class="line">@000030b8: $ 4 &lt;= 00000000</span><br><span class="line">@000030bc: $26 &lt;= 00000120</span><br><span class="line">@000030c0: $20 &lt;= 00000000</span><br><span class="line">@000030c4: $18 &lt;= 00000178</span><br><span class="line">@000030c8: *00000188 &lt;= 00000000</span><br><span class="line">@000030d4: $19 &lt;= 00000140</span><br><span class="line">@000030d8: *0000014c &lt;= 000000c4</span><br><span class="line">@000030e0: $11 &lt;= a5e60000</span><br><span class="line">@000030e4: $22 &lt;= ce2e0000</span><br><span class="line">@000030e8: $17 &lt;= 00000000</span><br><span class="line">@000030ec: $17 &lt;= 00000118</span><br><span class="line">@000030f0: $25 &lt;= 00000000</span><br><span class="line">@000030f8: *00000008 &lt;= 00000000</span><br><span class="line">@000030fc: $ 8 &lt;= ce2e0000</span><br><span class="line">@00003100: $14 &lt;= 000001b8</span><br><span class="line">@00003104: $ 6 &lt;= 00000000</span><br><span class="line">@00003110: $ 5 &lt;= ce2e01b8</span><br><span class="line">@00003114: $17 &lt;= 00007efc</span><br><span class="line">@00003118: $24 &lt;= 00000100</span><br><span class="line">@0000311c: *00000110 &lt;= ce2e0000</span><br><span class="line">@00003120: $21 &lt;= 00000100</span><br><span class="line">@00003124: $29 &lt;= 000000f8</span><br><span class="line">@00003128: $22 &lt;= ce2e0000</span><br><span class="line">@0000312c: $19 &lt;= ffffff6c</span><br><span class="line">@00003130: $ 5 &lt;= ce2e4cba</span><br><span class="line">@00003134: $ 7 &lt;= ce2e0000</span><br><span class="line">@00003138: $15 &lt;= a7460000</span><br><span class="line">@0000313c: $30 &lt;= 00000000</span><br><span class="line">@00003140: $23 &lt;= 00000090</span><br><span class="line">@00003144: *00000098 &lt;= 00000000</span><br><span class="line">@00003148: $22 &lt;= 000000fc</span><br><span class="line">@0000314c: *00000120 &lt;= 00000000</span><br><span class="line">@00003150: $31 &lt;= 00003154</span><br><span class="line">@000032b8: $13 &lt;= 0000017c</span><br><span class="line">@000032bc: *000001a0 &lt;= 00000000</span><br><span class="line">@000032c0: $ 5 &lt;= 000001a4</span><br><span class="line">@000032c4: $24 &lt;= 00000000</span><br><span class="line">@000032cc: $22 &lt;= 00000198</span><br><span class="line">@000032d0: $27 &lt;= 00000000</span><br><span class="line">@000032d4: $16 &lt;= 000000f8</span><br><span class="line">@000032d8: *00000114 &lt;= ce2e0000</span><br><span class="line">@000032dc: $26 &lt;= 0000c3ff</span><br><span class="line">@000032e4: $ 7 &lt;= 000000f8</span><br><span class="line">@000032ec: $23 &lt;= e5d70000</span><br><span class="line">@000032f4: $17 &lt;= 00000134</span><br><span class="line">@000032f8: $11 &lt;= 00000000</span><br><span class="line">@00003300: $ 2 &lt;= 0000c3ff</span><br><span class="line">@0000330c: $ 5 &lt;= 0000bbf8</span><br><span class="line">@00003310: $15 &lt;= 58ba017c</span><br><span class="line">@00003314: $31 &lt;= 00003318</span><br><span class="line">@000033ec: $27 &lt;= 00000064</span><br><span class="line">@000033f4: $28 &lt;= 000001b8</span><br><span class="line">@000033f8: $31 &lt;= 000033fc</span><br></pre></td></tr></table></figure>
+
+<p><strong>完全一致，测试通过！</strong></p>
+<hr>
+<h2 id="Warnings-1"><a href="#Warnings-1" class="headerlink" title="Warnings"></a><em>Warnings</em></h2><h3 id="易错点："><a href="#易错点：" class="headerlink" title="易错点："></a><strong>易错点：</strong></h3><p><strong>1.非阻塞赋值与display的内容不相符</strong></p>
+<p>评测机是通过看我们display的东西和它需要的一样不一样来评判我们是否正确的。如果采用非阻塞赋值，紧接着来一句display的话，由于非阻塞赋值是在过程块结束时才统一赋值的，所以输出的东西是未修改的。</p>
+<p><strong>2.位宽</strong></p>
+<p>对于0x0000_3000，它的位宽是32位，所以二进制写法是32’b00000000000000000011000000000000,省事写16进制的话，是<strong>32’h0000_3000，这里的32指的是位宽，而不是这个数在某种进制下有几位！</strong></p>
+<p><strong>3.jr跳转</strong></p>
+<p>jr不只是可以跳31号寄存器存的地址，任何寄存器存储的地址它都可以跳！这是室友P4课上遭遇的车祸现场，<strong>课下弱测并没有测试出来！</strong> 请务必检查jr是否写对了！</p>
+<p><strong>4.还是display</strong></p>
+<p>需要输出32位宽的内存地址，不是【13:2】（12位）地址，请大家看好自己的输出！和教程中提供的输出比对一下，应该就会发现。</p>
+<p><strong>5.Reset常见误区</strong></p>
+<p>首先是同步复位，这个老生常谈了。之后就是reset的地方够不够，对不对，我们需要reset的地方是程序计数器PC，寄存器堆GRF，数据存储器DM，除此之外，如果发现自己在其他地方也使用了reset，就得好好斟酌一下，这里到底需不需要reset？比如，我发现自己在IM中加了一个reset，本地测试过了，提交没输出，为何？经过了一天的思考和从各方获取经验，我隐约意识到可能是复位出了问题，IM里面为什么需要reset？是防止PC值没有变成0x0000_3000吗？我最开始的确是这么想的，所以在里面加了reset，但是，后来我发现，我reset的并不是输入进来的PC，而是，指令存储空间！！也就是说，考虑到评测机最开始上来就reset一下，我读入的code直接没了，当然之后没有输出。为何本地没有测出来问题？因为我没有检查reset,只是保持reset&#x3D;0跑的程序。这个点卡了我一天多，也卡了评论区不少同学好长时间。还有类似的问题如输出比正常的慢一周期的，也请看看reset。这样，关于reset的坑差不多就介绍完了。</p>
+<h3 id="新增指令要点："><a href="#新增指令要点：" class="headerlink" title="新增指令要点："></a><strong>新增指令要点：</strong></h3><ol>
+<li><p>注意条件分支带<strong>link</strong>的指令需改动的点，<strong>signal_def</strong>中添加<strong>OP</strong>，<strong>CMP_OP</strong>，在CMP中分析跳转模式，增加相应<strong>case</strong>分支。<strong>重点</strong>：<strong>CTRL</strong>内的信号添加。首先是添加<strong>相应导线</strong>，再在NPCOp内添加相应的<code>| 导线名</code>，<strong>WDsel</strong>的部分添加相应的<code>| 导线名</code>，<strong>A3sel</strong>的部分也添加相应的<code>| 导线名</code>，最后在于关键的<strong>WE</strong>信号，因为我采用了取反的方式，所以直接在括号内添加相应的指令模块，如对于<code>bgezal指令</code>，<strong>WE</strong>可写为</p>
+<p><code>assign GRFWE = !(sw | beq | j | sh | sb | jr | (bgezal &amp; !jump));</code>，重点就在<strong>添加<code>(bgezal &amp; !jump)</code>部分！！！</strong> <strong>谨记！！！</strong></p>
+</li>
+<li><p>对于复杂计算，则观察计算方法，由于<strong>ALU</strong>内部采用了case语句的模式，故可以考虑另写<strong>functional</strong>来保证计算方式合理添加，具体寄存器选择信号则观察指令相似处，与相同模式指令同处加<code>| 导线名</code>即可！！！</p>
+</li>
+</ol>
+<hr>
+<h2 id="思考题"><a href="#思考题" class="headerlink" title="思考题"></a>思考题</h2><ol>
+<li><p>阅读下面给出的 DM 的输入示例中（示例 DM 容量为 4KB，即 32bit × 1024字），根据你的理解回答，这个 addr 信号又是从哪里来的？地址信号 addr 位数为什么是 [11:2] 而不是 [9:0] ？</p>
+<p><img src="/2025/08/10/P4-CPU/image-20250816111014492.png"></p>
+<p>MIPS中以<strong>字节</strong>为单位，而在我们设计的DM中，每一个<code>reg[31:0]</code>为一个单位。</p>
+<p>Addr来自ALU的<strong>输出端口</strong>，代表要读取的DM存储器的地址，在DM设计中应当取[11:0]，又因为按字节寻址，因此除以<strong>4</strong>取 <strong>[11:2]</strong>；</p>
+</li>
+<li><p>思考上述两种控制器设计的译码方式，给出代码示例，并尝试对比各方式的优劣。</p>
+<p><strong>指令对应控制信号取值：</strong></p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">`<span class="keyword">define</span> R 6&#x27;b000000 </span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> lw 6&#x27;b100011 </span></span><br><span class="line"><span class="keyword">case</span>(Instr[<span class="number">31</span>:<span class="number">26</span>]) </span><br><span class="line">    `R: <span class="keyword">begin</span> </span><br><span class="line">        <span class="keyword">case</span>(Instr[<span class="number">5</span>:<span class="number">0</span>]) </span><br><span class="line">        <span class="number">6&#x27;b100000</span>:add RegDst=<span class="number">2&#x27;b01</span>; Regwrite=<span class="number">1&#x27;b1</span>; ALUsrc=<span class="number">2&#x27;b00</span>; ALUctrl=<span class="number">3</span>‘b000; Memwrite=<span class="number">0</span>; MemtoReg=<span class="number">2&#x27;b00</span>; </span><br><span class="line">        <span class="number">6&#x27;b100010</span>:sub RegDst=<span class="number">2&#x27;b01</span>; Regwrite=<span class="number">1&#x27;b1</span>; ALUsrc=<span class="number">2&#x27;b00</span>; ALUctrl=<span class="number">3</span>‘b001; Memwrite=<span class="number">0</span>; MemtoReg=<span class="number">2&#x27;b00</span>; </span><br><span class="line">            …… </span><br><span class="line">            <span class="keyword">endcase</span> </span><br><span class="line">            <span class="keyword">end</span> `</span><br><span class="line">     `lw: …… </span><br><span class="line"><span class="keyword">endcase</span></span><br></pre></td></tr></table></figure>
+
+<p>这种译码方式，对于信号的控制<strong>不容易遗漏</strong>，对于每一个信号都需要给一个值，清晰易读,比较直观，但是添加指令比较复杂，需要给出完整的控制信号，对于不需要的信号也需要给定默认值，这样也会导致控制部分的代码比较长。</p>
+<p><strong>控制信号每种取值所对应的指令</strong></p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">wire</span> add=(Instr[<span class="number">31</span>:<span class="number">26</span>]==<span class="number">6&#x27;b000000</span> &amp;&amp; Instr[<span class="number">5</span>:<span class="number">0</span>] == <span class="number">6&#x27;b100000</span>); </span><br><span class="line"><span class="keyword">wire</span> sub=(Instr[<span class="number">31</span>:<span class="number">26</span>]==<span class="number">6&#x27;b000000</span> &amp;&amp; Instr[<span class="number">5</span>:<span class="number">0</span>] == <span class="number">6&#x27;b100010</span>); ……</span><br><span class="line"><span class="keyword">assign</span> RegDst[<span class="number">1</span>]=<span class="number">1&#x27;b0</span>|jal; <span class="keyword">assign</span> RegDst[<span class="number">0</span>]=<span class="number">1&#x27;b0</span>|add|sub; </span><br><span class="line"><span class="keyword">assign</span> Regwrite=<span class="number">1&#x27;b0</span>|add|sub|ori|lw|lui|jal; </span><br><span class="line"><span class="keyword">assign</span> EXTop=<span class="number">1&#x27;b0</span>|lw|sw; <span class="keyword">assign</span> ALUsrc[<span class="number">1</span>]=<span class="number">1&#x27;b0</span>; </span><br><span class="line"><span class="keyword">assign</span> ALUsrc[<span class="number">0</span>]=<span class="number">1&#x27;b0</span>|ori|lw|sw|lui; <span class="keyword">assign</span> ALUctrl[<span class="number">2</span>]=<span class="number">1&#x27;b0</span>; </span><br><span class="line"><span class="keyword">assign</span> ALUctrl[<span class="number">1</span>]=<span class="number">1&#x27;b0</span>|ori; </span><br><span class="line"><span class="keyword">assign</span> ALUctrl[<span class="number">0</span>]=<span class="number">1&#x27;b0</span>|sub; </span><br><span class="line"><span class="keyword">assign</span> Memwrite=<span class="number">1&#x27;b0</span>|sw; </span><br><span class="line"><span class="keyword">assign</span> MemtoReg[<span class="number">1</span>]=<span class="number">1&#x27;b0</span>|lui|jal; </span><br><span class="line"><span class="keyword">assign</span> MemtoReg[<span class="number">0</span>]=<span class="number">1&#x27;b0</span>|lw|lui; </span><br><span class="line"><span class="keyword">assign</span> NPCop[<span class="number">1</span>]=<span class="number">1&#x27;b0</span>|beq|jr; </span><br><span class="line"><span class="keyword">assign</span> NPCop[<span class="number">0</span>]=<span class="number">1&#x27;b0</span>|jal|jr|j; </span><br><span class="line"><span class="keyword">assign</span> Branchop[<span class="number">2</span>]=<span class="number">1&#x27;b0</span>; </span><br><span class="line"><span class="keyword">assign</span> Branchop[<span class="number">1</span>]=<span class="number">1&#x27;b0</span>; </span><br><span class="line"><span class="keyword">assign</span> Branchop[<span class="number">0</span>]=<span class="number">1&#x27;b0</span>; </span><br><span class="line"><span class="keyword">assign</span> DMop[<span class="number">1</span>]=<span class="number">1&#x27;b0</span>; </span><br><span class="line"><span class="keyword">assign</span> DMop[<span class="number">0</span>]=<span class="number">1&#x27;b0</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这种译码方式，是对控制信号用了或指令的方式，如果满足这条指令，就会使的控制信号有效，这种方式的优点在于可以<strong>很容易的添加指令</strong>，对于<strong>指令只需要在相应控制信号之后或上一个即可</strong>，但是缺点是不够直观，<strong>可能会造成漏加信号的错误</strong>。</p>
+<p><del><strong>经过P3的拷打，我认为还是第二种比较好。</strong></del></p>
+</li>
+<li><p>在相应的部件中，复位信号的设计都是<strong>同步复位</strong>，这与 P3 中的设计要求不同。请对比<strong>同步复位</strong>与<strong>异步复位</strong>这两种方式的 reset 信号与 clk 信号优先级的关系。</p>
+<p>在同步复位中，<strong>clk的优先级是高于reset</strong>的，只有在时钟上升沿到来时reset信号有效才进行复位，单有reset信号而时钟上升沿信号没有到来不能进行复位。</p>
+<p>在异步复位中，<strong>reset优先级高于clk</strong>，不论是否是时钟上升沿来临，只要reset信号高电平就清零。</p>
+</li>
+<li><p>C 语言是一种弱类型程序设计语言。C 语言中不对计算结果溢出进行处理，这意味着 C 语言要求程序员必须很清楚计算结果是否会导致溢出。因此，如果仅仅支持 C 语言，MIPS 指令的所有计算指令均可以忽略溢出。 请说明为什么在忽略溢出的前提下，addi 与 addiu 是等价的，add 与 addu 是等价的。提示：阅读《MIPS32® Architecture For Programmers Volume II: The MIPS32® Instruction Set》中相关指令的 Operation 部分。</p>
+<p>根据<strong>RTL</strong>语言描述：<code>addi</code>与<code>addiu</code>的区别在于当出现溢出时，<code>addiu</code>忽略溢出，并将溢出的最高位舍弃；<code>addi</code>会报告<code>SignalException(IntegerOverflow)</code></p>
+<p><strong>故忽略溢出，二者等价。</strong></p>
+</li>
+</ol>
+</div><div class="article-licensing box"><div class="licensing-title"><p>RooKie_Z P4 Verilog单周期CPU设计文档</p><p><a href="https://rookie-zgy1513.github.io/2025/08/10/P4-CPU/">https://rookie-zgy1513.github.io/2025/08/10/P4-CPU/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>作者</h6><p>RooKie_Z</p></div></div><div class="level-item is-narrow"><div><h6>发布于</h6><p>2025-08-10</p></div></div><div class="level-item is-narrow"><div><h6>更新于</h6><p>2025-08-16</p></div></div><div class="level-item is-narrow"><div><h6>许可协议</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/CO/">CO</a></div><div class="sharethis-inline-share-buttons"></div><script src="https://platform-api.sharethis.com/js/sharethis.js#property=689f30d60faa3a7358f6b458&amp;product=inline-share-buttons" defer></script></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2025/08/10/P5-CPU/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">RooKie_Z P5 Verilog流水线CPU设计文档</span></a></div></nav><div class="card" id="comments"><div class="card-content"><h3 class="title is-5">评论</h3><div id="comment-container"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"><script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script><script>var gitalk = new Gitalk({
+            id: "ecdb58727da7d9eb8c6637b1105a0d18",
+            repo: "rookie-zgy1513.github.io",
+            owner: "rookie-zgy1513",
+            clientID: "Ov23li6vyFeMUxsyVjCc",
+            clientSecret: "28debacc0df80666a6064a7f00cdad1cb7ad9248",
+            admin: ["rookie-zgy1513"],
+            createIssueManually: false,
+            distractionFreeMode: false,
+            perPage: 10,
+            pagerDirection: "last",
+            
+            
+            enableHotKey: true,
+            
+        })
+        gitalk.render('comment-container')</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1 is-sticky"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/avatar.png" alt="RooKie_Z"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">RooKie_Z</p><p class="is-size-6 is-block">RooKie_Z的小窝</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>BeiJing 🇨🇳</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives/"><p class="title">12</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories/"><p class="title">9</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags/"><p class="title">6</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/rookie-zgy1513" target="_blank" rel="me noopener">关注我</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Github" href="https://github.com/rookie-zgy1513"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Facebook" href="https://facebook.com"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Twitter" href="https://x.com"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Instagram" href="https://instagram.com"><i class="fab fa-instagram"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Bilibili" href="https://bilibili.com"><i class="fab fa-bilibili"></i></a></div></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">归档</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2025/08/"><span class="level-start"><span class="level-item">八月 2025</span></span><span class="level-end"><span class="level-item tag">12</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/CO/"><span class="tag">CO</span><span class="tag">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Hexo/"><span class="tag">Hexo</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/OO/"><span class="tag">OO</span><span class="tag">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/OS/"><span class="tag">OS</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/compiler/"><span class="tag">compiler</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/database/"><span class="tag">database</span><span class="tag">1</span></a></div></div></div></div></div><div class="card widget" data-type="links"><div class="card-content"><div class="menu"><h3 class="menu-label">链接</h3><ul class="menu-list"><li><a class="level is-mobile" href="https://hexo.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li><li><a class="level is-mobile" href="https://ppoffice.github.io/" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Icarus</span></span><span class="level-right"><span class="level-item tag">ppoffice.github.io</span></span></a></li></ul></div></div></div><div class="column-right-shadow is-hidden-widescreen is-sticky"></div></div><div class="column column-right is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only order-3 is-sticky"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="level is-mobile" href="#写在前面"><span class="level-left"><span class="level-item">1</span><span class="level-item">写在前面</span></span></a></li><li><a class="level is-mobile" href="#总体设计概述"><span class="level-left"><span class="level-item">2</span><span class="level-item">总体设计概述</span></span></a></li><li><a class="level is-mobile" href="#关键模块介绍"><span class="level-left"><span class="level-item">3</span><span class="level-item">关键模块介绍</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#命名规则"><span class="level-left"><span class="level-item">3.1</span><span class="level-item">命名规则</span></span></a></li><li><a class="level is-mobile" href="#宏定义介绍"><span class="level-left"><span class="level-item">3.2</span><span class="level-item">宏定义介绍</span></span></a></li><li><a class="level is-mobile" href="#GRF"><span class="level-left"><span class="level-item">3.3</span><span class="level-item">GRF</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#端口说明"><span class="level-left"><span class="level-item">3.3.1</span><span class="level-item">端口说明</span></span></a></li><li><a class="level is-mobile" href="#相关控制信号说明"><span class="level-left"><span class="level-item">3.3.2</span><span class="level-item">相关控制信号说明</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#1、A3Sel"><span class="level-left"><span class="level-item">3.3.2.1</span><span class="level-item">1、A3Sel</span></span></a></li><li><a class="level is-mobile" href="#2、WDSel"><span class="level-left"><span class="level-item">3.3.2.2</span><span class="level-item">2、WDSel</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#EXT"><span class="level-left"><span class="level-item">3.4</span><span class="level-item">EXT</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#控制信号说明"><span class="level-left"><span class="level-item">3.4.1</span><span class="level-item">控制信号说明</span></span></a></li></ul></li><li><a class="level is-mobile" href="#IFU-指令读取单元"><span class="level-left"><span class="level-item">3.5</span><span class="level-item">IFU(指令读取单元)</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#端口说明-1"><span class="level-left"><span class="level-item">3.5.1</span><span class="level-item">端口说明</span></span></a></li></ul></li><li><a class="level is-mobile" href="#ALU"><span class="level-left"><span class="level-item">3.6</span><span class="level-item">ALU</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#端口说明-2"><span class="level-left"><span class="level-item">3.6.1</span><span class="level-item">端口说明</span></span></a></li><li><a class="level is-mobile" href="#控制信号说明-1"><span class="level-left"><span class="level-item">3.6.2</span><span class="level-item">控制信号说明</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#1-ALUOp"><span class="level-left"><span class="level-item">3.6.2.1</span><span class="level-item">1. ALUOp</span></span></a></li><li><a class="level is-mobile" href="#2-ALUBSel"><span class="level-left"><span class="level-item">3.6.2.2</span><span class="level-item">2. ALUBSel</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#CMP-分支比较"><span class="level-left"><span class="level-item">3.7</span><span class="level-item">CMP(分支比较)</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#代码实现："><span class="level-left"><span class="level-item">3.7.1</span><span class="level-item">代码实现：</span></span></a></li><li><a class="level is-mobile" href="#端口说明-3"><span class="level-left"><span class="level-item">3.7.2</span><span class="level-item">端口说明</span></span></a></li></ul></li><li><a class="level is-mobile" href="#NPC-次地址计算"><span class="level-left"><span class="level-item">3.8</span><span class="level-item">NPC(次地址计算)</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#端口说明-4"><span class="level-left"><span class="level-item">3.8.1</span><span class="level-item">端口说明</span></span></a></li><li><a class="level is-mobile" href="#控制信号说明-2"><span class="level-left"><span class="level-item">3.8.2</span><span class="level-item">控制信号说明</span></span></a></li></ul></li><li><a class="level is-mobile" href="#DM（数据储存器）"><span class="level-left"><span class="level-item">3.9</span><span class="level-item">DM（数据储存器）</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#端口说明-5"><span class="level-left"><span class="level-item">3.9.1</span><span class="level-item">端口说明</span></span></a></li><li><a class="level is-mobile" href="#控制信号说明-3"><span class="level-left"><span class="level-item">3.9.2</span><span class="level-item">控制信号说明</span></span></a></li></ul></li><li><a class="level is-mobile" href="#数据通路分析"><span class="level-left"><span class="level-item">3.10</span><span class="level-item">数据通路分析</span></span></a></li><li><a class="level is-mobile" href="#调试过程记录"><span class="level-left"><span class="level-item">3.11</span><span class="level-item">调试过程记录</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Warnings"><span class="level-left"><span class="level-item">3.11.1</span><span class="level-item">Warnings</span></span></a></li><li><a class="level is-mobile" href="#测试方案"><span class="level-left"><span class="level-item">3.11.2</span><span class="level-item">测试方案</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#Warnings-1"><span class="level-left"><span class="level-item">4</span><span class="level-item">Warnings</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#易错点："><span class="level-left"><span class="level-item">4.1</span><span class="level-item">易错点：</span></span></a></li><li><a class="level is-mobile" href="#新增指令要点："><span class="level-left"><span class="level-item">4.2</span><span class="level-item">新增指令要点：</span></span></a></li></ul></li><li><a class="level is-mobile" href="#思考题"><span class="level-left"><span class="level-item">5</span><span class="level-item">思考题</span></span></a></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2025-08-14T15:46:07.000Z">2025-08-14</time></p><p class="title"><a href="/2025/08/14/database/">学海伴航——教辅平台系统设计文档</a></p><p class="categories"><a href="/categories/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E4%B8%8A/">大三上课上</a> / <a href="/categories/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E4%B8%8A/database/">database</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2025-08-14T13:06:06.000Z">2025-08-14</time></p><p class="title"><a href="/2025/08/14/compiler/">RooKie_Z Compiler编译器设计文档</a></p><p class="categories"><a href="/categories/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E4%B8%8A/">大三上课上</a> / <a href="/categories/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E4%B8%8A/compiler/">compiler</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2025-08-14T12:37:15.000Z">2025-08-14</time></p><p class="title"><a href="/2025/08/14/challenge-shell/">RooKie_Z challenge-shell实现报告</a></p><p class="categories"><a href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8B%E8%AF%BE%E4%B8%8A/">大二下课上</a> / <a href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8B%E8%AF%BE%E4%B8%8A/OS/">OS</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2025-08-13T09:15:00.000Z">2025-08-13</time></p><p class="title"><a href="/2025/08/13/OO-4/">OO第四单元总结暨课程总结</a></p><p class="categories"><a href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8B%E8%AF%BE%E4%B8%8A/">大二下课上</a> / <a href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8B%E8%AF%BE%E4%B8%8A/OO/">OO</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2025-08-13T09:13:00.000Z">2025-08-13</time></p><p class="title"><a href="/2025/08/13/OO-3/">OO第三单元总结</a></p><p class="categories"><a href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8B%E8%AF%BE%E4%B8%8A/">大二下课上</a> / <a href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8B%E8%AF%BE%E4%B8%8A/OO/">OO</a></p></div></article></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/Hexo/"><span class="level-start"><span class="level-item">Hexo</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E4%B8%8A/"><span class="level-start"><span class="level-item">大三上课上</span></span><span class="level-end"><span class="level-item tag">2</span></span></a><ul><li><a class="level is-mobile" href="/categories/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E4%B8%8A/compiler/"><span class="level-start"><span class="level-item">compiler</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E4%B8%8A/database/"><span class="level-start"><span class="level-item">database</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></li><li><a class="level is-mobile" href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8A%E8%AF%BE%E4%B8%8A/"><span class="level-start"><span class="level-item">大二上课上</span></span><span class="level-end"><span class="level-item tag">4</span></span></a><ul><li><a class="level is-mobile" href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8A%E8%AF%BE%E4%B8%8A/CO%E5%AE%9E%E9%AA%8C/"><span class="level-start"><span class="level-item">CO实验</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li></ul></li><li><a class="level is-mobile" href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8B%E8%AF%BE%E4%B8%8A/"><span class="level-start"><span class="level-item">大二下课上</span></span><span class="level-end"><span class="level-item tag">5</span></span></a><ul><li><a class="level is-mobile" href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8B%E8%AF%BE%E4%B8%8A/OO/"><span class="level-start"><span class="level-item">OO</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile" href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8B%E8%AF%BE%E4%B8%8A/OS/"><span class="level-start"><span class="level-item">OS</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></li></ul></div></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.png" alt="RooKie_Z的小窝" height="28"></a><p class="is-size-7"><span>&copy; 2025 RooKie_Z</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p><p class="is-size-7">© 2025 RooKie_Z. All rights reserved.</p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/rookie-zgy1513"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-cn");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script data-pjax src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script data-pjax src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "此网站使用Cookie来改善您的体验。",
+          dismiss: "知道了！",
+          allow: "允许使用Cookie",
+          deny: "拒绝",
+          link: "了解更多",
+          policy: "Cookie政策",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script type="text/javascript" id="MathJax-script" async>MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+        fontCache: 'global'
+      },
+      chtml: {
+        matchFontHeight: false
+      }
+    };</script><script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script src="/js/pjax.js"></script><!--!--><!--!--><!--!--><script data-pjax src="/js/main.js" defer></script><script src="/js/night.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script data-pjax src="/js/insight.js" defer></script><script data-pjax>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>

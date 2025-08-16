@@ -1,0 +1,1270 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><meta rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css"><title>RooKie_Z P6 Verilog流水线CPU设计文档 - RooKie_Z的小窝</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="RooKie_Z的小窝"><meta name="msapplication-TileImage" content="/img/favicon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="RooKie_Z的小窝"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="&amp;#x2F;* 常用颜色类 *&amp;#x2F; .text-cadetblue { color: CadetBlue !important; } .text-blue { color: #007bff !important; } .text-green { color: #28a745 !important; } .text-red { color: #DC143C !important; } .text-orange"><meta property="og:type" content="blog"><meta property="og:title" content="RooKie_Z P6 Verilog流水线CPU设计文档"><meta property="og:url" content="https://rookie-zgy1513.github.io/2025/08/10/P6-CPU/"><meta property="og:site_name" content="RooKie_Z的小窝"><meta property="og:description" content="&amp;#x2F;* 常用颜色类 *&amp;#x2F; .text-cadetblue { color: CadetBlue !important; } .text-blue { color: #007bff !important; } .text-green { color: #28a745 !important; } .text-red { color: #DC143C !important; } .text-orange"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://rookie-zgy1513.github.io/images/%E6%B7%BB%E5%8A%A0%E8%BD%AC%E5%8F%91%E5%90%8E%E7%9A%84%E6%95%B0%E6%8D%AE%E9%80%9A%E8%B7%AF.svg"><meta property="article:published_time" content="2025-08-10T03:41:13.000Z"><meta property="article:modified_time" content="2025-08-16T03:45:27.307Z"><meta property="article:author" content="RooKie_Z"><meta property="article:tag" content="CO"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://rookie-zgy1513.github.io/images/%E6%B7%BB%E5%8A%A0%E8%BD%AC%E5%8F%91%E5%90%8E%E7%9A%84%E6%95%B0%E6%8D%AE%E9%80%9A%E8%B7%AF.svg"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://rookie-zgy1513.github.io/2025/08/10/P6-CPU/"},"headline":"RooKie_Z P6 Verilog流水线CPU设计文档","image":[],"datePublished":"2025-08-10T03:41:13.000Z","dateModified":"2025-08-16T03:45:27.307Z","author":{"@type":"Person","name":"RooKie_Z"},"publisher":{"@type":"Organization","name":"RooKie_Z的小窝","logo":{"@type":"ImageObject","url":"https://rookie-zgy1513.github.io/img/logo.png"}},"description":"&#x2F;* 常用颜色类 *&#x2F; .text-cadetblue { color: CadetBlue !important; } .text-blue { color: #007bff !important; } .text-green { color: #28a745 !important; } .text-red { color: #DC143C !important; } .text-orange"}</script><link rel="canonical" href="https://rookie-zgy1513.github.io/2025/08/10/P6-CPU/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link data-pjax rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/night-owl.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link data-pjax rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const id = '#' + CSS.escape(location.hash.substring(1));
+          const $tabMenu = document.querySelector(`.tabs a[href="${id}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(id);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.png" alt="RooKie_Z的小窝" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">主页</a><a class="navbar-item" href="/archives">归档</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/tags">标签</a><a class="navbar-item" href="/about">关于</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/rookie-zgy1513"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a><a class="navbar-item night" id="night-nav" title="Night Mode" href="javascript:;"><i class="fas fa-lightbulb" id="night-icon"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="fill" src="/images/%E6%B7%BB%E5%8A%A0%E8%BD%AC%E5%8F%91%E5%90%8E%E7%9A%84%E6%95%B0%E6%8D%AE%E9%80%9A%E8%B7%AF.svg" alt="RooKie_Z P6 Verilog流水线CPU设计文档"></span></div><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2025-08-10T03:41:13.000Z" title="2025/8/10 11:41:13">2025-08-10</time>发表</span><span class="level-item"><time dateTime="2025-08-16T03:45:27.307Z" title="2025/8/16 11:45:27">2025-08-16</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8A%E8%AF%BE%E4%B8%8A/">大二上课上</a><span> / </span><a class="link-muted" href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8A%E8%AF%BE%E4%B8%8A/CO%E5%AE%9E%E9%AA%8C/">CO实验</a></span><span class="level-item">1 小时读完 (大约10248个字)</span></div></div><h1 class="title is-3 is-size-4-mobile">RooKie_Z P6 Verilog流水线CPU设计文档</h1><div class="content"><style>
+/* 常用颜色类 */
+.text-cadetblue { color: CadetBlue !important; }
+.text-blue { color: #007bff !important; }
+.text-green { color: #28a745 !important; }
+.text-red { color: #DC143C !important; }
+.text-orange { color: #fd7e14 !important; }
+.text-purple { color: #6f42c1 !important; }
+
+.text-emphasis { color: #007bff; font-weight: bold; }
+.text-warning { color: #ffc107; font-weight: bold; }
+.text-success { color: #28a745; font-weight: bold; }
+.text-danger { color: #7835dc; font-weight: bold; }
+
+/* 警告框样式 */
+blockquote {
+    position: relative;
+    margin: 20px 0;
+    padding: 16px 20px;
+    border-left: 4px solid #007bff;
+    background: #f8f9fa;
+    border-radius: 0 6px 6px 0;
+    font-style: normal;
+}
+
+blockquote[data-callout="important"] {
+    border-left-color: #7835dc;
+    background: rgb(242, 241, 251);
+    border-left-width: 6px;
+}
+
+blockquote[data-callout="important"]::before {
+    content: "💬 重要";
+    display: block;
+    font-weight: bold;
+    color: #7835dc;
+    margin-bottom: 8px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+blockquote[data-callout="caution"] {
+    border-left-color: #ffc107;
+    background: #fffbf0;
+    border-left-width: 6px;
+}
+
+blockquote[data-callout="caution"]::before {
+    content: "⚠️ 注意";
+    display: block;
+    font-weight: bold;
+    color: #b8860b;
+    margin-bottom: 8px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+blockquote[data-callout="note"] {
+    border-left-color: #17a2b8;
+    background: #f0f9ff;
+    border-left-width: 6px;
+}
+
+blockquote[data-callout="note"]::before {
+    content: "ℹ️ 提示";
+    display: block;
+    font-weight: bold;
+    color: #17a2b8;
+    margin-bottom: 8px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+</style>
+
+<script>
+// 处理警告框
+document.addEventListener('DOMContentLoaded', function() {
+    const blockquotes = document.querySelectorAll('blockquote');
+    blockquotes.forEach(function(blockquote) {
+        const firstParagraph = blockquote.querySelector('p:first-child');
+        if (firstParagraph) {
+            const text = firstParagraph.textContent;
+            const calloutMatch = text.match(/\[!(IMPORTANT|CAUTION|NOTE)\]/i);
+
+            if (calloutMatch) {
+                const calloutType = calloutMatch[1].toLowerCase();
+                blockquote.setAttribute('data-callout', calloutType);
+                
+                // 移除标记文本
+                const cleanText = text.replace(/\[![^\]]+\]\s*/, '');
+                firstParagraph.textContent = cleanText;
+            }
+        }
+    });
+});
+</script>
+
+<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>这是RooKie_Z的P6流水线CPU设计文档，在课上测试中本CPU取得了 <strong><span class="text-cadetblue">满分💯的成绩。</span></strong></p>
+<h2 id="总体设计概述"><a href="#总体设计概述" class="headerlink" title="总体设计概述"></a>总体设计概述</h2><p>本次要求实现的指令集为<code>add, sub, and, or, slt, sltu, lui，addi, andi, ori，lb, lh, lw, sb, sh, sw，mult, multu, div, divu, mfhi, mflo, mthi, mtlo，beq, bne, jal, jr</code>，可以看到，除了一部分位移指令和异常相关的指令，指令集内各类型指令均有覆盖。由于P5架构较为完备，大部分指令已于P5课下实现，故本次设计仅添加乘除单元<strong>MDU</strong>，并结合课程组所给tb对数据通路稍作修改，并未进行大的重构。</p>
+<span id="more"></span>
+
+<h3 id="数据通路"><a href="#数据通路" class="headerlink" title="数据通路"></a>数据通路</h3><h3 id=""><a href="#" class="headerlink" title=""></a><img src="/2025/08/10/P6-CPU/%E6%95%B0%E6%8D%AE%E9%80%9A%E8%B7%AF.svg"></h3><h3 id="添加转发后的数据通路"><a href="#添加转发后的数据通路" class="headerlink" title="添加转发后的数据通路"></a>添加转发后的数据通路</h3><p><img src="/2025/08/10/P6-CPU/%E6%B7%BB%E5%8A%A0%E8%BD%AC%E5%8F%91%E5%90%8E%E7%9A%84%E6%95%B0%E6%8D%AE%E9%80%9A%E8%B7%AF.svg"></p>
+<hr>
+<h2 id="关键模块介绍"><a href="#关键模块介绍" class="headerlink" title="关键模块介绍"></a>关键模块介绍</h2><p>总体而言，在总体架构不作大的修改的前提下，修改了一部分控制信号，同时添加了流水线各级寄存器和虚拟的阻塞控制单元，对于每一级流水线都设计了相应的译码器。</p>
+<h3 id="命名规则"><a href="#命名规则" class="headerlink" title="命名规则"></a>命名规则</h3><ul>
+<li>对于各模块文件，均采用对于元件的文件命名，均为<code>流水线层级_元件英文简称</code>，例如<code>D_GRF.v</code>，<code>E_ALU.v</code>等，实例化时命名为<code>大写首字母小写英文名</code>，例如<code>Alu</code>，<code>Grf</code>等</li>
+<li>对于流水线寄存器文件命名为<code>两边的流水线层级_REG</code>，例如<code>FD_REG.v</code>，<code>DE_REG.v</code>，实例化时命名为<code>大写英文层级</code>，例如<code>FD</code></li>
+<li>每一级的控制信号和临时的<code>wire</code>均以本级的名称开头，如<code>E_ALUOp</code>，<code>M_DMOp</code>等</li>
+<li>在流水线中参与流水的信息遵从以下约定（以D级为例）<ul>
+<li><code>PC</code>和<code>Instr</code>命名以流水线层级开头，如<code>D_PC</code>，<code>D_Instr</code></li>
+<li>寄存器地址分别为<code>D_rs_addr</code>，<code>D_rt_addr</code>，读出数据为<code>D_rs</code>，<code>D_rt</code></li>
+<li>转发得到的寄存器数据（直接读取也视为一种转发）记作<code>D_FWD_rs_data</code>，<code>D_FWD_rt_data</code></li>
+<li>即将写入的寄存器地址为<code>E_A3</code>，即将写入的数据记作<code>E_WD</code>，选择信号为<code>E_WDSel</code></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="F级（取指）"><a href="#F级（取指）" class="headerlink" title="F级（取指）"></a>F级（取指）</h3><h4 id="PC（程序计数器）"><a href="#PC（程序计数器）" class="headerlink" title="PC（程序计数器）"></a>PC（程序计数器）</h4><table>
+<thead>
+<tr>
+<th align="center"><strong>信号名称</strong></th>
+<th align="center"><strong>方向</strong></th>
+<th align="center"><strong>功能描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>NPC[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>待写入PC的指令地址</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>clk</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>时钟信号</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>reset</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>同步复位信号</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>PC_WE</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>PC的写使能</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>PC</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>当前指令地址</strong></td>
+</tr>
+</tbody></table>
+<p>然后与<code>mips_txt.v</code>交互获得当前指令</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">F_PC _pc(</span><br><span class="line">	<span class="variable">.clk</span>(clk),</span><br><span class="line">	<span class="variable">.reset</span>(reset),</span><br><span class="line"></span><br><span class="line">	<span class="variable">.PC_WE</span>(PC_WE),</span><br><span class="line">	<span class="variable">.NPC</span>(NPC),</span><br><span class="line"></span><br><span class="line">	<span class="variable">.PC</span>(F_PC)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">assign</span> i_inst_addr = F_PC;</span><br><span class="line"><span class="keyword">assign</span> F_Instr = i_inst_rdata;</span><br></pre></td></tr></table></figure>
+
+<h4 id="FD-REG（F-D级流水线寄存器）"><a href="#FD-REG（F-D级流水线寄存器）" class="headerlink" title="FD_REG（F&#x2F;D级流水线寄存器）"></a>FD_REG（F&#x2F;D级流水线寄存器）</h4><table>
+<thead>
+<tr>
+<th align="center"><strong>信号名称</strong></th>
+<th align="center"><strong>方向</strong></th>
+<th align="center"><strong>功能描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>clk</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>时钟信号</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>reset</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>同步复位信号</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>flush</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>寄存器刷新信号（阻塞时使用）</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>F_PC</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>F级PC的指令地址</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>F_Instr[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>时钟信号</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>D_PC</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>D级PC的指令地址</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>D_Instr[31:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>32位的指令值</strong></td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="D级（译码）"><a href="#D级（译码）" class="headerlink" title="D级（译码）"></a>D级（译码）</h3><ul>
+<li>本级需要处理来自<strong>E, M, W</strong>级的转发，其中W级为寄存器内部转发，另外两个分别是<code>D_FWD_rs,D_FWD_rt</code>，在<code>CMP</code>和<code>NPC</code>中需要用</li>
+<li>本级的输入是来自F级的<code>PC</code>和<code>Instr</code>，输出是<code>D_rs</code>，<code>D_rt</code>，<code>D_Ext_Out</code>，<code>D_PC</code>和<code>D_Instr</code>，这些参与流水，还有输出到F级的<code>NPC</code></li>
+<li>本级元件较多，是最复杂的一级</li>
+</ul>
+<h4 id="D-GRF"><a href="#D-GRF" class="headerlink" title="D_GRF"></a>D_GRF</h4><h5 id="端口说明"><a href="#端口说明" class="headerlink" title="端口说明"></a><strong>端口说明</strong></h5><table>
+<thead>
+<tr>
+<th align="center"><strong>信号名称</strong></th>
+<th align="center"><strong>方向</strong></th>
+<th align="center"><strong>功能描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>A1[4:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>5位地址输入信号，将其储存的数据读出到RD1</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>A2[4:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>5位地址输入信号，将其储存的数据读出到RD2</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>A3[4:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>5位地址输入信号，将其作为写入数据的目标寄存器</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>RD1[31:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>输出A1指定的寄存器中的32位数据</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>RD2[31:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>输出A2指定的寄存器中的32位数据</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>WD[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>32位数据输入信号</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>clk</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>时钟信号</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>reset</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>同步复位信号，将32个寄存器中的数据清零；1：复位；0：无效</strong></td>
+</tr>
+</tbody></table>
+<ul>
+<li>这次删去了<code>WE</code>写使能信号，因为如果我们不写寄存器，可以把<code>A3</code>设为0，就相当于不写寄存器了</li>
+</ul>
+<p><strong>Ps ：这是我灵光一现想到的办法，受了P4课上访存指令的启发，如果有指令要在读出之后针对数据判断是否写入GRF，那么WE信号不仅要一直参与流水，还要用于控制每级的转发与阻塞，利用0寄存器的特点就可以规避这一切的麻烦！！！</strong></p>
+<h5 id="控制信号说明"><a href="#控制信号说明" class="headerlink" title="控制信号说明"></a>控制信号说明</h5><p><strong>1. <code>D_A3</code></strong></p>
+<p>直接给出待写入寄存器的地址，弃用了在P4中利用<code>A3Sel</code>进行选择的设计，这是因为P5采用分布式译码，每一级都需要<code>A3</code>的信息，因此在<code>CTRL</code>里面直接集成了</p>
+<p><strong>2. <code>D_WDSel</code></strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">控制信号值</th>
+<th align="center">功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>WDSel_DMout</code></td>
+<td align="center">选择写入寄存器的数据来自DM</td>
+</tr>
+<tr>
+<td align="center"><code>WDSel_ALUout</code></td>
+<td align="center">选择写入寄存器的数据来自ALU运算结果</td>
+</tr>
+<tr>
+<td align="center"><code>WDSel_PC8</code></td>
+<td align="center">选择写入寄存器的数据为<strong>当前流水线层级中的PC+8</strong></td>
+</tr>
+</tbody></table>
+<h4 id="D-EXT"><a href="#D-EXT" class="headerlink" title="D_EXT"></a>D_EXT</h4><p>将<strong>16位</strong>二进制数进行<strong>零扩展</strong>或<strong>符号扩展</strong>到32位</p>
+<h5 id="控制信号说明-1"><a href="#控制信号说明-1" class="headerlink" title="控制信号说明"></a><strong>控制信号说明</strong></h5><table>
+<thead>
+<tr>
+<th align="center"><strong>控制信号值</strong></th>
+<th align="center"><strong>功能</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong><code>EXT_unsigned</code></strong></td>
+<td align="center"><strong>零扩展</strong></td>
+</tr>
+<tr>
+<td align="center"><strong><code>EXT_signed</code></strong></td>
+<td align="center"><strong>符号扩展</strong></td>
+</tr>
+</tbody></table>
+<h4 id="D-CMP-分支比较"><a href="#D-CMP-分支比较" class="headerlink" title="D_CMP(分支比较)"></a>D_CMP(分支比较)</h4><p>参考P3中CPU内<strong>BranchDefine</strong>子电路生成的<strong>CMP</strong>模块，来生成<strong>jump</strong>信号，判断分支是否跳转，<strong>link</strong>是否写入</p>
+<p>目前实现了<code>beq, bne, bgtz, bltz</code>等指令</p>
+<h5 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h5><figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">`<span class="keyword">timescale</span> 1ns / 1ps</span></span><br><span class="line"><span class="meta">`<span class="keyword">include</span> &quot;signal_def.v&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">module</span> CMP(</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] rs,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] rt,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">2</span>:<span class="number">0</span>] CMPOp,</span><br><span class="line">    <span class="keyword">output</span> <span class="keyword">reg</span> jump</span><br><span class="line">    );</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">wire</span> eq = (rs == rt);</span><br><span class="line">    <span class="keyword">wire</span> ne = !eq;</span><br><span class="line">    <span class="keyword">wire</span> ltz = (<span class="built_in">$signed</span>(rs) &lt; <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">wire</span> gtz = (<span class="built_in">$signed</span>(rs) &gt; <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">wire</span> eqz = (rs == <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">always</span> @(*) <span class="keyword">begin</span></span><br><span class="line">        <span class="keyword">case</span> (CMPOp)</span><br><span class="line">            `CMP_beq: <span class="keyword">begin</span></span><br><span class="line">                jump = eq ? <span class="number">1</span> : <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">end</span></span><br><span class="line">            `CMP_bne: <span class="keyword">begin</span></span><br><span class="line">                jump = ne ? <span class="number">1</span> : <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">end</span></span><br><span class="line">            `CMP_bltz: <span class="keyword">begin</span></span><br><span class="line">                jump = ltz ? <span class="number">1</span> : <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">end</span></span><br><span class="line">            `CMP_bgtz: <span class="keyword">begin</span></span><br><span class="line">                jump = gtz ? <span class="number">1</span> : <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">end</span></span><br><span class="line">            <span class="keyword">default</span>: jump = <span class="number">1&#x27;b0</span>;</span><br><span class="line">        <span class="keyword">endcase</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">endmodule</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h5 id="端口说明-1"><a href="#端口说明-1" class="headerlink" title="端口说明"></a><strong>端口说明</strong></h5><table>
+<thead>
+<tr>
+<th align="center"><strong>端口名称</strong></th>
+<th align="center"><strong>方向</strong></th>
+<th align="center"><strong>功能描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>rs[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>转发后<code>$rs</code>寄存器的值</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>rt[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>转发后<code>$rt</code>寄存器的值</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>CMPOp[2:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>控制信号</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>jump</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>指示分支是否跳转</strong></td>
+</tr>
+</tbody></table>
+<h4 id="D-NPC-次地址计算"><a href="#D-NPC-次地址计算" class="headerlink" title="D_NPC(次地址计算)"></a>D_NPC(次地址计算)</h4><p>有了<strong>CMP</strong>之后，<strong>NPC</strong>的功能也更加简洁，只需根据<strong>NPCOp</strong>和<strong>jump</strong>信号输出<strong>NPC</strong>信号的值就行</p>
+<p>实际上<code>NPC</code>横跨了F级和D级两级，因为同时会输入<code>F_PC</code>和<code>D_PC</code>，前者正常跳转<code>F_PC+4</code>用，后者则用于流水<code>PC</code>值，后面转发<code>PC+8</code>的时候用</p>
+<p>这次我们弃用了P4中直接输出<code>PC+4</code>的设计，转而让<code>PC</code>信号参与流水，在需要转发时计算<code>PC+8</code></p>
+<h5 id="端口说明-2"><a href="#端口说明-2" class="headerlink" title="端口说明"></a><strong>端口说明</strong></h5><table>
+<thead>
+<tr>
+<th align="center">端口名称</th>
+<th align="center">方向</th>
+<th align="center">功能描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>F_PC[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>32位输入当前F级地址</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>D_PC[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>32位输入当前D级地址</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>imm[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>32位立即数</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>jump</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>指示b类型指令是否跳转</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>NPCOp[2:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>控制信号</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>RD1_rs[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong><code>$ra</code>寄存器保存的32位地址</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>NPC[31:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>32位输出次地址</strong></td>
+</tr>
+</tbody></table>
+<h5 id="控制信号说明-2"><a href="#控制信号说明-2" class="headerlink" title="控制信号说明"></a>控制信号说明</h5><table>
+<thead>
+<tr>
+<th align="center">控制信号值</th>
+<th align="center">功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>NPC_pc4</code></td>
+<td align="center"><code>NPC = F_PC+4</code></td>
+</tr>
+<tr>
+<td align="center"><code>NPC_b</code></td>
+<td align="center">执行<code>beq</code>等b类指令</td>
+</tr>
+<tr>
+<td align="center"><code>NPC_jal</code></td>
+<td align="center">执行<code>j</code>，<code>jal</code>指令</td>
+</tr>
+<tr>
+<td align="center"><code>NPC_jalr</code></td>
+<td align="center">执行<code>jalr</code>，<code>jr</code>指令</td>
+</tr>
+</tbody></table>
+<h4 id="DE-REG（D-E级流水线寄存器）"><a href="#DE-REG（D-E级流水线寄存器）" class="headerlink" title="DE_REG（D&#x2F;E级流水线寄存器）"></a>DE_REG（D&#x2F;E级流水线寄存器）</h4><ul>
+<li><p>输入<code>D_PC,D_Instr,D_Ext_Out</code>，此外上一级的<code>$rs</code>和<code>$rt</code>的值也要参与流水，即<code>D_FWD_rs,D_FWD_rt</code>需要参与流水，<strong>这是由于指令序列<code>sw, nop, add</code>的存在，<code>sw</code>在M级需要使用<code>$rt</code>的数据，但是在E级不会再进行转发（因为在D级已经转发过了），因此需要让正确的<code>$rt</code>值参与流水</strong></p>
+</li>
+<li><p>输出<code>E_PC,E_Instr,E_Ext_Out,E_rs,E_rt</code>，<code>ALU</code>需要这些信息</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center"><strong>信号名称</strong></th>
+<th align="center"><strong>方向</strong></th>
+<th align="center"><strong>功能描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>clk</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>时钟信号</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>reset</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>同步复位信号</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>flush</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>寄存器刷新信号（阻塞时使用）</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>D_PC[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>D级PC的指令地址</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>D_Instr[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>32位的指令值</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>D_Ext_Out[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>16位立即数经<code>EXT</code>扩展的结果</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>D_rs[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>32位的寄存器数据</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>D_rt[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>32位的寄存器数据</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>E_PC[31:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>E级PC的指令地址</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>E_Instr[31:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>32位的指令值</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>E_Ext_Out[31:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>16位立即数经<code>EXT</code>扩展的结果</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>E_rs[31:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>32位的寄存器数据</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>E_rt[31:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>32位的寄存器数据</strong></td>
+</tr>
+</tbody></table>
+<hr>
+<h4 id="E-ALU"><a href="#E-ALU" class="headerlink" title="E_ALU"></a>E_ALU</h4><ul>
+<li>相比于P4，ALU做了很大的变动，添加了<code>ALUSrcA</code>信号选择A运算数的来源，这是为了便于扩展<code>sll</code>和<code>sllv</code>类指令的原因取消了<code>shamt</code>信号，<code>shamt</code>信号从<code>ALUSrcB</code>中选择进入<code>ALU</code>中</li>
+</ul>
+<h5 id="端口说明-3"><a href="#端口说明-3" class="headerlink" title="端口说明"></a><strong>端口说明</strong></h5><table>
+<thead>
+<tr>
+<th align="center"><strong>信号名称</strong></th>
+<th align="center"><strong>方向</strong></th>
+<th align="center"><strong>功能描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>A[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>32位输入运算数A</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>B[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>32位输入运算数B</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>ALUOp[4:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>控制信号</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>ALUOut[31:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>32位输出运算结果</strong></td>
+</tr>
+</tbody></table>
+<h5 id="控制信号说明-3"><a href="#控制信号说明-3" class="headerlink" title="控制信号说明"></a><strong>控制信号说明</strong></h5><h6 id="1-ALUOp"><a href="#1-ALUOp" class="headerlink" title="1. ALUOp"></a><strong>1. ALUOp</strong></h6><p>具体见代码，已实现绝大多数计算功能。</p>
+<table>
+<thead>
+<tr>
+<th align="center"><strong>控制信号值</strong></th>
+<th align="center"><strong>功能</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong><code>ALU_add</code></strong></td>
+<td align="center"><strong>执行加法运算</strong></td>
+</tr>
+<tr>
+<td align="center"><strong><code>ALU_sub</code></strong></td>
+<td align="center"><strong>执行减法运算</strong></td>
+</tr>
+<tr>
+<td align="center"><strong><code>ALU_or</code></strong></td>
+<td align="center"><strong>执行逻辑或运算</strong></td>
+</tr>
+<tr>
+<td align="center"><strong><code>ALU_lui</code></strong></td>
+<td align="center"><strong>执行<code>lui</code>指令</strong></td>
+</tr>
+</tbody></table>
+<h6 id="2-ALUSrcA"><a href="#2-ALUSrcA" class="headerlink" title="2. ALUSrcA"></a><strong>2. ALUSrcA</strong></h6><table>
+<thead>
+<tr>
+<th>控制信号值</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>SrcA_rt</code></td>
+<td>对于<code>sll</code>和<code>sllv</code>等移位指令，选择<code>$rt</code>的值</td>
+</tr>
+<tr>
+<td><code>SrcA_rs</code></td>
+<td>对于其他大部分运算指令，采用 <code>$rs</code>的值</td>
+</tr>
+</tbody></table>
+<h6 id="3-ALUSrcB"><a href="#3-ALUSrcB" class="headerlink" title="3. ALUSrcB"></a><strong>3. ALUSrcB</strong></h6><table>
+<thead>
+<tr>
+<th align="center">控制信号值</th>
+<th align="center">功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>SrcB_rt</code></td>
+<td align="center">选择<strong>处理完转发后</strong><code>$rt</code>寄存器中的值进行运算</td>
+</tr>
+<tr>
+<td align="center"><code>SrcB_imm</code></td>
+<td align="center">选择立即数进行运算</td>
+</tr>
+<tr>
+<td align="center"><code>SrcB_shamt</code></td>
+<td align="center">使用<code>&#123;27&#39;b0, E_ALUshamt&#125;</code>得到32为扩展移位数</td>
+</tr>
+<tr>
+<td align="center"><code>SrcB_rs</code></td>
+<td align="center">考虑到<code>sllv</code>指令要求可变的位移数，这里可以选择<code>&#123;27&#39;b0, E_FWD_rs_data[4:0]&#125;</code>，即<code>$rs</code>寄存器中的数据作为移位数</td>
+</tr>
+</tbody></table>
+<h4 id="E-MDU（乘除单元）"><a href="#E-MDU（乘除单元）" class="headerlink" title="E_MDU（乘除单元）"></a>E_MDU（乘除单元）</h4><h5 id="端口说明-4"><a href="#端口说明-4" class="headerlink" title="端口说明"></a><strong>端口说明</strong></h5><table>
+<thead>
+<tr>
+<th align="center"><strong>信号名称</strong></th>
+<th align="center"><strong>方向</strong></th>
+<th align="center"><strong>功能描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>clk</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>时钟信号</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>reset</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>复位信号</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>MDUOp[2:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>控制信号</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>D1[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>32位输入运算数A</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>D1[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>32位输入运算数B</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>Start</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>开始运算的指示信号</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>Busy</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>是否处于运算过程中</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>HI[31:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>32位HI寄存器值结果</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>LO[31:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>32位LO寄存器值结果</strong></td>
+</tr>
+</tbody></table>
+<h5 id="控制信号说明-4"><a href="#控制信号说明-4" class="headerlink" title="控制信号说明"></a><strong>控制信号说明</strong></h5><h6 id="1-MDUOp"><a href="#1-MDUOp" class="headerlink" title="1. MDUOp"></a><strong>1. MDUOp</strong></h6><table>
+<thead>
+<tr>
+<th>控制信号值</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>MDU_mult</code></td>
+<td>乘法运算</td>
+</tr>
+<tr>
+<td><code>MDU_div</code></td>
+<td>除法运算</td>
+</tr>
+<tr>
+<td><code>MDU_multu</code></td>
+<td>无符号乘法运算</td>
+</tr>
+<tr>
+<td><code>MDU_divu</code></td>
+<td>无符号除法运算</td>
+</tr>
+<tr>
+<td><code>MDU_mfhi</code></td>
+<td><code>mfhi</code>指令</td>
+</tr>
+<tr>
+<td><code>MDU_mflo</code></td>
+<td><code>mflo</code>指令</td>
+</tr>
+<tr>
+<td><code>MDU_mthi</code></td>
+<td><code>mthi</code>指令，把D1的值赋给HI寄存器中</td>
+</tr>
+<tr>
+<td><code>MDU_mtlo</code></td>
+<td><code>mtlo</code>指令，把D1的值赋给LO寄存器中</td>
+</tr>
+</tbody></table>
+<h4 id="EM-REG（E-M级流水线寄存器）"><a href="#EM-REG（E-M级流水线寄存器）" class="headerlink" title="EM_REG（E&#x2F;M级流水线寄存器）"></a>EM_REG（E&#x2F;M级流水线寄存器）</h4><table>
+<thead>
+<tr>
+<th align="center"><strong>信号名称</strong></th>
+<th align="center"><strong>方向</strong></th>
+<th align="center"><strong>功能描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>clk</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>时钟信号</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>reset</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>同步复位信号</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>flush</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>寄存器刷新信号（阻塞时使用）</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>E_PC[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>E级PC的指令地址</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>E_Instr[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>32位的指令值</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>E_Ext_Out[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>16位立即数经<code>EXT</code>扩展的结果</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>E_rt[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>32位的寄存器数据</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>E_ALU_Out[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>32位的ALU运算结果</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>E_MDU_Out[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>32位的MDU运算结果</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>M_PC[31:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>M级PC的指令地址</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>M_Instr[31:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>32位的指令值</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>M_Ext_Out[31:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>16位立即数经<code>EXT</code>扩展的结果</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>M_ALU_Out[31:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>32位的ALU运算结果</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>M_MDU_Out[31:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>32位的MDU运算结果</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>M_rt[31:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>32位的寄存器数据</strong></td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="M级（储存）"><a href="#M级（储存）" class="headerlink" title="M级（储存）"></a>M级（储存）</h3><ul>
+<li>输入<code>E_PC,E_Instr</code>，此外上一级的<code>ALUOut</code>参与流水，即<code>E_ALU_Out,E_Ext_Out</code>需要参与流水，<strong>这是因为<code>ALUOut</code>可能是待写入或读取的内存地址</strong>，<strong>另外，上一级的rt值需要参与流水</strong>，因此还需要输入<code>E_FWD_rt</code>，<strong>这是因为<code>sw</code>指令会向内存中写入<code>$rt</code>的数据</strong></li>
+<li>输出<code>M_PC,M_Instr,M_ALU_Out,M_DM_Out,M_MDU_Out</code></li>
+</ul>
+<h4 id="M-DM（数据储存器）"><a href="#M-DM（数据储存器）" class="headerlink" title="M_DM（数据储存器）"></a>M_DM（数据储存器）</h4><ul>
+<li><p><code>DM</code>已经不需要自行实现，调用<code>mips_txt.v</code>中的接口即可</p>
+</li>
+<li><p>利用BE模块处理待写入数据，使其支持按半字、字节、字储存</p>
+</li>
+<li><p>利用DE模块处理DM返回的数据，使其可以按照不同要求存入寄存器</p>
+</li>
+</ul>
+<h5 id="M-BE"><a href="#M-BE" class="headerlink" title="M_BE"></a>M_BE</h5><table>
+<thead>
+<tr>
+<th>信号名称</th>
+<th>方向</th>
+<th>功能描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>BEOp[1:0]</td>
+<td>输入</td>
+<td>控制信号</td>
+</tr>
+<tr>
+<td>Addr[31:0]</td>
+<td>输入</td>
+<td>地址信息，用于处理半字、字节</td>
+</tr>
+<tr>
+<td>rt_data[31:0]</td>
+<td>输入</td>
+<td>读取的寄存器数据，待处理</td>
+</tr>
+<tr>
+<td>DMWr</td>
+<td>输入</td>
+<td>写使能</td>
+</tr>
+<tr>
+<td>m_data_byteen[3:0]</td>
+<td>输出</td>
+<td>控制写入半字、字节的位置位置</td>
+</tr>
+<tr>
+<td>m_data_wdata[31:0]</td>
+<td>输出</td>
+<td>待写入数据</td>
+</tr>
+</tbody></table>
+<h5 id="M-DE"><a href="#M-DE" class="headerlink" title="M_DE"></a>M_DE</h5><table>
+<thead>
+<tr>
+<th>信号名称</th>
+<th>方向</th>
+<th>功能描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DEOp[1:0]</td>
+<td>输入</td>
+<td>控制信号</td>
+</tr>
+<tr>
+<td>Addr[31:0]</td>
+<td>输入</td>
+<td>地址信息，用于处理半字、字节</td>
+</tr>
+<tr>
+<td>m_data_rdata[31:0]</td>
+<td>输入</td>
+<td><code>mips_txt.v</code>返回的DM中的数据</td>
+</tr>
+<tr>
+<td>DMout[31:0]</td>
+<td>输出</td>
+<td>处理之后的正确的读取数据</td>
+</tr>
+</tbody></table>
+<h5 id="与接口进行交互"><a href="#与接口进行交互" class="headerlink" title="与接口进行交互"></a>与接口进行交互</h5><figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 与DM交互</span></span><br><span class="line">M_BE _be(</span><br><span class="line">	<span class="variable">.BEOp</span>(M_BEOp),</span><br><span class="line">    <span class="variable">.Addr</span>(M_ALU_Out),</span><br><span class="line">	<span class="variable">.WD</span>(M_FWD_rt_data),</span><br><span class="line">	<span class="variable">.m_data_byteen</span>(m_data_byteen),</span><br><span class="line">	<span class="variable">.m_data_wdata</span>(m_data_wdata)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">assign</span> m_inst_addr = M_PC;</span><br><span class="line"><span class="keyword">assign</span> m_data_addr = M_ALU_OUt;</span><br><span class="line"></span><br><span class="line"><span class="keyword">wire</span> [<span class="number">31</span>:<span class="number">0</span>] M_DM_Out;</span><br><span class="line">M_DE _de(</span><br><span class="line">	<span class="variable">.DEOp</span>(M_DEOp),</span><br><span class="line">    <span class="variable">.Addr</span>(M_ALU_Out),</span><br><span class="line">	<span class="variable">.m_data_rdata</span>(m_data_rdata),</span><br><span class="line">    <span class="variable">.DMRD</span>(M_DM_out)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 正确输出GRF读写信息</span></span><br><span class="line"><span class="keyword">assign</span> w_grf_addr = W_A3;</span><br><span class="line"><span class="keyword">assign</span> w_grf_wdata = W_WD;</span><br><span class="line"><span class="keyword">assign</span> w_grf_we = W_GRFWE;</span><br><span class="line"><span class="keyword">assign</span> w_inst_addr = W_PC;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="W级（回写）"><a href="#W级（回写）" class="headerlink" title="W级（回写）"></a>W级（回写）</h3><h4 id="MW-REG（M-W级流水线寄存器）"><a href="#MW-REG（M-W级流水线寄存器）" class="headerlink" title="MW_REG（M&#x2F;W级流水线寄存器）"></a>MW_REG（M&#x2F;W级流水线寄存器）</h4><table>
+<thead>
+<tr>
+<th align="center"><strong>信号名称</strong></th>
+<th align="center"><strong>方向</strong></th>
+<th align="center"><strong>功能描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>clk</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>时钟信号</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>reset</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>同步复位信号</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>flush</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>寄存器刷新信号（阻塞时使用）</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>M_PC[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>M级PC的指令地址</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>M_Instr[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>32位的指令值</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>M_DM_Out[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>从内存中读取的值</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>M_ALU_Out[31:0]</strong></td>
+<td align="center"><strong>I</strong></td>
+<td align="center"><strong>32位的ALU运算结果</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>W_PC[31:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>W级PC的指令地址</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>W_Instr[31:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>32位的指令值</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>W_DM_Out[31:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>从内存中读取的值</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>W_ALU_Out[31:0]</strong></td>
+<td align="center"><strong>O</strong></td>
+<td align="center"><strong>32位的ALU运算结果</strong></td>
+</tr>
+</tbody></table>
+<h2 id="数据通路分析"><a href="#数据通路分析" class="headerlink" title="数据通路分析"></a>数据通路分析</h2><table>
+<thead>
+<tr>
+<th align="center">指令</th>
+<th align="center">opcode</th>
+<th align="center">funct</th>
+<th align="center">NPCOp</th>
+<th align="center">A3Sel</th>
+<th align="center">WDSel</th>
+<th align="center">EXTOp</th>
+<th align="center">GRFWE</th>
+<th align="center">ALUSRCB</th>
+<th align="center">ALUOp</th>
+<th align="center">DMWr</th>
+<th align="center">DMOp</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>add</strong></td>
+<td align="center">000000</td>
+<td align="center">100000</td>
+<td align="center"><code>NPC_PC4</code></td>
+<td align="center"><code>A3Sel_rd</code></td>
+<td align="center"><code>WDSel_ALUout</code></td>
+<td align="center">X</td>
+<td align="center">1</td>
+<td align="center"><code>SrcB_rt</code></td>
+<td align="center"><code>ALU_add</code></td>
+<td align="center">0</td>
+<td align="center">X</td>
+</tr>
+<tr>
+<td align="center"><strong>sub</strong></td>
+<td align="center">000000</td>
+<td align="center">100010</td>
+<td align="center"><code>NPC_PC4</code></td>
+<td align="center"><code>A3Sel_rd</code></td>
+<td align="center"><code>WDSel_ALUout</code></td>
+<td align="center">X</td>
+<td align="center">1</td>
+<td align="center"><code>SrcB_rt</code></td>
+<td align="center"><code>ALU_sub</code></td>
+<td align="center">0</td>
+<td align="center">X</td>
+</tr>
+<tr>
+<td align="center"><strong>ori</strong></td>
+<td align="center">001101</td>
+<td align="center">X</td>
+<td align="center"><code>NPC_PC4</code></td>
+<td align="center"><code>A3Sel_rt</code></td>
+<td align="center"><code>WDSel_ALUout</code></td>
+<td align="center"><code>EXT_unsigned</code></td>
+<td align="center">1</td>
+<td align="center"><code>SrcB_imm</code></td>
+<td align="center"><code>ALU_or</code></td>
+<td align="center">0</td>
+<td align="center">X</td>
+</tr>
+<tr>
+<td align="center"><strong>lw</strong></td>
+<td align="center">100011</td>
+<td align="center">X</td>
+<td align="center"><code>NPC_PC4</code></td>
+<td align="center"><code>A3Sel_rt</code></td>
+<td align="center"><code>WDSel_DMout</code></td>
+<td align="center"><code>EXT_signed</code></td>
+<td align="center">1</td>
+<td align="center"><code>SrcB_imm</code></td>
+<td align="center"><code>ALU_add</code></td>
+<td align="center">0</td>
+<td align="center"><code>DM_w</code></td>
+</tr>
+<tr>
+<td align="center"><strong>sw</strong></td>
+<td align="center">101011</td>
+<td align="center">X</td>
+<td align="center"><code>NPC_PC4</code></td>
+<td align="center">X</td>
+<td align="center"><code>WDSel_DMout</code></td>
+<td align="center"><code>EXT_signed</code></td>
+<td align="center">0</td>
+<td align="center"><code>SrcB_imm</code></td>
+<td align="center"><code>ALU_add</code></td>
+<td align="center">1</td>
+<td align="center"><code>DM_w</code></td>
+</tr>
+<tr>
+<td align="center"><strong>beq</strong></td>
+<td align="center">000100</td>
+<td align="center">X</td>
+<td align="center"><code>NPC_branch</code></td>
+<td align="center">X</td>
+<td align="center">X</td>
+<td align="center">X</td>
+<td align="center">0</td>
+<td align="center">X</td>
+<td align="center">X</td>
+<td align="center">0</td>
+<td align="center">X</td>
+</tr>
+<tr>
+<td align="center"><strong>lui</strong></td>
+<td align="center">001111</td>
+<td align="center">X</td>
+<td align="center"><code>NPC_PC4</code></td>
+<td align="center"><code>A3Sel_rt</code></td>
+<td align="center"><code>WDSel_ALUout</code></td>
+<td align="center">X</td>
+<td align="center">1</td>
+<td align="center"><code>SrcB_imm</code></td>
+<td align="center"><code>ALU_lui</code></td>
+<td align="center">0</td>
+<td align="center">X</td>
+</tr>
+<tr>
+<td align="center"><strong>jal</strong></td>
+<td align="center">000011</td>
+<td align="center">X</td>
+<td align="center"><code>NPC_jal</code></td>
+<td align="center"><code>A3Sel_ra</code></td>
+<td align="center"><code>WDSel_PC8</code></td>
+<td align="center">X</td>
+<td align="center">1</td>
+<td align="center">X</td>
+<td align="center">X</td>
+<td align="center">0</td>
+<td align="center">X</td>
+</tr>
+<tr>
+<td align="center"><strong>jr</strong></td>
+<td align="center">000000</td>
+<td align="center">001000</td>
+<td align="center"><code>NPC_jalr</code></td>
+<td align="center">X</td>
+<td align="center">X</td>
+<td align="center">X</td>
+<td align="center">0</td>
+<td align="center">X</td>
+<td align="center">X</td>
+<td align="center">X</td>
+<td align="center">X</td>
+</tr>
+</tbody></table>
+<p><strong>本CPU采用分布式译码，在每一级均设有译码器，解码出各级所需信息</strong></p>
+<hr>
+<h2 id="冲突处理方法"><a href="#冲突处理方法" class="headerlink" title="冲突处理方法"></a>冲突处理方法</h2><h3 id="转发-Forwarding"><a href="#转发-Forwarding" class="headerlink" title="转发(Forwarding)"></a>转发(Forwarding)</h3><p>对于转发，我们直接采用 <strong>AT 法</strong> + 暴力转发，首先要搞明白转发到哪，转发什么。 对于每一个流水线层级，我们要能够确定当前这一级正在执行的指令要写什么数据，向哪里写，因此就要维护 GRFWD （解决转发啥）和 GRFA3 （解决转发到哪）这两个值，我们转发需要去关注的也就是这两个数据，这些信号都可以从 Control 里面译码读出来 简单来说就是，我们需要在每一级都知道本级需要从哪读数据，要写到哪，要写啥，现在不知道没事，总之在这条指令从流水线消失之前，我们肯定知道，并且可以根据这些再经过判断做转发。</p>
+<p>在每一个需要用转发数据的地方，我们去比较要用的数据的 GPR 地址和前面正在维护的要写的 GRFA3 的地址，如果相同，那就意味着我们要写的寄存器已经被用了，但是这时前面获得的值显然是错误的，这时候直接转发过去就好了</p>
+<p>这里还要考虑优先级的问题，流水线寄存器生成的<strong>WD越靠近</strong>这条指令，得到的数据就<strong>越新</strong>，我们就越倾向于<strong>优先</strong>使用这些数据</p>
+<p>利用 AT 法，<strong>如果不阻塞就意味着一定能够在使用该寄存器的值之前获得正确的值</strong>，如果我们要用的时候，这个正确的值还没有算出来，那肯定不行，这时候我们就阻塞，如果能算出来，那么之前转发的错误的值不用去管它，<strong>最后总能得到一个正确的值去覆盖原先错误的值</strong></p>
+<p>如果我们还不知道要写的值是啥，那这个时候 <code>GRFA3</code> 就给正确的地址， <code>GRFWD</code> 就给 <code>32&#39;bz</code> ，这时还不能做转发，但是如果写的阻塞模块正确，这个值就不可能被转发，因为这种情况如果出现就已经被阻塞在 D 级了</p>
+<p>综合考量各种指令序列，我们得到了转发的旁路：</p>
+<ol>
+<li>D级需求: E-&gt;D(如序列<code>jal-add</code>), M-&gt;D(如序列<code>jal-nop-add</code>)(W-&gt;D隐藏于GRF的内部转发中);</li>
+<li>E级需求: M-&gt;E(如序列<code>add-add</code>), W-&gt;E(如序列<code>add-nop-add</code>)</li>
+<li>M级需求: W-&gt;M(如序列<code>add-sw</code>)</li>
+</ol>
+<p><strong>具体设计见前文图片</strong></p>
+<h4 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h4><p><code>W to D</code>:</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 寄存器内部转发</span></span><br><span class="line">    <span class="keyword">assign</span> RD1 = (A1 == <span class="number">5&#x27;b00000</span>) ? <span class="number">32&#x27;h0000_0000</span> :</span><br><span class="line">                 (A3 == A1 &amp;&amp; A1 != <span class="number">5&#x27;b00000</span>) ? WD : grf[A1];</span><br><span class="line">    <span class="keyword">assign</span> RD2 = (A2 == <span class="number">5&#x27;b00000</span>) ? <span class="number">32&#x27;h0000_0000</span> :</span><br><span class="line">                 (A3 == A2 &amp;&amp; A2 != <span class="number">5&#x27;b00000</span>) ? WD : grf[A2];</span><br></pre></td></tr></table></figure>
+
+<p><code>D级转发处理</code>：</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//D级写回数据</span></span><br><span class="line">    <span class="keyword">assign</span> D_FWD_rs_data = (D_rs_addr == <span class="number">0</span>) ? <span class="number">0</span> :</span><br><span class="line">                           (D_rs_addr == E_A3) ? E_WD :</span><br><span class="line">                           (D_rs_addr == M_A3) ? M_WD :</span><br><span class="line">                           D_rs;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">assign</span> D_FWD_rt_data = (D_rt_addr == <span class="number">0</span>) ? <span class="number">0</span> :</span><br><span class="line">                           (D_rt_addr == E_A3) ? E_WD :</span><br><span class="line">                           (D_rt_addr == M_A3) ? M_WD :</span><br><span class="line">                           D_rt;</span><br></pre></td></tr></table></figure>
+
+<p><code>E级转发处理</code>：</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//转发</span></span><br><span class="line">    <span class="keyword">assign</span> E_FWD_rs_data = (E_rs_addr == <span class="number">0</span>) ? <span class="number">0</span> :</span><br><span class="line">                           (E_rs_addr == M_A3) ? M_WD :</span><br><span class="line">                           (E_rs_addr == W_A3) ? W_WD :</span><br><span class="line">                           E_rs;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">assign</span> E_FWD_rt_data = (E_rt_addr == <span class="number">0</span>) ? <span class="number">0</span> :</span><br><span class="line">                           (E_rt_addr == M_A3) ? M_WD :</span><br><span class="line">                           (E_rt_addr == W_A3) ? W_WD :</span><br><span class="line">                           E_rt;</span><br></pre></td></tr></table></figure>
+
+<p><code>M级转发处理</code>：</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//转发</span></span><br><span class="line">    <span class="keyword">assign</span> M_FWD_rt_data = (M_rt_addr == <span class="number">0</span>) ? <span class="number">0</span> :</span><br><span class="line">                           (M_rt_addr == W_A3) ? W_WD :</span><br><span class="line">                           M_rt;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">assign</span> M_WD = (M_WDSel == `WDSel_PC8) ? M_PC + <span class="number">8</span> :</span><br><span class="line">                  (M_WDSel == `WDSel_ALUout) ? M_ALU_Out :</span><br><span class="line">                  <span class="number">32&#x27;bz</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="阻塞-Stall"><a href="#阻塞-Stall" class="headerlink" title="阻塞(Stall)"></a>阻塞(Stall)</h3><p>对于阻塞的处理，直接采用教程中的AT方法，设计一个 <code>Stall</code> 模块，专门负责处理阻塞时流水线寄存器的 <code>flush</code> 和 <code>WE</code> 信号就行</p>
+<p><strong>只在 D 级进行阻塞</strong>，阻塞控制器接受当前 D，E，M 级的指令输入，处理分析指令类别，算出当前D的<em>Tuse</em>，和E、M的<em>Tnew</em>，再进行相应的计算</p>
+<h4 id="代码实现：-1"><a href="#代码实现：-1" class="headerlink" title="代码实现："></a>代码实现：</h4><figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//阻塞逻辑</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">wire</span> E_stall_rs = ((E_A3 == D_rs_ad) &amp;&amp; (D_rs_ad != <span class="number">0</span>)) &amp;&amp; (E_Tnew &gt; D_Tuse_rs);</span><br><span class="line">    <span class="keyword">wire</span> E_stall_rt = ((E_A3 == D_rt_ad) &amp;&amp; (D_rt_ad != <span class="number">0</span>)) &amp;&amp; (E_Tnew &gt; D_Tuse_rt);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">wire</span> M_stall_rs = ((M_A3 == D_rs_ad) &amp;&amp; (D_rs_ad != <span class="number">0</span>)) &amp;&amp; (M_Tnew &gt; D_Tuse_rs);</span><br><span class="line">    <span class="keyword">wire</span> M_stall_rt = ((M_A3 == D_rt_ad) &amp;&amp; (D_rt_ad != <span class="number">0</span>)) &amp;&amp; (M_Tnew &gt; D_Tuse_rt);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">assign</span> Stall = E_stall_rs | E_stall_rt | M_stall_rs | M_stall_rt;    </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> <span class="comment">//清空当前指令信号，即插入nop</span></span><br><span class="line">    <span class="keyword">wire</span> FD_Flush, DE_Flush, EM_Flush, MW_Flush;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">assign</span> FD_WE = !Stall;      <span class="comment">//不再进新指令</span></span><br><span class="line">    <span class="keyword">assign</span> DE_WE = <span class="number">1&#x27;b1</span>;</span><br><span class="line">    <span class="keyword">assign</span> EM_WE = <span class="number">1&#x27;b1</span>;</span><br><span class="line">    <span class="keyword">assign</span> MW_WE = <span class="number">1&#x27;b1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">assign</span> PC_WE = !Stall;    </span><br><span class="line"></span><br><span class="line">    <span class="keyword">assign</span> FD_Flush = <span class="number">1&#x27;b0</span>;</span><br><span class="line">    <span class="keyword">assign</span> DE_Flush = Stall;    <span class="comment">//阻塞到D级，清空DE寄存器</span></span><br><span class="line">    <span class="keyword">assign</span> EM_Flush = <span class="number">1&#x27;b0</span>;</span><br><span class="line">    <span class="keyword">assign</span> MW_Flush = <span class="number">1&#x27;b0</span>; </span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="测试方案"><a href="#测试方案" class="headerlink" title="测试方案"></a>测试方案</h2><p>指令集：<code>add</code>, <code>sub</code>, <code>and</code>, <code>or</code>, <code>slt</code>, <code>sltu</code>, <code>lui</code>, <code>addi</code>, <code>andi</code>, <code>ori</code>, <code>lb</code>, <code>lh</code>, <code>lw</code>, <code>sb</code>, <code>sh</code>, <code>sw</code>, <code>mult</code>, <code>multu</code>, <code>div</code>, <code>divu</code>, <code>mfhi</code>, <code>mflo</code>, <code>mthi</code>, <code>mtlo</code>, <code>beq</code>, <code>bne</code>, <code>jal</code>, <code>jr</code></p>
+<h3 id="测试目标"><a href="#测试目标" class="headerlink" title="测试目标"></a>测试目标</h3><ul>
+<li>单计算指令行为</li>
+<li>单存取指令行为</li>
+<li>单跳转指令行为</li>
+<li>计算&#x2F;存取指令数据冲突阻塞转发行为</li>
+<li>跳转指令与计算&#x2F;存取指令数据冲突阻塞转发行为</li>
+<li>新增存储指令行为</li>
+<li>单指令乘除指令行为以及 <code>Busy</code> 信号表现</li>
+<li>乘除指令阻塞行为</li>
+<li>计算指令&#x2F;乘除指令的数据冲突阻塞转发行为</li>
+</ul>
+<p>具体实现分为两部分</p>
+<h4 id="功能性测试"><a href="#功能性测试" class="headerlink" title="功能性测试"></a>功能性测试</h4><p>采用课下提供的<code>P6_L0_weak.txt</code>测试每条指令的功能，对于未进行测试的指令，进行手动测试</p>
+<p>首先在P5的测试工具基础上进行简单的修改，由于指令类型相似，因此仅在P5的基础上添加了<code>mfhi</code>,<code>mflo</code>,<code>mthi</code>,<code>mtlo</code>,<code>div</code>,<code>divu</code>,<code>mult</code>,<code>multu</code>指令然后进行大范围的随机生成测试</p>
+<blockquote>
+<p>我的测试方法是利用随机生成数据进行大范围测试，对于随机数据无法覆盖的点，通过手动构造特殊样例进行测试</p>
+</blockquote>
+<p>对于更多情况，手动构造数据处理</p>
+<h3 id="单条指令功能测试："><a href="#单条指令功能测试：" class="headerlink" title="单条指令功能测试："></a>单条指令功能测试：</h3><h4 id="ori测试："><a href="#ori测试：" class="headerlink" title="ori测试："></a>ori测试：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ori $t0, $t0, 1</span><br><span class="line">ori $t1, $t1, 0</span><br><span class="line">ori $t3, $t3, 0x7fff</span><br><span class="line">ori $t4, $t3, 0xffff</span><br></pre></td></tr></table></figure>
+
+<h4 id="add测试："><a href="#add测试：" class="headerlink" title="add测试："></a>add测试：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ori $t0, $t0, 2</span><br><span class="line">ori $t1, $t1, 0xffff</span><br><span class="line">add $t2, $t0, $t0</span><br><span class="line">add $t3, $t1, $t1</span><br></pre></td></tr></table></figure>
+
+<h4 id="sub测试："><a href="#sub测试：" class="headerlink" title="sub测试："></a>sub测试：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ori $t0, $t0, 2</span><br><span class="line">ori $t1, $t1, 0xffff</span><br><span class="line">sub $t2, $t0, $t0</span><br><span class="line">sub $t3, $t1, $t1</span><br><span class="line">sub $t4, $t1, $t0</span><br><span class="line">sub $t4, $t0, $t1</span><br></pre></td></tr></table></figure>
+
+<h4 id="lui测试："><a href="#lui测试：" class="headerlink" title="lui测试："></a>lui测试：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">lui $t0, 0x7fff</span><br><span class="line">ori $t0, $t0, 0x777f</span><br></pre></td></tr></table></figure>
+
+<h4 id="beq测试："><a href="#beq测试：" class="headerlink" title="beq测试："></a>beq测试：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">#三次跳转</span><br><span class="line">ori $t3, $t4, 1</span><br><span class="line">beq $3, $t0, A</span><br><span class="line">ori $t1, $t1, 0xffff</span><br><span class="line">A:</span><br><span class="line">beq $0, $t0, B</span><br><span class="line">lui $t1, 0xffff</span><br><span class="line">C:</span><br><span class="line">ori $t1, $t1, 1</span><br><span class="line">lui $t0, 1</span><br><span class="line">B:</span><br><span class="line">beq $t0, $0, C</span><br><span class="line">lui $t2, 0xffff</span><br><span class="line">//后跳</span><br><span class="line">beq $t3, $t0, A</span><br><span class="line">ori $t1, $t1, 0xffff</span><br><span class="line">ori $t2, $t2, 0xffff</span><br><span class="line">A:</span><br><span class="line">lui $t1, 0xffff</span><br><span class="line">//不跳</span><br><span class="line">beq $3, $t0, A</span><br><span class="line">nop</span><br><span class="line">A:</span><br><span class="line">beq $0, $t0, B</span><br><span class="line">nop</span><br><span class="line">C:</span><br><span class="line">lui $t0, 1</span><br><span class="line">B:</span><br><span class="line">beq $t0, $0, C</span><br><span class="line">nop</span><br><span class="line">//前跳</span><br><span class="line">beq $3, $t0, A</span><br><span class="line">nop</span><br><span class="line">B:</span><br><span class="line">lui $t0, 1</span><br><span class="line">A:</span><br><span class="line">beq $0, $t0, B</span><br><span class="line">nop</span><br></pre></td></tr></table></figure>
+
+<h4 id="j，jal，jr测试："><a href="#j，jal，jr测试：" class="headerlink" title="j，jal，jr测试："></a>j，jal，jr测试：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">jal A</span><br><span class="line">ori $s1, $s1, 0x1111</span><br><span class="line">add $ra, $ra, $t2</span><br><span class="line">ori $s1, $s1, 0x2222</span><br><span class="line">A:</span><br><span class="line">lui $t1, 200</span><br><span class="line"></span><br><span class="line">jal A</span><br><span class="line">ori $t0, $t0, 0x1111</span><br><span class="line">sub $t1, $t1, $t0</span><br><span class="line">ori $t2, $t2, 0x1111</span><br><span class="line">beq $t2, $t2, B</span><br><span class="line">nop</span><br><span class="line">A:</span><br><span class="line">jr $ra</span><br><span class="line">add $t3, $t0, $t0</span><br><span class="line">B:</span><br></pre></td></tr></table></figure>
+
+<h4 id="sw，lw测试："><a href="#sw，lw测试：" class="headerlink" title="sw，lw测试："></a>sw，lw测试：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ori $t0, $t0, 4 #t0 = 4</span><br><span class="line">add $t1, $t0, $t0 # t1 = 8</span><br><span class="line">sub $t2, $t0, $t1 # t2 = -4</span><br><span class="line">add $t3, $t2, $t2 #t3 = -8</span><br><span class="line">sub $t4, $t0, $t3 #t4 = c</span><br><span class="line">sw $t4, 16($t4)  # add = 1c</span><br><span class="line">sw $t3, -4($t1) # add = 4</span><br><span class="line">lw $t5, 16($t4) </span><br><span class="line">lw $t6, -4($t1)</span><br></pre></td></tr></table></figure>
+
+<p>之后对于各种边界情况和转发阻塞情况，进行覆盖测试：</p>
+<p>提供一组超强测样例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br><span class="line">386</span><br><span class="line">387</span><br><span class="line">388</span><br><span class="line">389</span><br><span class="line">390</span><br><span class="line">391</span><br><span class="line">392</span><br><span class="line">393</span><br><span class="line">394</span><br><span class="line">395</span><br><span class="line">396</span><br><span class="line">397</span><br><span class="line">398</span><br><span class="line">399</span><br><span class="line">400</span><br><span class="line">401</span><br><span class="line">402</span><br><span class="line">403</span><br><span class="line">404</span><br><span class="line">405</span><br><span class="line">406</span><br><span class="line">407</span><br><span class="line">408</span><br><span class="line">409</span><br><span class="line">410</span><br><span class="line">411</span><br><span class="line">412</span><br><span class="line">413</span><br><span class="line">414</span><br><span class="line">415</span><br><span class="line">416</span><br><span class="line">417</span><br><span class="line">418</span><br><span class="line">419</span><br><span class="line">420</span><br><span class="line">421</span><br><span class="line">422</span><br><span class="line">423</span><br><span class="line">424</span><br><span class="line">425</span><br><span class="line">426</span><br><span class="line">427</span><br><span class="line">428</span><br><span class="line">429</span><br><span class="line">430</span><br><span class="line">431</span><br><span class="line">432</span><br><span class="line">433</span><br><span class="line">434</span><br><span class="line">435</span><br><span class="line">436</span><br><span class="line">437</span><br><span class="line">438</span><br><span class="line">439</span><br><span class="line">440</span><br><span class="line">441</span><br><span class="line">442</span><br><span class="line">443</span><br><span class="line">444</span><br><span class="line">445</span><br><span class="line">446</span><br><span class="line">447</span><br><span class="line">448</span><br><span class="line">449</span><br><span class="line">450</span><br><span class="line">451</span><br><span class="line">452</span><br><span class="line">453</span><br><span class="line">454</span><br><span class="line">455</span><br><span class="line">456</span><br><span class="line">457</span><br><span class="line">458</span><br><span class="line">459</span><br><span class="line">460</span><br><span class="line">461</span><br><span class="line">462</span><br><span class="line">463</span><br><span class="line">464</span><br><span class="line">465</span><br><span class="line">466</span><br><span class="line">467</span><br><span class="line">468</span><br><span class="line">469</span><br><span class="line">470</span><br><span class="line">471</span><br><span class="line">472</span><br><span class="line">473</span><br><span class="line">474</span><br><span class="line">475</span><br><span class="line">476</span><br><span class="line">477</span><br><span class="line">478</span><br><span class="line">479</span><br><span class="line">480</span><br><span class="line">481</span><br><span class="line">482</span><br><span class="line">483</span><br><span class="line">484</span><br><span class="line">485</span><br><span class="line">486</span><br><span class="line">487</span><br><span class="line">488</span><br><span class="line">489</span><br><span class="line">490</span><br><span class="line">491</span><br><span class="line">492</span><br><span class="line">493</span><br><span class="line">494</span><br><span class="line">495</span><br><span class="line">496</span><br><span class="line">497</span><br><span class="line">498</span><br><span class="line">499</span><br><span class="line">500</span><br><span class="line">501</span><br><span class="line">502</span><br><span class="line">503</span><br><span class="line">504</span><br><span class="line">505</span><br><span class="line">506</span><br><span class="line">507</span><br><span class="line">508</span><br><span class="line">509</span><br><span class="line">510</span><br><span class="line">511</span><br><span class="line">512</span><br><span class="line">513</span><br><span class="line">514</span><br><span class="line">515</span><br><span class="line">516</span><br><span class="line">517</span><br><span class="line">518</span><br><span class="line">519</span><br><span class="line">520</span><br><span class="line">521</span><br><span class="line">522</span><br><span class="line">523</span><br><span class="line">524</span><br><span class="line">525</span><br><span class="line">526</span><br><span class="line">527</span><br><span class="line">528</span><br><span class="line">529</span><br><span class="line">530</span><br><span class="line">531</span><br><span class="line">532</span><br><span class="line">533</span><br><span class="line">534</span><br><span class="line">535</span><br><span class="line">536</span><br><span class="line">537</span><br><span class="line">538</span><br><span class="line">539</span><br><span class="line">540</span><br><span class="line">541</span><br><span class="line">542</span><br><span class="line">543</span><br><span class="line">544</span><br><span class="line">545</span><br><span class="line">546</span><br><span class="line">547</span><br><span class="line">548</span><br><span class="line">549</span><br><span class="line">550</span><br><span class="line">551</span><br><span class="line">552</span><br><span class="line">553</span><br><span class="line">554</span><br><span class="line">555</span><br><span class="line">556</span><br><span class="line">557</span><br><span class="line">558</span><br><span class="line">559</span><br><span class="line">560</span><br><span class="line">561</span><br><span class="line">562</span><br><span class="line">563</span><br><span class="line">564</span><br><span class="line">565</span><br><span class="line">566</span><br><span class="line">567</span><br><span class="line">568</span><br><span class="line">569</span><br><span class="line">570</span><br><span class="line">571</span><br><span class="line">572</span><br><span class="line">573</span><br><span class="line">574</span><br><span class="line">575</span><br><span class="line">576</span><br><span class="line">577</span><br><span class="line">578</span><br><span class="line">579</span><br><span class="line">580</span><br><span class="line">581</span><br><span class="line">582</span><br><span class="line">583</span><br><span class="line">584</span><br><span class="line">585</span><br><span class="line">586</span><br><span class="line">587</span><br><span class="line">588</span><br><span class="line">589</span><br><span class="line">590</span><br><span class="line">591</span><br><span class="line">592</span><br><span class="line">593</span><br><span class="line">594</span><br><span class="line">595</span><br><span class="line">596</span><br><span class="line">597</span><br><span class="line">598</span><br><span class="line">599</span><br><span class="line">600</span><br><span class="line">601</span><br><span class="line">602</span><br><span class="line">603</span><br><span class="line">604</span><br><span class="line">605</span><br><span class="line">606</span><br><span class="line">607</span><br><span class="line">608</span><br><span class="line">609</span><br><span class="line">610</span><br><span class="line">611</span><br><span class="line">612</span><br><span class="line">613</span><br><span class="line">614</span><br><span class="line">615</span><br><span class="line">616</span><br><span class="line">617</span><br><span class="line">618</span><br><span class="line">619</span><br><span class="line">620</span><br><span class="line">621</span><br><span class="line">622</span><br><span class="line">623</span><br><span class="line">624</span><br><span class="line">625</span><br><span class="line">626</span><br><span class="line">627</span><br><span class="line">628</span><br><span class="line">629</span><br><span class="line">630</span><br><span class="line">631</span><br><span class="line">632</span><br><span class="line">633</span><br><span class="line">634</span><br><span class="line">635</span><br><span class="line">636</span><br><span class="line">637</span><br><span class="line">638</span><br><span class="line">639</span><br><span class="line">640</span><br><span class="line">641</span><br><span class="line">642</span><br><span class="line">643</span><br><span class="line">644</span><br><span class="line">645</span><br><span class="line">646</span><br><span class="line">647</span><br><span class="line">648</span><br><span class="line">649</span><br><span class="line">650</span><br><span class="line">651</span><br><span class="line">652</span><br><span class="line">653</span><br><span class="line">654</span><br><span class="line">655</span><br><span class="line">656</span><br><span class="line">657</span><br><span class="line">658</span><br><span class="line">659</span><br><span class="line">660</span><br><span class="line">661</span><br><span class="line">662</span><br><span class="line">663</span><br><span class="line">664</span><br><span class="line">665</span><br><span class="line">666</span><br><span class="line">667</span><br><span class="line">668</span><br><span class="line">669</span><br><span class="line">670</span><br><span class="line">671</span><br><span class="line">672</span><br><span class="line">673</span><br><span class="line">674</span><br><span class="line">675</span><br><span class="line">676</span><br><span class="line">677</span><br><span class="line">678</span><br><span class="line">679</span><br><span class="line">680</span><br><span class="line">681</span><br><span class="line">682</span><br><span class="line">683</span><br><span class="line">684</span><br><span class="line">685</span><br><span class="line">686</span><br><span class="line">687</span><br><span class="line">688</span><br><span class="line">689</span><br><span class="line">690</span><br><span class="line">691</span><br><span class="line">692</span><br><span class="line">693</span><br><span class="line">694</span><br><span class="line">695</span><br><span class="line">696</span><br><span class="line">697</span><br><span class="line">698</span><br><span class="line">699</span><br><span class="line">700</span><br><span class="line">701</span><br><span class="line">702</span><br><span class="line">703</span><br><span class="line">704</span><br><span class="line">705</span><br><span class="line">706</span><br><span class="line">707</span><br><span class="line">708</span><br><span class="line">709</span><br><span class="line">710</span><br><span class="line">711</span><br><span class="line">712</span><br><span class="line">713</span><br><span class="line">714</span><br><span class="line">715</span><br><span class="line">716</span><br><span class="line">717</span><br><span class="line">718</span><br><span class="line">719</span><br><span class="line">720</span><br><span class="line">721</span><br><span class="line">722</span><br><span class="line">723</span><br><span class="line">724</span><br><span class="line">725</span><br><span class="line">726</span><br><span class="line">727</span><br><span class="line">728</span><br><span class="line">729</span><br><span class="line">730</span><br><span class="line">731</span><br><span class="line">732</span><br><span class="line">733</span><br><span class="line">734</span><br><span class="line">735</span><br><span class="line">736</span><br><span class="line">737</span><br><span class="line">738</span><br><span class="line">739</span><br><span class="line">740</span><br><span class="line">741</span><br><span class="line">742</span><br><span class="line">743</span><br><span class="line">744</span><br><span class="line">745</span><br><span class="line">746</span><br><span class="line">747</span><br><span class="line">748</span><br><span class="line">749</span><br><span class="line">750</span><br><span class="line">751</span><br><span class="line">752</span><br><span class="line">753</span><br><span class="line">754</span><br><span class="line">755</span><br><span class="line">756</span><br><span class="line">757</span><br><span class="line">758</span><br><span class="line">759</span><br><span class="line">760</span><br><span class="line">761</span><br><span class="line">762</span><br><span class="line">763</span><br><span class="line">764</span><br><span class="line">765</span><br><span class="line">766</span><br><span class="line">767</span><br><span class="line">768</span><br><span class="line">769</span><br><span class="line">770</span><br><span class="line">771</span><br><span class="line">772</span><br><span class="line">773</span><br><span class="line">774</span><br><span class="line">775</span><br><span class="line">776</span><br><span class="line">777</span><br><span class="line">778</span><br><span class="line">779</span><br><span class="line">780</span><br><span class="line">781</span><br><span class="line">782</span><br><span class="line">783</span><br><span class="line">784</span><br><span class="line">785</span><br><span class="line">786</span><br><span class="line">787</span><br><span class="line">788</span><br><span class="line">789</span><br><span class="line">790</span><br><span class="line">791</span><br><span class="line">792</span><br><span class="line">793</span><br><span class="line">794</span><br><span class="line">795</span><br><span class="line">796</span><br><span class="line">797</span><br><span class="line">798</span><br><span class="line">799</span><br><span class="line">800</span><br><span class="line">801</span><br><span class="line">802</span><br><span class="line">803</span><br><span class="line">804</span><br><span class="line">805</span><br><span class="line">806</span><br><span class="line">807</span><br><span class="line">808</span><br><span class="line">809</span><br><span class="line">810</span><br><span class="line">811</span><br><span class="line">812</span><br><span class="line">813</span><br><span class="line">814</span><br><span class="line">815</span><br><span class="line">816</span><br><span class="line">817</span><br><span class="line">818</span><br><span class="line">819</span><br><span class="line">820</span><br><span class="line">821</span><br><span class="line">822</span><br><span class="line">823</span><br><span class="line">824</span><br><span class="line">825</span><br><span class="line">826</span><br><span class="line">827</span><br><span class="line">828</span><br><span class="line">829</span><br><span class="line">830</span><br><span class="line">831</span><br><span class="line">832</span><br><span class="line">833</span><br><span class="line">834</span><br><span class="line">835</span><br><span class="line">836</span><br><span class="line">837</span><br><span class="line">838</span><br><span class="line">839</span><br><span class="line">840</span><br><span class="line">841</span><br><span class="line">842</span><br><span class="line">843</span><br><span class="line">844</span><br><span class="line">845</span><br><span class="line">846</span><br><span class="line">847</span><br><span class="line">848</span><br><span class="line">849</span><br><span class="line">850</span><br><span class="line">851</span><br><span class="line">852</span><br><span class="line">853</span><br><span class="line">854</span><br><span class="line">855</span><br><span class="line">856</span><br><span class="line">857</span><br><span class="line">858</span><br><span class="line">859</span><br><span class="line">860</span><br><span class="line">861</span><br><span class="line">862</span><br><span class="line">863</span><br><span class="line">864</span><br><span class="line">865</span><br><span class="line">866</span><br><span class="line">867</span><br><span class="line">868</span><br><span class="line">869</span><br><span class="line">870</span><br><span class="line">871</span><br><span class="line">872</span><br><span class="line">873</span><br><span class="line">874</span><br><span class="line">875</span><br><span class="line">876</span><br><span class="line">877</span><br><span class="line">878</span><br><span class="line">879</span><br><span class="line">880</span><br><span class="line">881</span><br><span class="line">882</span><br><span class="line">883</span><br><span class="line">884</span><br><span class="line">885</span><br><span class="line">886</span><br><span class="line">887</span><br><span class="line">888</span><br><span class="line">889</span><br><span class="line">890</span><br><span class="line">891</span><br><span class="line">892</span><br><span class="line">893</span><br><span class="line">894</span><br><span class="line">895</span><br><span class="line">896</span><br><span class="line">897</span><br><span class="line">898</span><br><span class="line">899</span><br><span class="line">900</span><br><span class="line">901</span><br><span class="line">902</span><br><span class="line">903</span><br><span class="line">904</span><br><span class="line">905</span><br><span class="line">906</span><br><span class="line">907</span><br><span class="line">908</span><br><span class="line">909</span><br><span class="line">910</span><br><span class="line">911</span><br><span class="line">912</span><br><span class="line">913</span><br><span class="line">914</span><br><span class="line">915</span><br><span class="line">916</span><br><span class="line">917</span><br><span class="line">918</span><br><span class="line">919</span><br><span class="line">920</span><br><span class="line">921</span><br><span class="line">922</span><br><span class="line">923</span><br><span class="line">924</span><br><span class="line">925</span><br><span class="line">926</span><br><span class="line">927</span><br><span class="line">928</span><br><span class="line">929</span><br><span class="line">930</span><br><span class="line">931</span><br><span class="line">932</span><br><span class="line">933</span><br><span class="line">934</span><br><span class="line">935</span><br><span class="line">936</span><br><span class="line">937</span><br><span class="line">938</span><br><span class="line">939</span><br><span class="line">940</span><br><span class="line">941</span><br><span class="line">942</span><br><span class="line">943</span><br><span class="line">944</span><br><span class="line">945</span><br><span class="line">946</span><br><span class="line">947</span><br><span class="line">948</span><br><span class="line">949</span><br><span class="line">950</span><br><span class="line">951</span><br><span class="line">952</span><br><span class="line">953</span><br><span class="line">954</span><br><span class="line">955</span><br><span class="line">956</span><br><span class="line">957</span><br><span class="line">958</span><br><span class="line">959</span><br><span class="line">960</span><br><span class="line">961</span><br><span class="line">962</span><br><span class="line">963</span><br><span class="line">964</span><br><span class="line">965</span><br><span class="line">966</span><br><span class="line">967</span><br><span class="line">968</span><br><span class="line">969</span><br><span class="line">970</span><br><span class="line">971</span><br><span class="line">972</span><br><span class="line">973</span><br><span class="line">974</span><br><span class="line">975</span><br><span class="line">976</span><br><span class="line">977</span><br><span class="line">978</span><br><span class="line">979</span><br><span class="line">980</span><br><span class="line">981</span><br><span class="line">982</span><br><span class="line">983</span><br><span class="line">984</span><br><span class="line">985</span><br><span class="line">986</span><br><span class="line">987</span><br><span class="line">988</span><br><span class="line">989</span><br><span class="line">990</span><br><span class="line">991</span><br><span class="line">992</span><br><span class="line">993</span><br><span class="line">994</span><br><span class="line">995</span><br><span class="line">996</span><br><span class="line">997</span><br><span class="line">998</span><br><span class="line">999</span><br><span class="line">1000</span><br><span class="line">1001</span><br><span class="line">1002</span><br><span class="line">1003</span><br><span class="line">1004</span><br><span class="line">1005</span><br><span class="line">1006</span><br><span class="line">1007</span><br><span class="line">1008</span><br><span class="line">1009</span><br><span class="line">1010</span><br><span class="line">1011</span><br><span class="line">1012</span><br><span class="line">1013</span><br><span class="line">1014</span><br><span class="line">1015</span><br><span class="line">1016</span><br><span class="line">1017</span><br><span class="line">1018</span><br><span class="line">1019</span><br></pre></td><td class="code"><pre><span class="line">.text</span><br><span class="line">init_1:j init_44</span><br><span class="line">	lui $0, 58479</span><br><span class="line">init_2:j init_61</span><br><span class="line">	lui $26, 40699</span><br><span class="line">init_3:nop</span><br><span class="line">j init_26</span><br><span class="line">	ori $29, 12340</span><br><span class="line">init_4:j init_21</span><br><span class="line">	lui $9, 18793</span><br><span class="line">init_5:nop</span><br><span class="line">j init_9</span><br><span class="line">	ori $13, 19610</span><br><span class="line">init_6:j init_38</span><br><span class="line">	ori $28, 17819</span><br><span class="line">init_7:nop</span><br><span class="line">j init_37</span><br><span class="line">	ori $27, 17810</span><br><span class="line">init_8:j init_48</span><br><span class="line">	ori $14, 1324</span><br><span class="line">init_9:j init_8</span><br><span class="line">	lui $14, 20958</span><br><span class="line">init_10:j init_31</span><br><span class="line">	lui $4, 28505</span><br><span class="line">init_11:nop</span><br><span class="line">j init_13</span><br><span class="line">	ori $23, 24263</span><br><span class="line">init_12:j init_16</span><br><span class="line">	ori $12, 2525</span><br><span class="line">init_13:j init_62</span><br><span class="line">	lui $24, 49213</span><br><span class="line">init_14:j init_59</span><br><span class="line">	ori $6, 27235</span><br><span class="line">init_15:j init_52</span><br><span class="line">	ori $16, 28030</span><br><span class="line">init_16:j init_5</span><br><span class="line">	lui $13, 39021</span><br><span class="line">init_17:j init_23</span><br><span class="line">	lui $20, 45636</span><br><span class="line">init_18:nop</span><br><span class="line">j init_57</span><br><span class="line">	ori $7, 34738</span><br><span class="line">init_19:j init_56</span><br><span class="line">	lui $22, 48232</span><br><span class="line">init_20:j init_7</span><br><span class="line">	lui $27, 21269</span><br><span class="line">init_21:nop</span><br><span class="line">j init_24</span><br><span class="line">	ori $9, 60940</span><br><span class="line">init_22:j init_47</span><br><span class="line">	lui $19, 24579</span><br><span class="line">init_23:j init_53</span><br><span class="line">	ori $20, 23617</span><br><span class="line">init_24:j init_27</span><br><span class="line">	lui $10, 4700</span><br><span class="line">init_25:nop</span><br><span class="line">j init_60</span><br><span class="line">	ori $5, 25135</span><br><span class="line">init_26:j init_34</span><br><span class="line">	lui $30, 14559</span><br><span class="line">init_27:j init_29</span><br><span class="line">	ori $10, 45253</span><br><span class="line">init_28:j init_12</span><br><span class="line">	lui $12, 55820</span><br><span class="line">init_29:j init_36</span><br><span class="line">	lui $11, 49875</span><br><span class="line">init_30:j init_25</span><br><span class="line">	lui $5, 35220</span><br><span class="line">init_31:j init_30</span><br><span class="line">	ori $4, 7615</span><br><span class="line">init_32:j begin</span><br><span class="line">	lui $31, 60984</span><br><span class="line">init_33:j init_43</span><br><span class="line">	ori $2, 18084</span><br><span class="line">init_34:j init_63</span><br><span class="line">	ori $30, 41019</span><br><span class="line">init_35:j init_15</span><br><span class="line">	lui $16, 54272</span><br><span class="line">init_36:nop</span><br><span class="line">j init_28</span><br><span class="line">	ori $11, 2111</span><br><span class="line">init_37:j init_6</span><br><span class="line">	lui $28, 33755</span><br><span class="line">init_38:j init_3</span><br><span class="line">	lui $29, 26291</span><br><span class="line">init_39:nop</span><br><span class="line">j init_2</span><br><span class="line">	ori $25, 48740</span><br><span class="line">init_40:j init_42</span><br><span class="line">	lui $1, 43965</span><br><span class="line">init_41:nop</span><br><span class="line">j init_19</span><br><span class="line">	ori $21, 27953</span><br><span class="line">init_42:nop</span><br><span class="line">j init_50</span><br><span class="line">	ori $1, 18337</span><br><span class="line">init_43:j init_54</span><br><span class="line">	lui $3, 36555</span><br><span class="line">init_44:j init_40</span><br><span class="line">	ori $0, 39840</span><br><span class="line">init_45:j init_22</span><br><span class="line">	ori $18, 28396</span><br><span class="line">init_46:j init_4</span><br><span class="line">	ori $8, 13173</span><br><span class="line">init_47:nop</span><br><span class="line">j init_17</span><br><span class="line">	ori $19, 60189</span><br><span class="line">init_48:j init_49</span><br><span class="line">	lui $15, 28446</span><br><span class="line">init_49:nop</span><br><span class="line">j init_35</span><br><span class="line">	ori $15, 43996</span><br><span class="line">init_50:j init_33</span><br><span class="line">	lui $2, 50534</span><br><span class="line">init_51:j init_45</span><br><span class="line">	lui $18, 47692</span><br><span class="line">init_52:j init_58</span><br><span class="line">	lui $17, 18098</span><br><span class="line">init_53:j init_41</span><br><span class="line">	lui $21, 23125</span><br><span class="line">init_54:nop</span><br><span class="line">j init_10</span><br><span class="line">	ori $3, 34935</span><br><span class="line">init_55:j init_39</span><br><span class="line">	lui $25, 37200</span><br><span class="line">init_56:j init_64</span><br><span class="line">	ori $22, 41245</span><br><span class="line">init_57:j init_46</span><br><span class="line">	lui $8, 16690</span><br><span class="line">init_58:nop</span><br><span class="line">j init_51</span><br><span class="line">	ori $17, 23659</span><br><span class="line">init_59:j init_18</span><br><span class="line">	lui $7, 16431</span><br><span class="line">init_60:j init_14</span><br><span class="line">	lui $6, 20586</span><br><span class="line">init_61:j init_20</span><br><span class="line">	ori $26, 21724</span><br><span class="line">init_62:j init_55</span><br><span class="line">	ori $24, 64211</span><br><span class="line">init_63:j init_32</span><br><span class="line">	lui $31, 32491</span><br><span class="line">init_64:j init_11</span><br><span class="line">	lui $23, 36591</span><br><span class="line">begin:</span><br><span class="line">	ori $11, $11, 39941</span><br><span class="line">	sw $11, 0($0)</span><br><span class="line">	ori $22, $22, 13378</span><br><span class="line">	nop</span><br><span class="line">	sw $22, 4($0)</span><br><span class="line">	addu $8, $31, $16</span><br><span class="line">	nop</span><br><span class="line">	nop</span><br><span class="line">	sw $8, 8($0)</span><br><span class="line">	subu $20, $16, $6</span><br><span class="line">	sw $20, 12($0)</span><br><span class="line">	addu $9, $15, $7</span><br><span class="line">	nop</span><br><span class="line">	sw $9, 16($0)</span><br><span class="line">	addu $19, $23, $27</span><br><span class="line">	nop</span><br><span class="line">	nop</span><br><span class="line">	sw $19, 20($0)</span><br><span class="line">	subu $5, $1, $31</span><br><span class="line">	sw $5, 24($0)</span><br><span class="line">	addu $22, $6, $26</span><br><span class="line">	nop</span><br><span class="line">	sw $22, 28($0)</span><br><span class="line">	addu $10, $4, $18</span><br><span class="line">	nop</span><br><span class="line">	nop</span><br><span class="line">	sw $10, 32($0)</span><br><span class="line">	subu $19, $3, $0</span><br><span class="line">	sw $19, 36($0)</span><br><span class="line">	subu $22, $24, $1</span><br><span class="line">	nop</span><br><span class="line">	sw $22, 40($0)</span><br><span class="line">	subu $19, $10, $14</span><br><span class="line">	nop</span><br><span class="line">	nop</span><br><span class="line">	sw $19, 44($0)</span><br><span class="line">	subu $0, $19, $15</span><br><span class="line">	sw $0, 48($0)</span><br><span class="line">	ori $21, $21, 728</span><br><span class="line">	nop</span><br><span class="line">	sw $21, 52($0)</span><br><span class="line">	subu $13, $29, $4</span><br><span class="line">	nop</span><br><span class="line">	nop</span><br><span class="line">	sw $13, 56($0)</span><br><span class="line">	addu $11, $3, $1</span><br><span class="line">	sw $11, 60($0)</span><br><span class="line">	addu $27, $19, $11</span><br><span class="line">	nop</span><br><span class="line">	sw $27, 64($0)</span><br><span class="line">	addu $27, $16, $28</span><br><span class="line">	nop</span><br><span class="line">	nop</span><br><span class="line">	sw $27, 68($0)</span><br><span class="line">	ori $25, $25, 7272</span><br><span class="line">	sw $25, 72($0)</span><br><span class="line">	ori $31, $31, 65375</span><br><span class="line">	nop</span><br><span class="line">	sw $31, 76($0)</span><br><span class="line">	ori $13, $13, 65318</span><br><span class="line">	nop</span><br><span class="line">	nop</span><br><span class="line">	sw $13, 80($0)</span><br><span class="line">	ori $5, $5, 27677</span><br><span class="line">	sw $5, 84($0)</span><br><span class="line">	ori $13, $13, 30209</span><br><span class="line">	nop</span><br><span class="line">	sw $13, 88($0)</span><br><span class="line">	subu $16, $28, $20</span><br><span class="line">	nop</span><br><span class="line">	nop</span><br><span class="line">	sw $16, 92($0)</span><br><span class="line">	addu $6, $16, $21</span><br><span class="line">	sw $6, 96($0)</span><br><span class="line">	subu $22, $11, $31</span><br><span class="line">	nop</span><br><span class="line">	sw $22, 100($0)</span><br><span class="line">	subu $25, $23, $19</span><br><span class="line">	nop</span><br><span class="line">	nop</span><br><span class="line">	sw $25, 104($0)</span><br><span class="line">	ori $0, $0, 8927</span><br><span class="line">	sw $0, 108($0)</span><br><span class="line">	ori $24, $24, 21563</span><br><span class="line">	nop</span><br><span class="line">	sw $24, 112($0)</span><br><span class="line">	addu $13, $16, $11</span><br><span class="line">	nop</span><br><span class="line">	nop</span><br><span class="line">	sw $13, 116($0)</span><br><span class="line">	subu $14, $12, $27</span><br><span class="line">	sw $14, 120($0)</span><br><span class="line">	addu $15, $24, $27</span><br><span class="line">	nop</span><br><span class="line">	sw $15, 124($0)</span><br><span class="line">	subu $20, $1, $24</span><br><span class="line">	nop</span><br><span class="line">	nop</span><br><span class="line">	sw $20, 128($0)</span><br><span class="line">	subu $13, $28, $15</span><br><span class="line">	sw $13, 132($0)</span><br><span class="line">	ori $28, $28, 56842</span><br><span class="line">	nop</span><br><span class="line">	sw $28, 136($0)</span><br><span class="line">	addu $31, $6, $23</span><br><span class="line">	nop</span><br><span class="line">	nop</span><br><span class="line">	sw $31, 140($0)</span><br><span class="line">	ori $10, $10, 11112</span><br><span class="line">	sw $10, 144($0)</span><br><span class="line">	addu $21, $23, $9</span><br><span class="line">	nop</span><br><span class="line">	sw $21, 148($0)</span><br><span class="line">	subu $22, $16, $29</span><br><span class="line">	nop</span><br><span class="line">	nop</span><br><span class="line">	sw $22, 152($0)</span><br><span class="line">	addu $16, $1, $31</span><br><span class="line">	sw $16, 156($0)</span><br><span class="line">	subu $12, $15, $28</span><br><span class="line">	nop</span><br><span class="line">	sw $12, 160($0)</span><br><span class="line">	addu $6, $10, $22</span><br><span class="line">	nop</span><br><span class="line">	nop</span><br><span class="line">	sw $6, 164($0)</span><br><span class="line">	ori $12, $12, 14691</span><br><span class="line">	sw $12, 168($0)</span><br><span class="line">	ori $16, $16, 34145</span><br><span class="line">	nop</span><br><span class="line">	sw $16, 172($0)</span><br><span class="line">	ori $11, $11, 18551</span><br><span class="line">	nop</span><br><span class="line">	nop</span><br><span class="line">	sw $11, 176($0)</span><br><span class="line">	sw $sp, 180($0)</span><br><span class="line">	sw $ra, 184($0)</span><br><span class="line">	sw $at, 188($0)</span><br><span class="line">	ori $sp, $0, 4060</span><br><span class="line">	ori $1, $0, 32</span><br><span class="line">	jal foo1</span><br><span class="line">	nop</span><br><span class="line">	lui $1, 0</span><br><span class="line">	ori $1, 0</span><br><span class="line">	beq $1, $0, skip_manual1</span><br><span class="line">	nop</span><br><span class="line">	j dl</span><br><span class="line">	nop</span><br><span class="line">skip_manual1:</span><br><span class="line">	lui $1, 10994</span><br><span class="line">	lui $2, 10994</span><br><span class="line">	beq $1, $2, skip_manual2</span><br><span class="line">	nop</span><br><span class="line">	j dl</span><br><span class="line">	nop</span><br><span class="line">skip_manual2:</span><br><span class="line">	lui $3, 10995</span><br><span class="line">	nop</span><br><span class="line">	nop</span><br><span class="line">	beq $1, $3, dl</span><br><span class="line">	addu $4, $4, $3</span><br><span class="line">	lui $1, 0x6183</span><br><span class="line">	addu $2, $2, $1</span><br><span class="line">	lui $5, 0x8124</span><br><span class="line">	addu $4, $5, $1</span><br><span class="line">	subu $6, $6, $5</span><br><span class="line">	jal skip_manual3</span><br><span class="line">	nop</span><br><span class="line">	sw $0, 4($0)</span><br><span class="line">skip_manual3:</span><br><span class="line">	sw $7, -0x3000($ra)</span><br><span class="line">	lw $ra, -0x3000($ra)</span><br><span class="line">	ori $ra, $0, 0</span><br><span class="line">	jal skip_manual4</span><br><span class="line">	nop</span><br><span class="line">	sw $0, 8($0)</span><br><span class="line">skip_manual4:</span><br><span class="line">	beq $ra, $0, dl</span><br><span class="line">	nop</span><br><span class="line">	ori $ra, $0, 0</span><br><span class="line">	jal skip_manual5</span><br><span class="line">	nop</span><br><span class="line">	sw $ra, 12($0)</span><br><span class="line">skip_manual5:</span><br><span class="line">	nop</span><br><span class="line">	beq $ra, $0, dl</span><br><span class="line">	nop</span><br><span class="line">	ori $4, $0, 4</span><br><span class="line">	ori $5, $0, 5</span><br><span class="line">	ori $1, $0, 1</span><br><span class="line">	addu $4, $4, $1</span><br><span class="line">	nop</span><br><span class="line">	nop</span><br><span class="line">	beq $4, $5, skip_manual6</span><br><span class="line">	nop</span><br><span class="line">	sw $0, 16($0)</span><br><span class="line">skip_manual6:</span><br><span class="line">	ori $1, $0, 1</span><br><span class="line">	ori $2, $0, 2</span><br><span class="line">	ori $3, $0, 3</span><br><span class="line">	ori $4, $0, 4</span><br><span class="line">	ori $5, $0, 6</span><br><span class="line">	ori $6, $0, 5</span><br><span class="line">	subu $5, $5, $1</span><br><span class="line">	addu $6, $2, $1</span><br><span class="line">	beq $5, $6, dl</span><br><span class="line">	nop</span><br><span class="line">	jal skip_manual8</span><br><span class="line">	nop</span><br><span class="line">skip_manual8:</span><br><span class="line">	addu $3, $3, $ra</span><br><span class="line">	subu $4, $4, $ra</span><br><span class="line">	jal foo</span><br><span class="line">	nop</span><br><span class="line">	jal fooo</span><br><span class="line">	nop</span><br><span class="line">	jal foooo</span><br><span class="line">	nop</span><br><span class="line">	jal fooooo</span><br><span class="line">	nop</span><br><span class="line">sw $0, 192($0)</span><br><span class="line">sw $1, 196($0)</span><br><span class="line">sw $2, 200($0)</span><br><span class="line">sw $3, 204($0)</span><br><span class="line">sw $4, 208($0)</span><br><span class="line">sw $5, 212($0)</span><br><span class="line">sw $6, 216($0)</span><br><span class="line">sw $7, 220($0)</span><br><span class="line">sw $8, 224($0)</span><br><span class="line">sw $9, 228($0)</span><br><span class="line">sw $10, 232($0)</span><br><span class="line">sw $11, 236($0)</span><br><span class="line">sw $12, 240($0)</span><br><span class="line">sw $13, 244($0)</span><br><span class="line">sw $14, 248($0)</span><br><span class="line">sw $15, 252($0)</span><br><span class="line">sw $16, 256($0)</span><br><span class="line">sw $17, 260($0)</span><br><span class="line">sw $18, 264($0)</span><br><span class="line">sw $19, 268($0)</span><br><span class="line">sw $20, 272($0)</span><br><span class="line">sw $21, 276($0)</span><br><span class="line">sw $22, 280($0)</span><br><span class="line">sw $23, 284($0)</span><br><span class="line">sw $24, 288($0)</span><br><span class="line">sw $25, 292($0)</span><br><span class="line">sw $26, 296($0)</span><br><span class="line">sw $27, 300($0)</span><br><span class="line">sw $28, 304($0)</span><br><span class="line">sw $29, 308($0)</span><br><span class="line">sw $30, 312($0)</span><br><span class="line">sw $31, 316($0)</span><br><span class="line">	lui $31, 63605</span><br><span class="line">	jal tag_0</span><br><span class="line">	nop</span><br><span class="line">	ori $ra, $0, 2</span><br><span class="line">tag_0:sw $ra, 320($0)</span><br><span class="line">	addu $14, $13, $7</span><br><span class="line">	jal  tag_1</span><br><span class="line">	nop</span><br><span class="line">	ori $ra, $0, 2</span><br><span class="line">tag_1:sw $ra, 324($0)</span><br><span class="line">	lw $25, 12($0)</span><br><span class="line">	jal  tag_2</span><br><span class="line">	nop</span><br><span class="line">	ori $ra, $0, 2</span><br><span class="line">tag_2:sw $ra, 328($0)</span><br><span class="line">	lui $29, 14949</span><br><span class="line">	nop</span><br><span class="line">	jal  tag_3</span><br><span class="line">	nop</span><br><span class="line">	ori $ra, $0, 2</span><br><span class="line">tag_3:sw $ra, 332($0)</span><br><span class="line">	addu $10, $24, $1</span><br><span class="line">	nop</span><br><span class="line">	jal  tag_4</span><br><span class="line">	nop</span><br><span class="line">	ori $ra, $0, 2</span><br><span class="line">tag_4:sw $ra, 336($0)</span><br><span class="line">	lw $12, 164($0)</span><br><span class="line">	nop</span><br><span class="line">	jal  tag_5</span><br><span class="line">	nop</span><br><span class="line">	ori $ra, $0, 2</span><br><span class="line">tag_5:sw $ra, 340($0)</span><br><span class="line">	lui $31, 58593</span><br><span class="line">	nop</span><br><span class="line">	nop</span><br><span class="line">	jal  tag_6</span><br><span class="line">	nop</span><br><span class="line">	ori $ra, $0, 2</span><br><span class="line">tag_6:sw $ra, 344($0)</span><br><span class="line">	addu $1, $7, $12</span><br><span class="line">	nop</span><br><span class="line">	nop</span><br><span class="line">	jal  tag_7</span><br><span class="line">	nop</span><br><span class="line">	ori $ra, $0, 2</span><br><span class="line">tag_7:sw $ra, 348($0)</span><br><span class="line">	lw $20, 256($0)</span><br><span class="line">	nop</span><br><span class="line">	nop</span><br><span class="line">	jal  tag_8</span><br><span class="line">	nop</span><br><span class="line">	ori $ra, $0, 2</span><br><span class="line">tag_8:sw $ra, 352($0)</span><br><span class="line">	lui $17, 19367</span><br><span class="line">	jal  tag_9</span><br><span class="line">	nop</span><br><span class="line">	ori $ra, $0, 2</span><br><span class="line">tag_9:sw $ra, 356($0)</span><br><span class="line">	addu $8, $11, $11</span><br><span class="line">	jal  tag_10</span><br><span class="line">	nop</span><br><span class="line">	ori $ra, $0, 2</span><br><span class="line">tag_10:sw $ra, 360($0)</span><br><span class="line">	lw $1, 132($0)</span><br><span class="line">	jal  tag_11</span><br><span class="line">	nop</span><br><span class="line">	ori $ra, $0, 2</span><br><span class="line">tag_11:sw $ra, 364($0)</span><br><span class="line">	lui $18, 56313</span><br><span class="line">	nop</span><br><span class="line">	jal  tag_12</span><br><span class="line">	nop</span><br><span class="line">	ori $ra, $0, 2</span><br><span class="line">tag_12:sw $ra, 368($0)</span><br><span class="line">	addu $23, $25, $24</span><br><span class="line">	nop</span><br><span class="line">	jal  tag_13</span><br><span class="line">	nop</span><br><span class="line">	ori $ra, $0, 2</span><br><span class="line">tag_13:sw $ra, 372($0)</span><br><span class="line">	lw $20, 368($0)</span><br><span class="line">	nop</span><br><span class="line">	jal  tag_14</span><br><span class="line">	nop</span><br><span class="line">	ori $ra, $0, 2</span><br><span class="line">tag_14:sw $ra, 376($0)</span><br><span class="line">	lui $21, 22951</span><br><span class="line">	nop</span><br><span class="line">	nop</span><br><span class="line">	jal  tag_15</span><br><span class="line">	nop</span><br><span class="line">	ori $ra, $0, 2</span><br><span class="line">tag_15:sw $ra, 380($0)</span><br><span class="line">	addu $8, $10, $1</span><br><span class="line">	nop</span><br><span class="line">	nop</span><br><span class="line">	jal  tag_16</span><br><span class="line">	nop</span><br><span class="line">	ori $ra, $0, 2</span><br><span class="line">tag_16:sw $ra, 384($0)</span><br><span class="line">	lw $4, 88($0)</span><br><span class="line">	nop</span><br><span class="line">	nop</span><br><span class="line">	jal  tag_17</span><br><span class="line">	nop</span><br><span class="line">	ori $ra, $0, 2</span><br><span class="line">tag_17:sw $ra, 388($0)</span><br><span class="line">	ori $4, $0, 12</span><br><span class="line">	jal skip_manual7</span><br><span class="line">	nop</span><br><span class="line">skip_manual7:</span><br><span class="line">	addu $ra, $ra, $4</span><br><span class="line">	jr $ra</span><br><span class="line">	ori $4, $0, 8</span><br><span class="line">	addu $ra, $ra, $4</span><br><span class="line">	nop</span><br><span class="line">	jr $ra</span><br><span class="line">	nop</span><br><span class="line">dl:addu $ra, $0, $0</span><br><span class="line">	beq $0, $0, dl</span><br><span class="line">	nop</span><br><span class="line">foo:	jr $ra</span><br><span class="line">	ori $ra, $ra, 0xff</span><br><span class="line">fooo:	ori $6, $ra, 0xa</span><br><span class="line">	jr $ra</span><br><span class="line">	nop</span><br><span class="line">foooo:	jr $ra</span><br><span class="line">	ori $t8, $ra, 0xff</span><br><span class="line">fooooo:	ori $t9, $ra, 0xa</span><br><span class="line">	jr $ra</span><br><span class="line">	nop</span><br><span class="line">foo1:</span><br><span class="line">	sw $a0, 0($sp)</span><br><span class="line">	sw $ra, 16($sp)</span><br><span class="line">	sw $a1, 4($sp)</span><br><span class="line">	sw $a2, 8($sp)</span><br><span class="line">	sw $a3, 12($sp)</span><br><span class="line">	sw $t0, 20($sp)</span><br><span class="line">	sw $t1, 24($sp)</span><br><span class="line">	sw $t2, 28($sp)</span><br><span class="line">	ori $s1, $0, 84</span><br><span class="line">	ori $s2, $0, 220</span><br><span class="line">	lw $t0, -40($s1)</span><br><span class="line">	lw $t1, -88($s2)</span><br><span class="line">	addu $a3, $t0, $t1</span><br><span class="line">	addu $a0, $a0, $t0</span><br><span class="line">	addu $a1, $a1, $t1</span><br><span class="line">	addu $t2, $a0, $a1</span><br><span class="line">	ori $a0, $t2, 11072</span><br><span class="line">	addu $t2, $t2, $t2</span><br><span class="line">	addu $t2, $t2, $t2</span><br><span class="line">	ori $a1, $t2, 30986</span><br><span class="line">	ori $a2, $a1, 0xf0</span><br><span class="line">	nop</span><br><span class="line">	beq $a2, $a1, skip1</span><br><span class="line">	nop</span><br><span class="line">	jal foo2</span><br><span class="line">	subu $sp, $sp, $1</span><br><span class="line">skip1:	lw $a3, 16($sp)</span><br><span class="line">	addu $sp, $sp, $1</span><br><span class="line">	nop</span><br><span class="line">	jr $a3</span><br><span class="line">	nop</span><br><span class="line">foo2:</span><br><span class="line">	sw $a0, 0($sp)</span><br><span class="line">	sw $a1, 4($sp)</span><br><span class="line">	sw $ra, 16($sp)</span><br><span class="line">	sw $a2, 8($sp)</span><br><span class="line">	sw $a3, 12($sp)</span><br><span class="line">	sw $t0, 20($sp)</span><br><span class="line">	sw $t1, 24($sp)</span><br><span class="line">	sw $t2, 28($sp)</span><br><span class="line">	ori $s1, $0, 152</span><br><span class="line">	ori $s2, $0, 54</span><br><span class="line">	lw $t1, 326($s2)</span><br><span class="line">	lw $t0, 160($s1)</span><br><span class="line">	addu $a3, $t0, $t1</span><br><span class="line">	addu $a0, $a0, $t0</span><br><span class="line">	addu $a1, $a1, $t1</span><br><span class="line">	addu $t2, $a0, $a1</span><br><span class="line">	ori $a0, $t2, 21109</span><br><span class="line">	addu $t2, $t2, $t2</span><br><span class="line">	addu $t2, $t2, $t2</span><br><span class="line">	ori $a1, $t2, 60683</span><br><span class="line">	ori $a2, $a1, 0xf0</span><br><span class="line">	beq $a2, $a1, skip2</span><br><span class="line">	nop</span><br><span class="line">	jal foo3</span><br><span class="line">	subu $sp, $sp, $1</span><br><span class="line">skip2:	lw $a3, 16($sp)</span><br><span class="line">	jr $a3</span><br><span class="line">	addu $sp, $sp, $1</span><br><span class="line">foo3:</span><br><span class="line">	sw $ra, 16($sp)</span><br><span class="line">	sw $a0, 0($sp)</span><br><span class="line">	sw $a1, 4($sp)</span><br><span class="line">	sw $a2, 8($sp)</span><br><span class="line">	sw $a3, 12($sp)</span><br><span class="line">	sw $t0, 20($sp)</span><br><span class="line">	sw $t1, 24($sp)</span><br><span class="line">	sw $t2, 28($sp)</span><br><span class="line">	ori $s1, $0, 139</span><br><span class="line">	ori $s2, $0, 302</span><br><span class="line">	lw $t0, -35($s1)</span><br><span class="line">	lw $t1, -34($s2)</span><br><span class="line">	addu $a3, $t0, $t1</span><br><span class="line">	addu $a0, $a0, $t0</span><br><span class="line">	addu $a1, $a1, $t1</span><br><span class="line">	addu $t2, $a0, $a1</span><br><span class="line">	ori $a0, $t2, 29202</span><br><span class="line">	addu $t2, $t2, $t2</span><br><span class="line">	addu $t2, $t2, $t2</span><br><span class="line">	ori $a1, $t2, 43269</span><br><span class="line">	ori $a2, $a1, 0xf0</span><br><span class="line">	nop</span><br><span class="line">	beq $a2, $a1, skip3</span><br><span class="line">	nop</span><br><span class="line">	jal foo13</span><br><span class="line">	subu $sp, $sp, $1</span><br><span class="line">skip3:	lw $a3, 16($sp)</span><br><span class="line">	addu $sp, $sp, $1</span><br><span class="line">	jr $a3</span><br><span class="line">	nop</span><br><span class="line">foo4:</span><br><span class="line">	sw $a0, 0($sp)</span><br><span class="line">	sw $ra, 16($sp)</span><br><span class="line">	sw $a1, 4($sp)</span><br><span class="line">	sw $a2, 8($sp)</span><br><span class="line">	sw $a3, 12($sp)</span><br><span class="line">	sw $t0, 20($sp)</span><br><span class="line">	sw $t1, 24($sp)</span><br><span class="line">	sw $t2, 28($sp)</span><br><span class="line">	ori $s1, $0, 297</span><br><span class="line">	ori $s2, $0, 96</span><br><span class="line">	lw $t1, 104($s2)</span><br><span class="line">	lw $t0, -197($s1)</span><br><span class="line">	addu $a3, $t0, $t1</span><br><span class="line">	addu $a0, $a0, $t0</span><br><span class="line">	addu $a1, $a1, $t1</span><br><span class="line">	addu $t2, $a0, $a1</span><br><span class="line">	ori $a0, $t2, 14171</span><br><span class="line">	addu $t2, $t2, $t2</span><br><span class="line">	addu $t2, $t2, $t2</span><br><span class="line">	ori $a1, $t2, 18179</span><br><span class="line">	ori $a2, $a1, 0xf0</span><br><span class="line">	beq $a2, $a1, skip4</span><br><span class="line">	nop</span><br><span class="line">	jal foo11</span><br><span class="line">	subu $sp, $sp, $1</span><br><span class="line">skip4:	lw $a3, 16($sp)</span><br><span class="line">	addu $sp, $sp, $1</span><br><span class="line">	nop</span><br><span class="line">	jr $a3</span><br><span class="line">	nop</span><br><span class="line">foo5:</span><br><span class="line">	sw $a0, 0($sp)</span><br><span class="line">	sw $a1, 4($sp)</span><br><span class="line">	sw $ra, 16($sp)</span><br><span class="line">	sw $a2, 8($sp)</span><br><span class="line">	sw $a3, 12($sp)</span><br><span class="line">	sw $t0, 20($sp)</span><br><span class="line">	sw $t1, 24($sp)</span><br><span class="line">	sw $t2, 28($sp)</span><br><span class="line">	ori $s1, $0, 106</span><br><span class="line">	ori $s2, $0, 190</span><br><span class="line">	lw $t0, -26($s1)</span><br><span class="line">	lw $t1, -82($s2)</span><br><span class="line">	addu $a3, $t0, $t1</span><br><span class="line">	addu $a0, $a0, $t0</span><br><span class="line">	addu $a1, $a1, $t1</span><br><span class="line">	addu $t2, $a0, $a1</span><br><span class="line">	ori $a0, $t2, 49045</span><br><span class="line">	addu $t2, $t2, $t2</span><br><span class="line">	addu $t2, $t2, $t2</span><br><span class="line">	ori $a1, $t2, 36619</span><br><span class="line">	ori $a2, $a1, 0xf0</span><br><span class="line">	nop</span><br><span class="line">	beq $a2, $a1, skip5</span><br><span class="line">	nop</span><br><span class="line">	jal foo1</span><br><span class="line">	subu $sp, $sp, $1</span><br><span class="line">skip5:	lw $a3, 16($sp)</span><br><span class="line">	jr $a3</span><br><span class="line">	addu $sp, $sp, $1</span><br><span class="line">foo6:</span><br><span class="line">	sw $ra, 16($sp)</span><br><span class="line">	sw $a0, 0($sp)</span><br><span class="line">	sw $a1, 4($sp)</span><br><span class="line">	sw $a2, 8($sp)</span><br><span class="line">	sw $a3, 12($sp)</span><br><span class="line">	sw $t0, 20($sp)</span><br><span class="line">	sw $t1, 24($sp)</span><br><span class="line">	sw $t2, 28($sp)</span><br><span class="line">	ori $s1, $0, 345</span><br><span class="line">	ori $s2, $0, 52</span><br><span class="line">	lw $t1, -32($s2)</span><br><span class="line">	lw $t0, 15($s1)</span><br><span class="line">	addu $a3, $t0, $t1</span><br><span class="line">	addu $a0, $a0, $t0</span><br><span class="line">	addu $a1, $a1, $t1</span><br><span class="line">	addu $t2, $a0, $a1</span><br><span class="line">	ori $a0, $t2, 25874</span><br><span class="line">	addu $t2, $t2, $t2</span><br><span class="line">	addu $t2, $t2, $t2</span><br><span class="line">	ori $a1, $t2, 45316</span><br><span class="line">	ori $a2, $a1, 0xf0</span><br><span class="line">	beq $a2, $a1, skip6</span><br><span class="line">	nop</span><br><span class="line">	jal foo4</span><br><span class="line">	subu $sp, $sp, $1</span><br><span class="line">skip6:	lw $a3, 16($sp)</span><br><span class="line">	addu $sp, $sp, $1</span><br><span class="line">	jr $a3</span><br><span class="line">	nop</span><br><span class="line">foo7:</span><br><span class="line">	sw $a0, 0($sp)</span><br><span class="line">	sw $ra, 16($sp)</span><br><span class="line">	sw $a1, 4($sp)</span><br><span class="line">	sw $a2, 8($sp)</span><br><span class="line">	sw $a3, 12($sp)</span><br><span class="line">	sw $t0, 20($sp)</span><br><span class="line">	sw $t1, 24($sp)</span><br><span class="line">	sw $t2, 28($sp)</span><br><span class="line">	ori $s1, $0, 319</span><br><span class="line">	ori $s2, $0, 212</span><br><span class="line">	lw $t0, -167($s1)</span><br><span class="line">	lw $t1, 120($s2)</span><br><span class="line">	addu $a3, $t0, $t1</span><br><span class="line">	addu $a0, $a0, $t0</span><br><span class="line">	addu $a1, $a1, $t1</span><br><span class="line">	addu $t2, $a0, $a1</span><br><span class="line">	ori $a0, $t2, 44079</span><br><span class="line">	addu $t2, $t2, $t2</span><br><span class="line">	addu $t2, $t2, $t2</span><br><span class="line">	ori $a1, $t2, 38407</span><br><span class="line">	ori $a2, $a1, 0xf0</span><br><span class="line">	nop</span><br><span class="line">	beq $a2, $a1, skip7</span><br><span class="line">	nop</span><br><span class="line">	jal foo10</span><br><span class="line">	subu $sp, $sp, $1</span><br><span class="line">skip7:	lw $a3, 16($sp)</span><br><span class="line">	addu $sp, $sp, $1</span><br><span class="line">	nop</span><br><span class="line">	jr $a3</span><br><span class="line">	nop</span><br><span class="line">foo8:</span><br><span class="line">	sw $a0, 0($sp)</span><br><span class="line">	sw $a1, 4($sp)</span><br><span class="line">	sw $ra, 16($sp)</span><br><span class="line">	sw $a2, 8($sp)</span><br><span class="line">	sw $a3, 12($sp)</span><br><span class="line">	sw $t0, 20($sp)</span><br><span class="line">	sw $t1, 24($sp)</span><br><span class="line">	sw $t2, 28($sp)</span><br><span class="line">	ori $s1, $0, 366</span><br><span class="line">	ori $s2, $0, 244</span><br><span class="line">	lw $t1, -116($s2)</span><br><span class="line">	lw $t0, -290($s1)</span><br><span class="line">	addu $a3, $t0, $t1</span><br><span class="line">	addu $a0, $a0, $t0</span><br><span class="line">	addu $a1, $a1, $t1</span><br><span class="line">	addu $t2, $a0, $a1</span><br><span class="line">	ori $a0, $t2, 20552</span><br><span class="line">	addu $t2, $t2, $t2</span><br><span class="line">	addu $t2, $t2, $t2</span><br><span class="line">	ori $a1, $t2, 22025</span><br><span class="line">	ori $a2, $a1, 0xf0</span><br><span class="line">	beq $a2, $a1, skip8</span><br><span class="line">	nop</span><br><span class="line">	jal foo5</span><br><span class="line">	subu $sp, $sp, $1</span><br><span class="line">skip8:	lw $a3, 16($sp)</span><br><span class="line">	jr $a3</span><br><span class="line">	addu $sp, $sp, $1</span><br><span class="line">foo9:</span><br><span class="line">	sw $ra, 16($sp)</span><br><span class="line">	sw $a0, 0($sp)</span><br><span class="line">	sw $a1, 4($sp)</span><br><span class="line">	sw $a2, 8($sp)</span><br><span class="line">	sw $a3, 12($sp)</span><br><span class="line">	sw $t0, 20($sp)</span><br><span class="line">	sw $t1, 24($sp)</span><br><span class="line">	sw $t2, 28($sp)</span><br><span class="line">	ori $s1, $0, 223</span><br><span class="line">	ori $s2, $0, 283</span><br><span class="line">	lw $t0, 13($s1)</span><br><span class="line">	lw $t1, -27($s2)</span><br><span class="line">	addu $a3, $t0, $t1</span><br><span class="line">	addu $a0, $a0, $t0</span><br><span class="line">	addu $a1, $a1, $t1</span><br><span class="line">	addu $t2, $a0, $a1</span><br><span class="line">	ori $a0, $t2, 28872</span><br><span class="line">	addu $t2, $t2, $t2</span><br><span class="line">	addu $t2, $t2, $t2</span><br><span class="line">	ori $a1, $t2, 52993</span><br><span class="line">	ori $a2, $a1, 0xf0</span><br><span class="line">	nop</span><br><span class="line">	beq $a2, $a1, skip9</span><br><span class="line">	nop</span><br><span class="line">	jal foo15</span><br><span class="line">	subu $sp, $sp, $1</span><br><span class="line">skip9:	lw $a3, 16($sp)</span><br><span class="line">	addu $sp, $sp, $1</span><br><span class="line">	jr $a3</span><br><span class="line">	nop</span><br><span class="line">foo10:</span><br><span class="line">	sw $a0, 0($sp)</span><br><span class="line">	sw $ra, 16($sp)</span><br><span class="line">	sw $a1, 4($sp)</span><br><span class="line">	sw $a2, 8($sp)</span><br><span class="line">	sw $a3, 12($sp)</span><br><span class="line">	sw $t0, 20($sp)</span><br><span class="line">	sw $t1, 24($sp)</span><br><span class="line">	sw $t2, 28($sp)</span><br><span class="line">	ori $s1, $0, 228</span><br><span class="line">	ori $s2, $0, 255</span><br><span class="line">	lw $t1, -155($s2)</span><br><span class="line">	lw $t0, 12($s1)</span><br><span class="line">	addu $a3, $t0, $t1</span><br><span class="line">	addu $a0, $a0, $t0</span><br><span class="line">	addu $a1, $a1, $t1</span><br><span class="line">	addu $t2, $a0, $a1</span><br><span class="line">	ori $a0, $t2, 56866</span><br><span class="line">	addu $t2, $t2, $t2</span><br><span class="line">	addu $t2, $t2, $t2</span><br><span class="line">	ori $a1, $t2, 21770</span><br><span class="line">	ori $a2, $a1, 0xf0</span><br><span class="line">	beq $a2, $a1, skip10</span><br><span class="line">	nop</span><br><span class="line">	jal foo12</span><br><span class="line">	subu $sp, $sp, $1</span><br><span class="line">skip10:	lw $a3, 16($sp)</span><br><span class="line">	addu $sp, $sp, $1</span><br><span class="line">	nop</span><br><span class="line">	jr $a3</span><br><span class="line">	nop</span><br><span class="line">foo11:</span><br><span class="line">	sw $a0, 0($sp)</span><br><span class="line">	sw $a1, 4($sp)</span><br><span class="line">	sw $ra, 16($sp)</span><br><span class="line">	sw $a2, 8($sp)</span><br><span class="line">	sw $a3, 12($sp)</span><br><span class="line">	sw $t0, 20($sp)</span><br><span class="line">	sw $t1, 24($sp)</span><br><span class="line">	sw $t2, 28($sp)</span><br><span class="line">	ori $s1, $0, 54</span><br><span class="line">	ori $s2, $0, 306</span><br><span class="line">	lw $t0, 278($s1)</span><br><span class="line">	lw $t1, -238($s2)</span><br><span class="line">	addu $a3, $t0, $t1</span><br><span class="line">	addu $a0, $a0, $t0</span><br><span class="line">	addu $a1, $a1, $t1</span><br><span class="line">	addu $t2, $a0, $a1</span><br><span class="line">	ori $a0, $t2, 34513</span><br><span class="line">	addu $t2, $t2, $t2</span><br><span class="line">	addu $t2, $t2, $t2</span><br><span class="line">	ori $a1, $t2, 36103</span><br><span class="line">	ori $a2, $a1, 0xf0</span><br><span class="line">	nop</span><br><span class="line">	beq $a2, $a1, skip11</span><br><span class="line">	nop</span><br><span class="line">	jal foo8</span><br><span class="line">	subu $sp, $sp, $1</span><br><span class="line">skip11:	lw $a3, 16($sp)</span><br><span class="line">	jr $a3</span><br><span class="line">	addu $sp, $sp, $1</span><br><span class="line">foo12:</span><br><span class="line">	sw $ra, 16($sp)</span><br><span class="line">	sw $a0, 0($sp)</span><br><span class="line">	sw $a1, 4($sp)</span><br><span class="line">	sw $a2, 8($sp)</span><br><span class="line">	sw $a3, 12($sp)</span><br><span class="line">	sw $t0, 20($sp)</span><br><span class="line">	sw $t1, 24($sp)</span><br><span class="line">	sw $t2, 28($sp)</span><br><span class="line">	ori $s1, $0, 248</span><br><span class="line">	ori $s2, $0, 72</span><br><span class="line">	lw $t1, 152($s2)</span><br><span class="line">	lw $t0, 76($s1)</span><br><span class="line">	addu $a3, $t0, $t1</span><br><span class="line">	addu $a0, $a0, $t0</span><br><span class="line">	addu $a1, $a1, $t1</span><br><span class="line">	addu $t2, $a0, $a1</span><br><span class="line">	ori $a0, $t2, 1104</span><br><span class="line">	addu $t2, $t2, $t2</span><br><span class="line">	addu $t2, $t2, $t2</span><br><span class="line">	ori $a1, $t2, 24322</span><br><span class="line">	ori $a2, $a1, 0xf0</span><br><span class="line">	beq $a2, $a1, skip12</span><br><span class="line">	nop</span><br><span class="line">	jal foo9</span><br><span class="line">	subu $sp, $sp, $1</span><br><span class="line">skip12:	lw $a3, 16($sp)</span><br><span class="line">	addu $sp, $sp, $1</span><br><span class="line">	jr $a3</span><br><span class="line">	nop</span><br><span class="line">foo13:</span><br><span class="line">	sw $a0, 0($sp)</span><br><span class="line">	sw $ra, 16($sp)</span><br><span class="line">	sw $a1, 4($sp)</span><br><span class="line">	sw $a2, 8($sp)</span><br><span class="line">	sw $a3, 12($sp)</span><br><span class="line">	sw $t0, 20($sp)</span><br><span class="line">	sw $t1, 24($sp)</span><br><span class="line">	sw $t2, 28($sp)</span><br><span class="line">	ori $s1, $0, 386</span><br><span class="line">	ori $s2, $0, 194</span><br><span class="line">	lw $t0, -82($s1)</span><br><span class="line">	lw $t1, -142($s2)</span><br><span class="line">	addu $a3, $t0, $t1</span><br><span class="line">	addu $a0, $a0, $t0</span><br><span class="line">	addu $a1, $a1, $t1</span><br><span class="line">	addu $t2, $a0, $a1</span><br><span class="line">	ori $a0, $t2, 18477</span><br><span class="line">	addu $t2, $t2, $t2</span><br><span class="line">	addu $t2, $t2, $t2</span><br><span class="line">	ori $a1, $t2, 2816</span><br><span class="line">	ori $a2, $a1, 0xf0</span><br><span class="line">	nop</span><br><span class="line">	beq $a2, $a1, skip13</span><br><span class="line">	nop</span><br><span class="line">	jal foo7</span><br><span class="line">	subu $sp, $sp, $1</span><br><span class="line">skip13:	lw $a3, 16($sp)</span><br><span class="line">	addu $sp, $sp, $1</span><br><span class="line">	nop</span><br><span class="line">	jr $a3</span><br><span class="line">	nop</span><br><span class="line">foo14:</span><br><span class="line">	sw $a0, 0($sp)</span><br><span class="line">	sw $a1, 4($sp)</span><br><span class="line">	sw $ra, 16($sp)</span><br><span class="line">	sw $a2, 8($sp)</span><br><span class="line">	sw $a3, 12($sp)</span><br><span class="line">	sw $t0, 20($sp)</span><br><span class="line">	sw $t1, 24($sp)</span><br><span class="line">	sw $t2, 28($sp)</span><br><span class="line">	ori $s1, $0, 184</span><br><span class="line">	ori $s2, $0, 255</span><br><span class="line">	lw $t1, 13($s2)</span><br><span class="line">	lw $t0, -88($s1)</span><br><span class="line">	addu $a3, $t0, $t1</span><br><span class="line">	addu $a0, $a0, $t0</span><br><span class="line">	addu $a1, $a1, $t1</span><br><span class="line">	addu $t2, $a0, $a1</span><br><span class="line">	ori $a0, $t2, 26871</span><br><span class="line">	addu $t2, $t2, $t2</span><br><span class="line">	addu $t2, $t2, $t2</span><br><span class="line">	ori $a1, $t2, 23821</span><br><span class="line">	ori $a2, $a1, 0xf0</span><br><span class="line">	beq $a2, $a1, skip14</span><br><span class="line">	nop</span><br><span class="line">	jal foo16</span><br><span class="line">	subu $sp, $sp, $1</span><br><span class="line">skip14:	lw $a3, 16($sp)</span><br><span class="line">	jr $a3</span><br><span class="line">	addu $sp, $sp, $1</span><br><span class="line">foo15:</span><br><span class="line">	sw $ra, 16($sp)</span><br><span class="line">	sw $a0, 0($sp)</span><br><span class="line">	sw $a1, 4($sp)</span><br><span class="line">	sw $a2, 8($sp)</span><br><span class="line">	sw $a3, 12($sp)</span><br><span class="line">	sw $t0, 20($sp)</span><br><span class="line">	sw $t1, 24($sp)</span><br><span class="line">	sw $t2, 28($sp)</span><br><span class="line">	ori $s1, $0, 264</span><br><span class="line">	ori $s2, $0, 366</span><br><span class="line">	lw $t0, -212($s1)</span><br><span class="line">	lw $t1, -2($s2)</span><br><span class="line">	addu $a3, $t0, $t1</span><br><span class="line">	addu $a0, $a0, $t0</span><br><span class="line">	addu $a1, $a1, $t1</span><br><span class="line">	addu $t2, $a0, $a1</span><br><span class="line">	ori $a0, $t2, 36680</span><br><span class="line">	addu $t2, $t2, $t2</span><br><span class="line">	addu $t2, $t2, $t2</span><br><span class="line">	ori $a1, $t2, 1289</span><br><span class="line">	ori $a2, $a1, 0xf0</span><br><span class="line">	nop</span><br><span class="line">	beq $a2, $a1, skip15</span><br><span class="line">	nop</span><br><span class="line">	jal foo14</span><br><span class="line">	subu $sp, $sp, $1</span><br><span class="line">skip15:	lw $a3, 16($sp)</span><br><span class="line">	addu $sp, $sp, $1</span><br><span class="line">	jr $a3</span><br><span class="line">	nop</span><br><span class="line">foo16:</span><br><span class="line">	sw $a0, 0($sp)</span><br><span class="line">	sw $ra, 16($sp)</span><br><span class="line">	sw $a1, 4($sp)</span><br><span class="line">	sw $a2, 8($sp)</span><br><span class="line">	sw $a3, 12($sp)</span><br><span class="line">	sw $t0, 20($sp)</span><br><span class="line">	sw $t1, 24($sp)</span><br><span class="line">	sw $t2, 28($sp)</span><br><span class="line">	ori $s1, $0, 39</span><br><span class="line">	ori $s2, $0, 301</span><br><span class="line">	lw $t1, -17($s2)</span><br><span class="line">	lw $t0, 317($s1)</span><br><span class="line">	addu $a3, $t0, $t1</span><br><span class="line">	addu $a0, $a0, $t0</span><br><span class="line">	addu $a1, $a1, $t1</span><br><span class="line">	addu $t2, $a0, $a1</span><br><span class="line">	ori $a0, $t2, 706</span><br><span class="line">	addu $t2, $t2, $t2</span><br><span class="line">	addu $t2, $t2, $t2</span><br><span class="line">	ori $a1, $t2, 2561</span><br><span class="line">	ori $a2, $a1, 0xf0</span><br><span class="line">	beq $a2, $a1, skip16</span><br><span class="line">	nop</span><br><span class="line">	jal foo6</span><br><span class="line">	subu $sp, $sp, $1</span><br><span class="line">skip16:	lw $a3, 16($sp)</span><br><span class="line">	addu $sp, $sp, $1</span><br><span class="line">	nop</span><br><span class="line">	jr $a3</span><br><span class="line">	nop</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>对拍输出一致</strong>，<del>或许对吧……</del></p>
+<hr>
+<h2 id="思考题"><a href="#思考题" class="headerlink" title="思考题"></a>思考题</h2><ol>
+<li><p>为什么需要有单独的乘除法部件而不是整合进 ALU？为何需要有独立的 HI、LO 寄存器？</p>
+<p>因为乘法除法需要在多个周期内执行，且只用HI，LO寄存器。所以用单独的HI,LO寄存器可以减少阻塞周期，提高效率，<strong>因为在乘除法部件工作时ALU模块还可以进行其他指令的工作</strong>，做到高效率执行。</p>
+<p>并且HI，LO寄存器不属于通用寄存器，和其他通用寄存器的用法不一致，不能通过非乘除法指令修改和访问，因此不需要置于GRF中，内置在MDU中即可。</p>
+</li>
+<li><p>真实的流水线 CPU 是如何使用实现乘除法的？请查阅相关资料进行简单说明。</p>
+<p><strong>乘法实现：</strong></p>
+<p>首先CPU会初始化三个通用寄存器用来存放被乘数，乘数，部分积。<br>部分积寄存器初始化为0。<br>判断乘数寄存器的低位是0|1，如果为0则将乘数寄存器右移一位，同时将部分积寄存器也右移一位。<br>在位移时遵循计算机位移规则，乘数寄存器低位溢出的一位丢弃，部分积寄存器低位溢出的一位填充到乘数寄存器的高位。<br>同时部分积寄存器高位补0。如果为1则将部分积寄存器加上被乘数寄存器，再进行移位操作。<br>当所有乘数位处理完成后部分积寄存器做高位，乘数寄存器做低位就是最终乘法结果。</p>
+<p><strong>还有另一种乘法的方式：</strong></p>
+<p>只需两个寄存器，A[31:0],B[63:0]，A初始化为被乘数，B初始化为乘数。<br>每一次取B的最低位，为1则将A[31:0]+B[63:32] -&gt; B[63:32]，为0则不操作。<br>每次将B &gt;&gt; 1，然后高位补0。</p>
+<p><strong>除法实现：</strong></p>
+<p>与乘法的操作基本相反，首先CPU会初始化三个寄存器,用来存放被除数，除数，部分商。余数(被除数与除数比较的结果)放到被除数的有效高位上。CPU做除法时和做除法时是相反的，乘法是右移，除法是左移，乘法做的是加法，除法做的是减法。首先CPU会把被除数bit位与除数bit位对齐，然后再让对齐的被除数与除数比较(双符号位判断)。比如01-10&#x3D;11(前面的1是符号位) 1-2&#x3D;-1 计算机通过符号位和后一位的bit位来判断大于和小于，那么01-10&#x3D;11 就说明01小于10，如果得数为01就代表大于，如果得数为00代表等于。如果得数大于或等于则将比较的结果放到被除数的有效高位上然后再商寄存器上商：1 并向后多看一位(上商就是将商的最低位左移1位腾出商寄存器最低位上新的商)如果得数小于则上商：0 并向后多看一位然后循环做以上操作当所有的被除数都处理完后，商做结果被除数里面的值就是余数。</p>
+</li>
+<li><p>请结合自己的实现分析，你是如何处理 Busy 信号带来的周期阻塞的？</p>
+<p>对于stall信号，我增加了如果Start或者Busy信号有效，且D级时<strong>mfhi,mflo,mthi,mtlo</strong>时进行阻塞。</p>
+</li>
+<li><p>请问采用字节使能信号的方式处理写指令有什么好处？（提示：从清晰性、统一性等角度考虑）</p>
+<p><strong>清晰性方面</strong>，按字节使能相当于onehot编码，1为写入，0为不写入，直观清楚。</p>
+<p> <strong>统一性方面</strong>，对于各种处理内存指令只需设置好字节使能信号就可以控制数据的写入，不用通过取出该字的数据后再次拼接，对各种指令的操作表现的一样。</p>
+</li>
+<li><p>请思考，我们在按字节读和按字节写时，实际从 DM 获得的数据和向 DM 写入的数据是否是一字节？在什么情况下我们按字节读和按字节写的效率会高于按字读和按字写呢？</p>
+<p><strong>在按字节读和按字节写时</strong>，实际从 DM 获得的数据和向 DM 写入的数据是同一节，因为读写所使用的地址都来自上一级的ALUresult，但是对应的字节不能保证一样，因为写入的和读出的有特定的模块控制。</p>
+<p> **在有sb，sh这种不是对于完整字节操作的指令来说，**按字节的读写效率会更高，如果按字处理，需要先从内存中读出该字节的所存储的数据，接下来根据需要进行拼接，最后组成完整的字节存入地址中，从内存中读出所消耗的组合逻辑延迟会降低效率，以字节读写就会消除这方面的影响。</p>
+</li>
+<li><p>为了对抗复杂性你采取了哪些抽象和规范手段？这些手段在译码和处理数据冲突的时候有什么样的特点与帮助？</p>
+<p>主要采用了指令分类的方法，P6 完全沿用了 P5 的分类方法，新增的指令对应的特点都没有脱离这些分类，因此对于每条指令而言，只需译码后将其加入对应的分类，数据通路部分和 P5 完全类似，转发部分完全不用改，暂停部分只需添加一个因乘除块而导致的暂停。</p>
+</li>
+<li><p>在本实验中你遇到了哪些不同指令类型组合产生的冲突？你又是如何解决的？相应的测试样例是什么样的？</p>
+<p><strong>冲突方面，主要是数据冒险和控制冒险，分别通过暂停转发以及比较前移+延迟槽解决。</strong></p>
+<p>具体而言：</p>
+<p><strong>R类型Rd（写），后续指令Rs或Rt（读）</strong></p>
+<p>使用旁路转发，以add为例</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">add $t0,$t1,$t2 add $a0,$t0,$t1 M到E级转发 </span><br><span class="line">add $t0,$t1,$t2 nop add $a0,$t0,$t1 M到D级转发 </span><br><span class="line">add $t0,$t1,$t2 nop nop add $a0,$t0,$t1 WB向D级转发</span><br></pre></td></tr></table></figure>
+
+<p><strong>load指令Rt（写），隔条指令Rs或Rt（读）</strong></p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">lw $t0,<span class="number">0</span>($<span class="number">0</span>) add $t0,$t0,$t0 stall一个周期，WB向E级转发 </span><br><span class="line">lw $t0,<span class="number">0</span>($<span class="number">0</span>) nop add $t0,$t0,$t0 WB向E级转发 </span><br><span class="line">lw $t0,<span class="number">0</span>($<span class="number">0</span>) nop nop add $t0,$t0,$t0 WB向D级转发</span><br></pre></td></tr></table></figure>
+
+<p><strong>mult、multu、div、divu和mfhi、mflo、mthi、mtlo</strong></p>
+<p>如果E级的Busy或Start信号有效，如果是其他非乘除法相关指令，不会阻塞，使用ALU即可，如果是乘除法相关指令，如果是<strong>mfhi、mflo、mthi、mtlo</strong>，将它们阻塞在D级，直到乘除法结束；如果是<strong>mult、multu、div、divu</strong>，清空乘除法模块中的操作，将D级流水到E级。</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mult $t1,$t2 mflo $a0 会阻塞直到乘除法结束 </span><br><span class="line">mult $t1,$t2 div $a0,$a1 mult指令被div指令覆盖</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果你是手动构造的样例，请说明构造策略，说明你的测试程序如何保证<strong>覆盖</strong>了所有需要测试的情况；如果你是<strong>完全随机</strong>生成的测试样例，请思考完全随机的测试程序有何不足之处；如果你在生成测试样例时采用了<strong>特殊的策略</strong>，比如构造连续数据冒险序列，请你描述一下你使用的策略如何<strong>结合了随机性</strong>达到强测的效果。</p>
+<p><strong>数据生成器采用了特殊策略：单组数据中除了 0 和 31 号寄存器外，至多涉及 3 个寄存器。一方面，这样产生的代码中，邻近的指令几乎全部都存在数据冒险，可以充分测试转发和暂停；另一方面，当测试数据的组数一定多，几乎涉及了每个寄存器，避免了只测试部分寄存器。此外，所有跳转指令都是特殊构造的，不会进入死循环的同时如果跳转出错可以输出中体现。</strong></p>
+<p><strong>对于一些会产生异常的指令，为防止 MARS 报错，进行了一定的规避，比如除法不会去生成有关0号寄存器的除法，lw,sw保证是4的倍数等等。</strong></p>
+</li>
+</ol>
+</div><div class="article-licensing box"><div class="licensing-title"><p>RooKie_Z P6 Verilog流水线CPU设计文档</p><p><a href="https://rookie-zgy1513.github.io/2025/08/10/P6-CPU/">https://rookie-zgy1513.github.io/2025/08/10/P6-CPU/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>作者</h6><p>RooKie_Z</p></div></div><div class="level-item is-narrow"><div><h6>发布于</h6><p>2025-08-10</p></div></div><div class="level-item is-narrow"><div><h6>更新于</h6><p>2025-08-16</p></div></div><div class="level-item is-narrow"><div><h6>许可协议</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/CO/">CO</a></div><div class="sharethis-inline-share-buttons"></div><script src="https://platform-api.sharethis.com/js/sharethis.js#property=689f30d60faa3a7358f6b458&amp;product=inline-share-buttons" defer></script></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2025/08/10/P7-CPU/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">RooKie_Z P7 基于Verilog CPU的MIPS微体系设计文档</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2025/08/10/P5-CPU/"><span class="level-item">RooKie_Z P5 Verilog流水线CPU设计文档</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card" id="comments"><div class="card-content"><h3 class="title is-5">评论</h3><div id="comment-container"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"><script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script><script>var gitalk = new Gitalk({
+            id: "66b48f5291c07867198fdbb190d8e42b",
+            repo: "rookie-zgy1513.github.io",
+            owner: "rookie-zgy1513",
+            clientID: "Ov23li6vyFeMUxsyVjCc",
+            clientSecret: "28debacc0df80666a6064a7f00cdad1cb7ad9248",
+            admin: ["rookie-zgy1513"],
+            createIssueManually: false,
+            distractionFreeMode: false,
+            perPage: 10,
+            pagerDirection: "last",
+            
+            
+            enableHotKey: true,
+            
+        })
+        gitalk.render('comment-container')</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1 is-sticky"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/avatar.png" alt="RooKie_Z"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">RooKie_Z</p><p class="is-size-6 is-block">RooKie_Z的小窝</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>BeiJing 🇨🇳</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives/"><p class="title">12</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories/"><p class="title">9</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags/"><p class="title">6</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/rookie-zgy1513" target="_blank" rel="me noopener">关注我</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Github" href="https://github.com/rookie-zgy1513"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Facebook" href="https://facebook.com"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Twitter" href="https://x.com"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Instagram" href="https://instagram.com"><i class="fab fa-instagram"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Bilibili" href="https://bilibili.com"><i class="fab fa-bilibili"></i></a></div></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">归档</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2025/08/"><span class="level-start"><span class="level-item">八月 2025</span></span><span class="level-end"><span class="level-item tag">12</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/CO/"><span class="tag">CO</span><span class="tag">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Hexo/"><span class="tag">Hexo</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/OO/"><span class="tag">OO</span><span class="tag">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/OS/"><span class="tag">OS</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/compiler/"><span class="tag">compiler</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/database/"><span class="tag">database</span><span class="tag">1</span></a></div></div></div></div></div><div class="card widget" data-type="links"><div class="card-content"><div class="menu"><h3 class="menu-label">链接</h3><ul class="menu-list"><li><a class="level is-mobile" href="https://hexo.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li><li><a class="level is-mobile" href="https://ppoffice.github.io/" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Icarus</span></span><span class="level-right"><span class="level-item tag">ppoffice.github.io</span></span></a></li></ul></div></div></div><div class="column-right-shadow is-hidden-widescreen is-sticky"></div></div><div class="column column-right is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only order-3 is-sticky"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="level is-mobile" href="#写在前面"><span class="level-left"><span class="level-item">1</span><span class="level-item">写在前面</span></span></a></li><li><a class="level is-mobile" href="#总体设计概述"><span class="level-left"><span class="level-item">2</span><span class="level-item">总体设计概述</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#数据通路"><span class="level-left"><span class="level-item">2.1</span><span class="level-item">数据通路</span></span></a></li><li><a class="level is-mobile" href="#"><span class="level-left"><span class="level-item">2.2</span><span class="level-item"> </span></span></a></li><li><a class="level is-mobile" href="#添加转发后的数据通路"><span class="level-left"><span class="level-item">2.3</span><span class="level-item">添加转发后的数据通路</span></span></a></li></ul></li><li><a class="level is-mobile" href="#关键模块介绍"><span class="level-left"><span class="level-item">3</span><span class="level-item">关键模块介绍</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#命名规则"><span class="level-left"><span class="level-item">3.1</span><span class="level-item">命名规则</span></span></a></li><li><a class="level is-mobile" href="#F级（取指）"><span class="level-left"><span class="level-item">3.2</span><span class="level-item">F级（取指）</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#PC（程序计数器）"><span class="level-left"><span class="level-item">3.2.1</span><span class="level-item">PC（程序计数器）</span></span></a></li><li><a class="level is-mobile" href="#FD-REG（F-D级流水线寄存器）"><span class="level-left"><span class="level-item">3.2.2</span><span class="level-item">FD_REG（F/D级流水线寄存器）</span></span></a></li></ul></li><li><a class="level is-mobile" href="#D级（译码）"><span class="level-left"><span class="level-item">3.3</span><span class="level-item">D级（译码）</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#D-GRF"><span class="level-left"><span class="level-item">3.3.1</span><span class="level-item">D_GRF</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#端口说明"><span class="level-left"><span class="level-item">3.3.1.1</span><span class="level-item">端口说明</span></span></a></li><li><a class="level is-mobile" href="#控制信号说明"><span class="level-left"><span class="level-item">3.3.1.2</span><span class="level-item">控制信号说明</span></span></a></li></ul></li><li><a class="level is-mobile" href="#D-EXT"><span class="level-left"><span class="level-item">3.3.2</span><span class="level-item">D_EXT</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#控制信号说明-1"><span class="level-left"><span class="level-item">3.3.2.1</span><span class="level-item">控制信号说明</span></span></a></li></ul></li><li><a class="level is-mobile" href="#D-CMP-分支比较"><span class="level-left"><span class="level-item">3.3.3</span><span class="level-item">D_CMP(分支比较)</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#代码实现："><span class="level-left"><span class="level-item">3.3.3.1</span><span class="level-item">代码实现：</span></span></a></li><li><a class="level is-mobile" href="#端口说明-1"><span class="level-left"><span class="level-item">3.3.3.2</span><span class="level-item">端口说明</span></span></a></li></ul></li><li><a class="level is-mobile" href="#D-NPC-次地址计算"><span class="level-left"><span class="level-item">3.3.4</span><span class="level-item">D_NPC(次地址计算)</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#端口说明-2"><span class="level-left"><span class="level-item">3.3.4.1</span><span class="level-item">端口说明</span></span></a></li><li><a class="level is-mobile" href="#控制信号说明-2"><span class="level-left"><span class="level-item">3.3.4.2</span><span class="level-item">控制信号说明</span></span></a></li></ul></li><li><a class="level is-mobile" href="#DE-REG（D-E级流水线寄存器）"><span class="level-left"><span class="level-item">3.3.5</span><span class="level-item">DE_REG（D/E级流水线寄存器）</span></span></a></li><li><a class="level is-mobile" href="#E-ALU"><span class="level-left"><span class="level-item">3.3.6</span><span class="level-item">E_ALU</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#端口说明-3"><span class="level-left"><span class="level-item">3.3.6.1</span><span class="level-item">端口说明</span></span></a></li><li><a class="level is-mobile" href="#控制信号说明-3"><span class="level-left"><span class="level-item">3.3.6.2</span><span class="level-item">控制信号说明</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#1-ALUOp"><span class="level-left"><span class="level-item">3.3.6.2.1</span><span class="level-item">1. ALUOp</span></span></a></li><li><a class="level is-mobile" href="#2-ALUSrcA"><span class="level-left"><span class="level-item">3.3.6.2.2</span><span class="level-item">2. ALUSrcA</span></span></a></li><li><a class="level is-mobile" href="#3-ALUSrcB"><span class="level-left"><span class="level-item">3.3.6.2.3</span><span class="level-item">3. ALUSrcB</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#E-MDU（乘除单元）"><span class="level-left"><span class="level-item">3.3.7</span><span class="level-item">E_MDU（乘除单元）</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#端口说明-4"><span class="level-left"><span class="level-item">3.3.7.1</span><span class="level-item">端口说明</span></span></a></li><li><a class="level is-mobile" href="#控制信号说明-4"><span class="level-left"><span class="level-item">3.3.7.2</span><span class="level-item">控制信号说明</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#1-MDUOp"><span class="level-left"><span class="level-item">3.3.7.2.1</span><span class="level-item">1. MDUOp</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#EM-REG（E-M级流水线寄存器）"><span class="level-left"><span class="level-item">3.3.8</span><span class="level-item">EM_REG（E/M级流水线寄存器）</span></span></a></li></ul></li><li><a class="level is-mobile" href="#M级（储存）"><span class="level-left"><span class="level-item">3.4</span><span class="level-item">M级（储存）</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#M-DM（数据储存器）"><span class="level-left"><span class="level-item">3.4.1</span><span class="level-item">M_DM（数据储存器）</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#M-BE"><span class="level-left"><span class="level-item">3.4.1.1</span><span class="level-item">M_BE</span></span></a></li><li><a class="level is-mobile" href="#M-DE"><span class="level-left"><span class="level-item">3.4.1.2</span><span class="level-item">M_DE</span></span></a></li><li><a class="level is-mobile" href="#与接口进行交互"><span class="level-left"><span class="level-item">3.4.1.3</span><span class="level-item">与接口进行交互</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#W级（回写）"><span class="level-left"><span class="level-item">3.5</span><span class="level-item">W级（回写）</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#MW-REG（M-W级流水线寄存器）"><span class="level-left"><span class="level-item">3.5.1</span><span class="level-item">MW_REG（M/W级流水线寄存器）</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#数据通路分析"><span class="level-left"><span class="level-item">4</span><span class="level-item">数据通路分析</span></span></a></li><li><a class="level is-mobile" href="#冲突处理方法"><span class="level-left"><span class="level-item">5</span><span class="level-item">冲突处理方法</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#转发-Forwarding"><span class="level-left"><span class="level-item">5.1</span><span class="level-item">转发(Forwarding)</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#代码实现"><span class="level-left"><span class="level-item">5.1.1</span><span class="level-item">代码实现</span></span></a></li></ul></li><li><a class="level is-mobile" href="#阻塞-Stall"><span class="level-left"><span class="level-item">5.2</span><span class="level-item">阻塞(Stall)</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#代码实现：-1"><span class="level-left"><span class="level-item">5.2.1</span><span class="level-item">代码实现：</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#测试方案"><span class="level-left"><span class="level-item">6</span><span class="level-item">测试方案</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#测试目标"><span class="level-left"><span class="level-item">6.1</span><span class="level-item">测试目标</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#功能性测试"><span class="level-left"><span class="level-item">6.1.1</span><span class="level-item">功能性测试</span></span></a></li></ul></li><li><a class="level is-mobile" href="#单条指令功能测试："><span class="level-left"><span class="level-item">6.2</span><span class="level-item">单条指令功能测试：</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#ori测试："><span class="level-left"><span class="level-item">6.2.1</span><span class="level-item">ori测试：</span></span></a></li><li><a class="level is-mobile" href="#add测试："><span class="level-left"><span class="level-item">6.2.2</span><span class="level-item">add测试：</span></span></a></li><li><a class="level is-mobile" href="#sub测试："><span class="level-left"><span class="level-item">6.2.3</span><span class="level-item">sub测试：</span></span></a></li><li><a class="level is-mobile" href="#lui测试："><span class="level-left"><span class="level-item">6.2.4</span><span class="level-item">lui测试：</span></span></a></li><li><a class="level is-mobile" href="#beq测试："><span class="level-left"><span class="level-item">6.2.5</span><span class="level-item">beq测试：</span></span></a></li><li><a class="level is-mobile" href="#j，jal，jr测试："><span class="level-left"><span class="level-item">6.2.6</span><span class="level-item">j，jal，jr测试：</span></span></a></li><li><a class="level is-mobile" href="#sw，lw测试："><span class="level-left"><span class="level-item">6.2.7</span><span class="level-item">sw，lw测试：</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#思考题"><span class="level-left"><span class="level-item">7</span><span class="level-item">思考题</span></span></a></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2025-08-14T15:46:07.000Z">2025-08-14</time></p><p class="title"><a href="/2025/08/14/database/">学海伴航——教辅平台系统设计文档</a></p><p class="categories"><a href="/categories/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E4%B8%8A/">大三上课上</a> / <a href="/categories/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E4%B8%8A/database/">database</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2025-08-14T13:06:06.000Z">2025-08-14</time></p><p class="title"><a href="/2025/08/14/compiler/">RooKie_Z Compiler编译器设计文档</a></p><p class="categories"><a href="/categories/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E4%B8%8A/">大三上课上</a> / <a href="/categories/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E4%B8%8A/compiler/">compiler</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2025-08-14T12:37:15.000Z">2025-08-14</time></p><p class="title"><a href="/2025/08/14/challenge-shell/">RooKie_Z challenge-shell实现报告</a></p><p class="categories"><a href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8B%E8%AF%BE%E4%B8%8A/">大二下课上</a> / <a href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8B%E8%AF%BE%E4%B8%8A/OS/">OS</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2025-08-13T09:15:00.000Z">2025-08-13</time></p><p class="title"><a href="/2025/08/13/OO-4/">OO第四单元总结暨课程总结</a></p><p class="categories"><a href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8B%E8%AF%BE%E4%B8%8A/">大二下课上</a> / <a href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8B%E8%AF%BE%E4%B8%8A/OO/">OO</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2025-08-13T09:13:00.000Z">2025-08-13</time></p><p class="title"><a href="/2025/08/13/OO-3/">OO第三单元总结</a></p><p class="categories"><a href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8B%E8%AF%BE%E4%B8%8A/">大二下课上</a> / <a href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8B%E8%AF%BE%E4%B8%8A/OO/">OO</a></p></div></article></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/Hexo/"><span class="level-start"><span class="level-item">Hexo</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E4%B8%8A/"><span class="level-start"><span class="level-item">大三上课上</span></span><span class="level-end"><span class="level-item tag">2</span></span></a><ul><li><a class="level is-mobile" href="/categories/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E4%B8%8A/compiler/"><span class="level-start"><span class="level-item">compiler</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E4%B8%8A/database/"><span class="level-start"><span class="level-item">database</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></li><li><a class="level is-mobile" href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8A%E8%AF%BE%E4%B8%8A/"><span class="level-start"><span class="level-item">大二上课上</span></span><span class="level-end"><span class="level-item tag">4</span></span></a><ul><li><a class="level is-mobile" href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8A%E8%AF%BE%E4%B8%8A/CO%E5%AE%9E%E9%AA%8C/"><span class="level-start"><span class="level-item">CO实验</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li></ul></li><li><a class="level is-mobile" href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8B%E8%AF%BE%E4%B8%8A/"><span class="level-start"><span class="level-item">大二下课上</span></span><span class="level-end"><span class="level-item tag">5</span></span></a><ul><li><a class="level is-mobile" href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8B%E8%AF%BE%E4%B8%8A/OO/"><span class="level-start"><span class="level-item">OO</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile" href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8B%E8%AF%BE%E4%B8%8A/OS/"><span class="level-start"><span class="level-item">OS</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></li></ul></div></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.png" alt="RooKie_Z的小窝" height="28"></a><p class="is-size-7"><span>&copy; 2025 RooKie_Z</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p><p class="is-size-7">© 2025 RooKie_Z. All rights reserved.</p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/rookie-zgy1513"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-cn");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script data-pjax src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script data-pjax src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "此网站使用Cookie来改善您的体验。",
+          dismiss: "知道了！",
+          allow: "允许使用Cookie",
+          deny: "拒绝",
+          link: "了解更多",
+          policy: "Cookie政策",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script type="text/javascript" id="MathJax-script" async>MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+        fontCache: 'global'
+      },
+      chtml: {
+        matchFontHeight: false
+      }
+    };</script><script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script src="/js/pjax.js"></script><!--!--><!--!--><!--!--><script data-pjax src="/js/main.js" defer></script><script src="/js/night.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script data-pjax src="/js/insight.js" defer></script><script data-pjax>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
