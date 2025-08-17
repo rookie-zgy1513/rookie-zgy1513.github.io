@@ -11691,7 +11691,7 @@ body.night {
   color: #cbba7d;
 }
 .night #night-nav #night-icon:before {
-  content: '\f186';
+  content: '\f0eb';
 }
 .night .navbar-menu {
   background-color: inherit;
@@ -12058,4 +12058,24 @@ body.night {
 }
 .night .hljs-link {
   text-decoration: underline;
+}
+.content > h1 {
+  padding: 0px 13px;
+  border-left: 8px solid rgba(237,81,81,0.569);
+}
+.content > h2 {
+  padding: 0px 12px;
+  border-left: 7px solid rgba(191,81,237,0.569);
+}
+.content > h3 {
+  padding: 0px 11px;
+  border-left: 6px solid rgba(100,149,237,0.569);
+}
+.content > h4 {
+  padding: 0px 10px;
+  border-left: 5px solid rgba(226,170,43,0.569);
+}
+.content > h5 {
+  padding: 0 19px;
+  border-left: 4px solid rgba(100,193,193,0.569);
 }

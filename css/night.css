@@ -12,7 +12,7 @@ body.night {
   color: #cbba7d;
 }
 .night #night-nav #night-icon:before {
-  content: '\f186';
+  content: '\f0eb';
 }
 .night .navbar-menu {
   background-color: inherit;
