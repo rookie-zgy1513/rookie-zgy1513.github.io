@@ -1,0 +1,1296 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><meta rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css"><title>database_theory - RooKie_Z的小窝</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="RooKie_Z的小窝"><meta name="msapplication-TileImage" content="/img/favicon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="RooKie_Z的小窝"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="&amp;#x2F;* 常用颜色类 *&amp;#x2F; .text-cadetblue { color: CadetBlue !important; } .text-blue { color: #007bff !important; } .text-green { color: #28a745 !important; } .text-red { color: #DC143C !important; } .text-orange"><meta property="og:type" content="blog"><meta property="og:title" content="database_theory"><meta property="og:url" content="https://rookie-zgy1513.github.io/2025/09/23/database-theory/"><meta property="og:site_name" content="RooKie_Z的小窝"><meta property="og:description" content="&amp;#x2F;* 常用颜色类 *&amp;#x2F; .text-cadetblue { color: CadetBlue !important; } .text-blue { color: #007bff !important; } .text-green { color: #28a745 !important; } .text-red { color: #DC143C !important; } .text-orange"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://rookie-zgy1513.github.io/images/default-cover.heic"><meta property="article:published_time" content="2025-09-23T04:01:03.000Z"><meta property="article:modified_time" content="2025-09-23T04:07:27.331Z"><meta property="article:author" content="RooKie_Z"><meta property="article:tag" content="database"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://rookie-zgy1513.github.io/images/default-cover.heic"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://rookie-zgy1513.github.io/2025/09/23/database-theory/"},"headline":"database_theory","image":[],"datePublished":"2025-09-23T04:01:03.000Z","dateModified":"2025-09-23T04:07:27.331Z","author":{"@type":"Person","name":"RooKie_Z"},"publisher":{"@type":"Organization","name":"RooKie_Z的小窝","logo":{"@type":"ImageObject","url":"https://rookie-zgy1513.github.io/img/logo.png"}},"description":"&#x2F;* 常用颜色类 *&#x2F; .text-cadetblue { color: CadetBlue !important; } .text-blue { color: #007bff !important; } .text-green { color: #28a745 !important; } .text-red { color: #DC143C !important; } .text-orange"}</script><link rel="canonical" href="https://rookie-zgy1513.github.io/2025/09/23/database-theory/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link data-pjax rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/night-owl.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link data-pjax rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const id = '#' + CSS.escape(location.hash.substring(1));
+          const $tabMenu = document.querySelector(`.tabs a[href="${id}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(id);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.png" alt="RooKie_Z的小窝" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">主页</a><a class="navbar-item" href="/archives">归档</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/tags">标签</a><a class="navbar-item" href="/about">关于</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/rookie-zgy1513"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a><a class="navbar-item night" id="night-nav" title="Night Mode" href="javascript:;"><i class="fas fa-moon" id="night-icon"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="fill" src="/images/default-cover.heic" alt="database_theory"></span></div><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2025-09-23T04:01:03.000Z" title="2025/9/23 12:01:03">2025-09-23</time>发表</span><span class="level-item"><time dateTime="2025-09-23T04:07:27.331Z" title="2025/9/23 12:07:27">2025-09-23</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E4%B8%8A/">大三上课上</a><span> / </span><a class="link-muted" href="/categories/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E4%B8%8A/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%90%86%E8%AE%BA/">数据库理论</a></span><span class="level-item">2 小时读完 (大约17087个字)</span></div></div><h1 class="title is-3 is-size-4-mobile">database_theory</h1><div class="content"><style>
+/* 常用颜色类 */
+.text-cadetblue { color: CadetBlue !important; }
+.text-blue { color: #007bff !important; }
+.text-green { color: #28a745 !important; }
+.text-red { color: #DC143C !important; }
+.text-orange { color: #fd7e14 !important; }
+.text-purple { color: #6f42c1 !important; }
+
+.text-emphasis { color: #007bff; font-weight: bold; }
+.text-warning { color: #ffc107; font-weight: bold; }
+.text-success { color: #28a745; font-weight: bold; }
+.text-danger { color: #7835dc; font-weight: bold; }
+
+/* 警告框样式 */
+blockquote {
+    position: relative;
+    margin: 20px 0;
+    padding: 16px 20px;
+    border-left: 4px solid #007bff;
+    background: #f8f9fa;
+    border-radius: 0 6px 6px 0;
+    font-style: normal;
+}
+
+blockquote[data-callout="important"] {
+    border-left-color: #7835dc;
+    background: rgb(242, 241, 251);
+    border-left-width: 6px;
+}
+
+blockquote[data-callout="important"]::before {
+    content: "💬 重要";
+    display: block;
+    font-weight: bold;
+    color: #7835dc;
+    margin-bottom: 8px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+blockquote[data-callout="caution"] {
+    border-left-color: #ffc107;
+    background: #fffbf0;
+    border-left-width: 6px;
+}
+
+blockquote[data-callout="caution"]::before {
+    content: "⚠️ 注意";
+    display: block;
+    font-weight: bold;
+    color: #b8860b;
+    margin-bottom: 8px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+blockquote[data-callout="note"] {
+    border-left-color: #17a2b8;
+    background: #f0f9ff;
+    border-left-width: 6px;
+}
+
+blockquote[data-callout="note"]::before {
+    content: "ℹ️ 提示";
+    display: block;
+    font-weight: bold;
+    color: #17a2b8;
+    margin-bottom: 8px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+</style>
+
+<script>
+// 处理警告框
+document.addEventListener('DOMContentLoaded', function() {
+    const blockquotes = document.querySelectorAll('blockquote');
+    blockquotes.forEach(function(blockquote) {
+        const firstParagraph = blockquote.querySelector('p:first-child');
+        if (firstParagraph) {
+            const text = firstParagraph.textContent;
+            const calloutMatch = text.match(/\[!(IMPORTANT|CAUTION|NOTE)\]/i);
+
+            if (calloutMatch) {
+                const calloutType = calloutMatch[1].toLowerCase();
+                blockquote.setAttribute('data-callout', calloutType);
+              
+                // 移除标记文本
+                const cleanText = text.replace(/\[![^\]]+\]\s*/, '');
+                firstParagraph.textContent = cleanText;
+            }
+        }
+    });
+});
+</script>
+
+<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>这是RooKie_Z的2024秋数据库理论复习资料，整理了部分郎波老师PPT的知识点</p>
+<span id="more"></span>
+
+<h1 id="数据库-期末复习"><a href="#数据库-期末复习" class="headerlink" title="数据库 期末复习"></a>数据库 期末复习</h1><h2 id="第一章-概述"><a href="#第一章-概述" class="headerlink" title="第一章 概述"></a>第一章 概述</h2><h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><ul>
+<li>数据：描述现实世界中各种事物的可以识别的符号。(lb PPT 的定义)</li>
+<li>信息：一种已经被加工为特定形式的数据，这些数据对现在与将来的决策有明显价值。数据只有被加工为信息才有价值。<ul>
+<li>信息是各种数据所包括的意义。信息是意义</li>
+<li>数据是信息的载体，是信息的具体表现形式。数据是载体</li>
+</ul>
+</li>
+<li>数据处理：从大量原始数据抽取和推导有价值信息的加工过程。包括：数据收集、组织、存储、加工、分类、检索、输出、传输等操作。</li>
+<li>数据管理：数据处理一般性的基本操作，研究专门的技术——数据库管理技术。</li>
+<li>数据库技术：按照某种数据结构对数据进行组织，将数据存储在计算机的二级存储中，并可以提供数据共享操作的数据管理技术。</li>
+</ul>
+<h3 id="什么是数据库系统"><a href="#什么是数据库系统" class="headerlink" title="什么是数据库系统"></a>什么是数据库系统</h3><p>建立在数据库管理系统之上，以满足实际应用需求的数据管理（组织、存储、使用）为主要功能的计算机软件系统。</p>
+<h3 id="数据管理技术的发展"><a href="#数据管理技术的发展" class="headerlink" title="数据管理技术的发展"></a>数据管理技术的发展</h3><h4 id="人工管理阶段"><a href="#人工管理阶段" class="headerlink" title="人工管理阶段"></a>人工管理阶段</h4><ul>
+<li>时间：20世纪50年代中期以前</li>
+<li>背景：外存只有磁带、卡片、纸带等，没有磁盘等直接存取设备，没有OS。</li>
+<li>特点：<ul>
+<li>数据不在计算机上保存。</li>
+<li>没有软件系统对数据进行管理。程序规定数据的逻辑结构与物理结构，程序与数据不具备独立性。</li>
+<li>没有文件的概念，数据组织方式必须由程序员设计。</li>
+<li>一组数据对应一个程序，数据是面向应用的，程序间不能共享数据。</li>
+</ul>
+</li>
+</ul>
+<h4 id="文件系统阶段"><a href="#文件系统阶段" class="headerlink" title="文件系统阶段"></a>文件系统阶段</h4><ul>
+<li>时间：20世纪50年代后期到60年代中期。</li>
+<li>背景：有磁盘、有文件系统。</li>
+<li>特点：<ul>
+<li>以文件形式保存在外存上。</li>
+<li>文件多样化。</li>
+<li>数据的存取基本上以记录为单位。</li>
+<li>程序和数据有一定的独立性。</li>
+<li>缺点：<ul>
+<li>数据冗余度大，浪费空间并且易造成数据的不一致性。</li>
+<li>数据和程序缺乏独立性（逻辑独立性）。</li>
+<li>不能反映现实世界事物之间的关系。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="数据库系统阶段"><a href="#数据库系统阶段" class="headerlink" title="数据库系统阶段"></a>数据库系统阶段</h4><ul>
+<li>时间：20世纪60年代后期开始</li>
+<li>背景：有了大容量磁盘、光盘，计算机管理数据量大，关系复杂，共享性要求强。</li>
+<li>特点：<ul>
+<li>面向全组织的复杂的数据结构，不仅描述数据本身，还描述联系，使得整个组织<strong>结构化</strong>。<strong>数据结构化是数据库与文件系统的根本区别。</strong></li>
+<li>数据冗余度小，易扩充。</li>
+<li>具有较高的数据和程序独立性。<ul>
+<li><strong>数据物理独立性：存储结构改变时，逻辑结构可以不变。</strong></li>
+<li><strong>数据逻辑独立性：逻辑结构改变时，应用程序可以不变。</strong></li>
+</ul>
+</li>
+<li>提供了两方面映像功能（<strong>映像功能实现数据的独立性</strong>）：<ul>
+<li>存储结构与逻辑结构映像——实现物理独立性。</li>
+<li>全局逻辑结构与某类应用所涉及的局部逻辑结构之间的映像——实现逻辑独立性。</li>
+</ul>
+</li>
+<li>统一的数据控制功能（安完并恢）。<ul>
+<li>数据安全性控制。<ul>
+<li>保护数据以防止不合法的使用所造成数据的泄密和破坏</li>
+</ul>
+</li>
+<li>数据完整性控制。<ul>
+<li>指数据的正确性与相容性</li>
+</ul>
+</li>
+<li>并发控制。<ul>
+<li>对多用户的并发操作进行控制、协调，保护数据的完整性</li>
+</ul>
+</li>
+<li>数据库恢复。<ul>
+<li>将数据库从错误状态恢复到某一已知的正确状态</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>数据的最小存取单位是数据项。</li>
+</ul>
+</li>
+</ul>
+<p>速记：数据结构化，数据冗余度小，具有较高的数据独立性，两方面的映像功能，统一的数据控制功能（5 点）。结冗独映控。</p>
+<h3 id="数据库系统（DBS）的组成"><a href="#数据库系统（DBS）的组成" class="headerlink" title="数据库系统（DBS）的组成"></a>数据库系统（DBS）的组成</h3><ul>
+<li>数据库：数据库中存储的数据是集成的、共享的。</li>
+<li>用户：存储、维护和检索数据的各类请求。分为三类：<ul>
+<li>终端用户</li>
+<li>应用程序员</li>
+<li>数据库管理员</li>
+</ul>
+</li>
+<li>软件：包括DBMS和各种应用系统。</li>
+<li>硬件：存储数据库和运行DBMS的硬件资源，如内存、外存。</li>
+</ul>
+<h3 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h3><p>数据模型用来抽象和表示现实世界中的数据和信息。</p>
+<p>在数据库中，模型分为两类：<strong>概念模型和数据模型</strong>。</p>
+<h4 id="数据模型的层次"><a href="#数据模型的层次" class="headerlink" title="数据模型的层次"></a>数据模型的层次</h4><p>现实世界 —— 信息世界（概念模型） —— 机器世界（数据模型）</p>
+<ul>
+<li>数据模型：按计算机系统的观点对数据建模。</li>
+<li>概念模型：现实世界到信息世界的抽象，是用户和数据库设计人员进行交流的语言。</li>
+</ul>
+<h4 id="概念模型"><a href="#概念模型" class="headerlink" title="概念模型"></a>概念模型</h4><p>基于信息世界的主要概念，表达应用中的各种语义。具有较强的语义表达能力，能够方便、直接表达应用中的各种语义。应该简单、清晰、易于理解。</p>
+<h5 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h5><ul>
+<li>实体：客观存在并可以相互区分的事物。</li>
+<li>属性：实体所具有的某一特性。</li>
+<li>码：唯一标识实体的属性集。</li>
+<li>域：某个（某些）属性的取值范围。</li>
+<li>实体型：表示一类实体，用实体名称与属性名集合来抽象刻画。</li>
+<li>联系：实体之间的联系，有名称、类型（3种 1:1 1:n m:n），并且可以具有属性。</li>
+</ul>
+<h5 id="ER图"><a href="#ER图" class="headerlink" title="ER图"></a>ER图</h5><p>组成包含：实体、联系、属性。</p>
+<ul>
+<li>实体：长方形。</li>
+<li>属性：椭圆形，用无向边连接属性。</li>
+<li>联系：菱形，用无向边连接有关的实体，并在边上标注联系类型。</li>
+<li>一些说明：<ul>
+<li>同一个实体集内部各实体可以有一对一、一对多和多对多联系。</li>
+<li>三个或以上的实体可能具有联系。</li>
+<li>两个实体之间可能有多种联系。</li>
+</ul>
+</li>
+</ul>
+<h4 id="数据模型-1"><a href="#数据模型-1" class="headerlink" title="数据模型"></a>数据模型</h4><h5 id="三要素"><a href="#三要素" class="headerlink" title="三要素"></a>三要素</h5><ul>
+<li>数据结构：由描述数据对象以及对象之间的联系的一组概念组成。是<strong>静态特性</strong>的描述，是<strong>刻画数据模型最重要的方面</strong>。<ul>
+<li>描述对象的类型、内容和性质的概念，如域、属性。</li>
+<li>描述对象之间联系的概念，如关系。</li>
+</ul>
+</li>
+<li>数据操作：是对数据库中各种数据对象的实例允许执行的操作集合，包括操作以及操作规则。是数据模型的<strong>动态特性</strong>的描述。数据库主要有<strong>检索</strong>和<strong>更新</strong>两大类操作。</li>
+<li>完整性约束：完整性规则的集合，是给定数据模型中<strong>数据及其联系所有的制约和依存规则</strong>，用以<strong>保证数据正确、相容</strong>。<ul>
+<li>正确和相容统称为数据的完整性</li>
+</ul>
+</li>
+</ul>
+<h5 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h5><ul>
+<li>层次模型：树结构，用有向树表示一对多联系。<ul>
+<li>特点：有且仅有一个结点没有双亲，其他节点仅有一个双亲。</li>
+<li>优点：结构简单易于实现。</li>
+<li>缺点：支持联系种类太少，数据操纵不方便。</li>
+<li>代表：IBM的IMS数据库。</li>
+</ul>
+</li>
+<li>网状模型：图结构，用有向图表示一对多联系。<ul>
+<li>特点：可以有一个以上结点没有k双亲，至少有一个结点有多于一个双亲。表达的联系种类丰富，结构复杂。</li>
+</ul>
+</li>
+<li>关系模型：二维表<ul>
+<li>特点：用关系描述实体与实体间的联系，可直接表示多对多联系，关系必须是规范化关系（不允许表套表），必须建立在数学概念基础上。</li>
+<li>和层次模型和网状模型的主要区别：用关系描述实体和实体间的联系，建立在严格的数学概念基础上。</li>
+</ul>
+</li>
+</ul>
+<h3 id="数据库系统的结构"><a href="#数据库系统的结构" class="headerlink" title="数据库系统的结构"></a>数据库系统的结构</h3><p><strong>三级模式、两级映像。</strong></p>
+<h4 id="模式"><a href="#模式" class="headerlink" title="模式"></a>模式</h4><p><strong>数据库中全体数据的逻辑结构和特性的描述。</strong></p>
+<p>是三级模式的核心，不涉及物理存储细节，与具体应用程序和编程语言无关。</p>
+<p>用模式DDL写出的一个数据库逻辑定义的全部语句称为某个数据库的模式。</p>
+<h4 id="外模式"><a href="#外模式" class="headerlink" title="外模式"></a>外模式</h4><p>个别用户的数据视图，即<strong>与某一应用有关的数据的逻辑表示</strong>。通常是模式的子集，一个应用只能启用一个外模式。数据库提供外模式描述语言定义外模式。</p>
+<h4 id="内模式"><a href="#内模式" class="headerlink" title="内模式"></a>内模式</h4><p>称为存储模式，是数据在数据库系统内部的表示，即<strong>对数据的物理结构和存储方式的描述</strong>。</p>
+<h4 id="两级映象"><a href="#两级映象" class="headerlink" title="两级映象"></a>两级映象</h4><ul>
+<li>外模式&#x2F;模式映象定义某个外模式与模式之间的对应关系，当模式改变时，映像做出改变就可以保证外模式不变。——<strong>数据的逻辑独立性</strong></li>
+<li>模式&#x2F;内模式映象定义数据逻辑结构与存储结构之间的对应关系，内模式改变时，修改该映象可以使得模式保持不变。——<strong>数据的物理独立性</strong></li>
+</ul>
+<h4 id="三级模式结构的优点"><a href="#三级模式结构的优点" class="headerlink" title="三级模式结构的优点"></a>三级模式结构的优点</h4><ul>
+<li>保证数据的独立性</li>
+<li>简化用户接口，方便用户使用</li>
+<li>有利于数据共享</li>
+<li>有利于数据的安全保密</li>
+</ul>
+<h3 id="DBMS"><a href="#DBMS" class="headerlink" title="DBMS"></a>DBMS</h3><h4 id="主要功能"><a href="#主要功能" class="headerlink" title="主要功能"></a>主要功能</h4><ul>
+<li>数据库定义功能：提供DDL语言描述外模式、模式和内模式，模式翻译程序把原模式翻译成目标模式，存入数据字典。</li>
+<li>数据存取功能：提供DML语言进行增删查改。还有数据控制功能（DCL）。</li>
+<li>数据库运行管理：并发控制、存取控制、完整性约束条件检查和执行……</li>
+<li>数据组织、存储和管理</li>
+<li>数据库的建立和维护</li>
+</ul>
+<p><em><strong>定存运组建</strong></em></p>
+<h4 id="组成"><a href="#组成" class="headerlink" title="组成"></a>组成</h4><ul>
+<li>语言编译处理程序</li>
+<li>系统运行控制程序</li>
+<li>系统建立和维护程序</li>
+<li>数据字典</li>
+</ul>
+<h2 id="第二章-关系数据库"><a href="#第二章-关系数据库" class="headerlink" title="第二章 关系数据库"></a>第二章 关系数据库</h2><h3 id="关系的数学定义"><a href="#关系的数学定义" class="headerlink" title="关系的数学定义"></a>关系的数学定义</h3><ul>
+<li>域</li>
+<li>元组和分量</li>
+<li>关系：笛卡尔积$D_1 * D_2 * …$的子集叫做在域$D_1 * D_2 * …$上的关系，用$R(D_1, D_2, …)$表示。$n$是关系的度或目（$degree$）。</li>
+</ul>
+<h3 id="关系数据模型"><a href="#关系数据模型" class="headerlink" title="关系数据模型"></a>关系数据模型</h3><h4 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h4><ul>
+<li>关系模型的数据结构——关系。</li>
+<li>码<ul>
+<li>候选码：关系中的某一个属性组，若它唯一标识元组并具有最小性则为候选码。</li>
+<li>主码：选定一个候选码为主码。</li>
+</ul>
+</li>
+<li>主属性：码中的属性。</li>
+<li>非主属性：不在码中的属性。</li>
+<li>关系模式：$R(U, D, dom, F, I)$，简记作$R(A_1, A_2,\dots,A_n)$。关系式关系模式在某一时刻的状态或内容。关系模式是相对稳定的，关系是动态的。</li>
+<li><strong>语义约束</strong>（也即完整性约束）：<ul>
+<li>实体完整性：要有属性或属性组合作为主码，主码不能为空或部分为空。</li>
+<li>参照完整性：<ul>
+<li>外码：某个R的属性（组）与另外一个基本关系S的主码对应，即为外码。R为参照关系，S为被参照关系（目标关系）。</li>
+<li>参照完整性：外码或者等于S的主码，或者为空。</li>
+</ul>
+</li>
+<li>用户定义完整性</li>
+</ul>
+</li>
+</ul>
+<h4 id="数据操作"><a href="#数据操作" class="headerlink" title="数据操作"></a>数据操作</h4><ul>
+<li><p>特点：集合操作，操作对象都是集合。</p>
+</li>
+<li><p>基础：关系运算，分为代数方式和逻辑方式。</p>
+<ul>
+<li><p>关系代数</p>
+</li>
+<li><p>关系演算</p>
+<ul>
+<li>元组关系演算</li>
+<li>域关系演算</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="关系代数"><a href="#关系代数" class="headerlink" title="关系代数"></a>关系代数</h3><p>共有9种：</p>
+<ul>
+<li>常规集合运算：并、差、交、广义笛卡尔积。</li>
+<li>特有关系运算：选择、投影、连接、自然连接、求商。</li>
+</ul>
+<p>笛卡尔积相关的运算（笛卡尔积、连接）都可以交换顺序。</p>
+<p>**基本的关系代数运算：**并、差、选择、投影、广义笛卡尔积。</p>
+<h4 id="传统集合运算"><a href="#传统集合运算" class="headerlink" title="传统集合运算"></a>传统集合运算</h4><p>是二目运算，除了笛卡尔积外，要求参加运算的两个关系必须是同类关系。</p>
+<ul>
+<li>并：将R和S的元组统一到一个集合。</li>
+<li>差：从R中剔除S中存在的元组。</li>
+<li>交：R和S的共同元组。</li>
+<li>广义笛卡尔积：将R和S的元组并列。</li>
+</ul>
+<h4 id="专门的关系运算"><a href="#专门的关系运算" class="headerlink" title="专门的关系运算"></a>专门的关系运算</h4><ul>
+<li>选择：在R中选择出满足条件的元组，记作$\sigma_F(R) &#x3D; {t|t \in R,F(t)&#x3D;true}$。</li>
+<li>投影：从R中选出若干属性删除重复的行，记作$\pi_A(R)&#x3D;{t[A]|t\in R,A\sube U}$。</li>
+<li>连接：R和S在属性X和Y上的连接（X，Y是连接属性，即X和Y包含同等数量的属性，且相应属性有共同的域），是从两个关系的广义笛卡尔积里选出满足比较条件θ的元组，记作 $R \Join S_{X \theta Y}&#x3D;{t|t&#x3D;&lt;r,s&gt;\land s\in S\land r \in R\land r[X]\theta r[Y]}$。</li>
+<li>自然连接：在相同属性列取值相等为条件的连接，要去掉重复属性列。</li>
+<li>除法：关系S的属性是关系R属性的子集，记为$R\div S&#x3D;{t |t \in \pi_X(R)\land s \in S\land &lt;t,s&gt; \in R}$。（结果包含S中没有的属性）</li>
+</ul>
+<h3 id="关系演算"><a href="#关系演算" class="headerlink" title="关系演算"></a>关系演算</h3><h4 id="元组关系演算"><a href="#元组关系演算" class="headerlink" title="元组关系演算"></a>元组关系演算</h4><p>基本结构是元组演算表达式。</p>
+<h4 id="域关系演算"><a href="#域关系演算" class="headerlink" title="域关系演算"></a>域关系演算</h4><p>类似于元组演算，公式中的变量对应元组各个分量的域变量。</p>
+<h3 id="关系运算的安全约束"><a href="#关系运算的安全约束" class="headerlink" title="关系运算的安全约束"></a>关系运算的安全约束</h3><p><strong>不产生无限关系和无穷验证的运算成为安全运算，其表达式称为安全表达式，对其采取的限制称为安全约束。</strong>（记忆：无线关系和无穷验证）。</p>
+<h3 id="数据库数据语言"><a href="#数据库数据语言" class="headerlink" title="数据库数据语言"></a>数据库数据语言</h3><ul>
+<li>DDL：数据定义（描述）语言</li>
+<li>DML：数据操纵语言，检索、插入、修改、删除。<ul>
+<li>联机交互方式</li>
+<li>宿主语言方式</li>
+</ul>
+</li>
+<li>DCL：数据控制语言，完成安全性控制、完整性控制、并发控制等。</li>
+<li>关系数据语言特点：<ul>
+<li>一体化</li>
+<li>非过程化</li>
+<li>面向集合（实质是关系）的存取方式</li>
+<li>既可以独立使用又可以与主语言嵌套使用</li>
+</ul>
+</li>
+</ul>
+<p>DB 三言 DDL DML DCL</p>
+<h2 id="第三章-关系数据库标准语言SQL"><a href="#第三章-关系数据库标准语言SQL" class="headerlink" title="第三章 关系数据库标准语言SQL"></a>第三章 关系数据库标准语言SQL</h2><h3 id="SQL的特点"><a href="#SQL的特点" class="headerlink" title="SQL的特点"></a>SQL的特点</h3><ul>
+<li>综合统一</li>
+<li>高度非过程化</li>
+<li>面向集合</li>
+<li>以同一种语法结构提供两种使用方式</li>
+<li>语言简捷、易学易用</li>
+</ul>
+<h3 id="基本概念-1"><a href="#基本概念-1" class="headerlink" title="基本概念"></a>基本概念</h3><ul>
+<li>基本表：实际存在的</li>
+<li>导出表：有视图（虚表）和快照。</li>
+</ul>
+<h3 id="检索"><a href="#检索" class="headerlink" title="检索"></a>检索</h3><ul>
+<li>SELECT A FROM B：对应不去重的投影操作。</li>
+<li>SELECT DISTINCT A FROM B：对应投影。</li>
+<li>SELECT A FROM B WHERE C &#x3D; D：选取检索，可以用AND、OR或NOT连接条件&#x3D;，&lt;&gt;，&gt;，&gt;&#x3D;，&lt;，&lt;&#x3D;。可以使用BETWEEN a AND b表示某个区间。</li>
+<li>SELECT A FROM B WHERE C &#x3D; D ORDER BY A ASC：对A升序排列，如果降序可以写DESC。</li>
+<li>WHERE后可以指明连接条件，选择需要的若干列。</li>
+<li>外连接：<code>SELECT * FROM S, SC WHERE S.S#=SC.S#(*)</code></li>
+<li>子查询：<ul>
+<li>如果返回单值，可以直接用比较运算。</li>
+<li>如果返回了多值，必须在比较运算符和子查询之间加入ANY或ALL。</li>
+<li>IN与&#x3D;ANY是等价的，NOT IN与!&#x3D;ALL是等价的。</li>
+<li>EXISTS：在子查询结果非空时为真。</li>
+<li>NOT EXISTS：子查询结果为空时为真。</li>
+</ul>
+</li>
+<li>并：UNION</li>
+<li>交：INTERSECT</li>
+<li>差：MINUS</li>
+<li>COUNT：按列值记个数，COUNT(*)对行记数。</li>
+<li>SUM：对数值列求和。</li>
+<li>AVG：求数值列平均值。</li>
+<li>MAX：求列的最大值。</li>
+<li>MIN：求列的最小值。</li>
+<li>GROUP BY A [HAVING B &#x3D; C]。</li>
+</ul>
+<h3 id="表操作"><a href="#表操作" class="headerlink" title="表操作"></a>表操作</h3><h4 id="定义基本表"><a href="#定义基本表" class="headerlink" title="定义基本表"></a>定义基本表</h4><p><code>CREATE TABLE table_name (S# char(5) not null unique, SN char(20) not null, SA int, primary key(S#), check(SA &gt;= 18))</code></p>
+<h4 id="修改基本表"><a href="#修改基本表" class="headerlink" title="修改基本表"></a>修改基本表</h4><p><code>ALTER TABLE table_name [ADD &lt;新列名&gt;&lt;数据类型&gt;][DROP&lt;完整性约束名&gt;][MODIFY&lt;列名&gt;&lt;数据类型&gt;]</code></p>
+<h4 id="删除基本表"><a href="#删除基本表" class="headerlink" title="删除基本表"></a>删除基本表</h4><p><code>DROP TABLE table_name</code></p>
+<h4 id="定义索引"><a href="#定义索引" class="headerlink" title="定义索引"></a>定义索引</h4><ul>
+<li>语法：<code>Create [Unique][Cluster] Index &lt;索引名&gt; On &lt;表名&gt; (&lt;列名&gt;[次序][, &lt;列名&gt;[次序]] ...);</code></li>
+<li>示例： <code>Create Unique Index Scno On SC(S# ASC, C# DESC) ;</code></li>
+</ul>
+<h4 id="删除索引"><a href="#删除索引" class="headerlink" title="删除索引"></a>删除索引</h4><p>删除索引 </p>
+<ul>
+<li>语法：&#96;&#96;Drop Index &lt;索引名&gt;  <code>;</code></li>
+<li>示例：<code>Drop Index Stusno</code>;</li>
+</ul>
+<h4 id="定义视图"><a href="#定义视图" class="headerlink" title="定义视图"></a>定义视图</h4><p><code>CREATE VIEW view_name AS (SELECT ...)</code></p>
+<ul>
+<li>视图消解：将视图定义的子查询和用户查询结合，转换成对基本表的查询。</li>
+<li>视图作用：<ul>
+<li>检化用户操作</li>
+<li>使用户能够以多种角度看待同一数据</li>
+<li>提供一定程度的逻辑独立性</li>
+<li>能够对数据提供安全保护</li>
+</ul>
+</li>
+</ul>
+<h3 id="数据更新"><a href="#数据更新" class="headerlink" title="数据更新"></a>数据更新</h3><h4 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h4><p><code>INSERT INTO table_name ([&lt;属性列&gt;&#123;,&lt;属性列&gt;&#125;]) VALUES(&lt;值&gt;&#123;,&lt;值&gt;&#125;)</code></p>
+<h4 id="修改"><a href="#修改" class="headerlink" title="修改"></a>修改</h4><p><code>UPDATE table_name SET &lt;列名&gt;=&lt;表达式&gt;</code></p>
+<h4 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h4><p><code>DELETE FROM table_name [WHERE &lt;条件&gt;]</code></p>
+<h3 id="嵌入式SQL"><a href="#嵌入式SQL" class="headerlink" title="嵌入式SQL"></a>嵌入式SQL</h3><p>把SQL的最佳特性与程序设计语言的最佳特性结合，使SQL功能更强，灵活性更强。</p>
+<p>预编译法：把嵌入在程序中的SQL语句翻译为高级语言源码，然后按主语言的通常方式进行编译、链接生成可执行代码。</p>
+<h3 id="动态SQL"><a href="#动态SQL" class="headerlink" title="动态SQL"></a>动态SQL</h3><p>允许程序运行过程中临时组装SQL语句，有语句可变、条件可变、数据库对象，查询条件均可变三种形式。</p>
+<h3 id="ODBC-JDBC"><a href="#ODBC-JDBC" class="headerlink" title="ODBC&#x2F;JDBC"></a>ODBC&#x2F;JDBC</h3><p>四个组件：应用程序、驱动程序管理器、驱动程序和数据源。</p>
+<h2 id="第四章-数据库保护"><a href="#第四章-数据库保护" class="headerlink" title="第四章 数据库保护"></a>第四章 数据库保护</h2><h3 id="安全性控制"><a href="#安全性控制" class="headerlink" title="安全性控制"></a>安全性控制</h3><ul>
+<li>安全性：保护数据库以防止不合法的使用所造成的数据泄漏、更改和破坏。<ul>
+<li>向授权用户提供可靠的信息服务。</li>
+<li>拒绝对数据库的非授权存取访问请求，保证数据的可用性、完整性和一致性，进而保护数据库所有者和使用者的合法权益。</li>
+</ul>
+</li>
+<li>安全性控制：包含数据库系统的计算机系统安全模型。<ul>
+<li>用户标识与鉴别：用户标识和认证是系统提供的最外层安全保护措施。<ul>
+<li>标识：系统采用一定的方式标识其用户或应用程序的名字或身份。</li>
+<li>认证：系统在用户或应用程序登录时判断其是否为合法的授权用户。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>存取控制：确保合法用户按照指定的权限使用DBMS和访问数据。<ul>
+<li>用户权限定义</li>
+<li>合法权限检查</li>
+<li>上述两者一起组成了DBMS的安全子系统。</li>
+</ul>
+</li>
+<li>存取控制方法分类<ul>
+<li>自主存取控制（DAC）：用户对于不同数据对象有不同的存取权限，不同用户对同一对象也有不同的权限。<strong>用户还可以将其拥有的权限转授给其他用户</strong>。</li>
+<li>强制存取控制（MAC）：对于任意一个对象，只有具有合法许可证的用户才可以存取。</li>
+<li>对于用户存取权限的定义称为<strong>授权</strong>。在授权中应指明用户名、数据对象名、允许的操作对象类型。</li>
+</ul>
+</li>
+<li>SQL可以授予用户的两类权限：<ul>
+<li>用户级权限：DBA为每个用户授予特定权限，是对用户使用整个数据库权限的限定。</li>
+<li>关系级权限：DBA和数据库对象的拥有者为用户授予的与关系或视图有关的权限，这种权限是对用户使用关系的视图权限的限定。</li>
+<li>授权：GRANT option TO user，回收权限：REVOKE option ON user。</li>
+</ul>
+</li>
+<li>角色与用户组<ul>
+<li>角色是一组权限的集合。</li>
+<li>用户组是一组具有相同特性用户的集合，可以在授权或收回权限时以用户组为单位进行。</li>
+</ul>
+</li>
+<li>强制存取方法：MAC中全部实体被分为主体和客体。<ul>
+<li>主体是系统中的活动实体，包括实际用户和代表用户的各进程。</li>
+<li>客体是系统的被动实体，由主体操纵。</li>
+<li>对于主客体，DBMS为每个实例指定一个<strong>敏感度标记（Label）</strong>。<strong>主体的敏感度标记称为许可证级别，客体的敏感度标记称为密级</strong>。</li>
+<li>MAC机制通过对比主体的label和客体的label最终确定主体是否能够存取客体。</li>
+<li>当某一主体以某一许可证级别注册入系统时，系统要求他对任何客体的存取必须遵循如下规则：<ul>
+<li>只有当主体的许可证级别大于等于客体的密级时，主体才能读取相应客体。</li>
+<li>仅当主体许可证级别等于客体的密级时，才可以写相应客体。（想想为什么）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>其他方法：<ul>
+<li>视图机制</li>
+<li>审计（日志 Log）</li>
+<li>数据加密</li>
+</ul>
+</li>
+</ul>
+<h3 id="完整性控制"><a href="#完整性控制" class="headerlink" title="完整性控制"></a>完整性控制</h3><ul>
+<li>完整性：数据的正确性和相容性。<ul>
+<li>正确性：数据应该具有合法类型，在有效取值范围内。</li>
+<li>相容性：表示同一个事实的两个数据应该相同。</li>
+<li>数据库是否保持完整性关系到数据库系统是否能真实反映现实世界。</li>
+</ul>
+</li>
+<li>完整性约束条件：施加在数据库数据之上的语义约束条件称为数据库完整性约束条件。作用对象可以是<strong>列、元组和关系</strong>三种。</li>
+<li>完整性约束条件分类：<ul>
+<li><strong>静态约束</strong>：反应数据库状态合理性的约束。</li>
+<li><strong>动态约束</strong>：反应数据库状态变迁的约束。</li>
+</ul>
+</li>
+<li>完整性控制包括三个方面的功能：<ul>
+<li>定义功能</li>
+<li>检查功能</li>
+<li>违约相应</li>
+</ul>
+</li>
+<li>完整性检查时机：<ul>
+<li>立即执行约束：在执行用户事务过程中，在一条语句执行完后立即进行完整性约束的检查。</li>
+<li>延迟执行约束：整个用户事务执行完毕后，在进行完整性约束的检查。</li>
+</ul>
+</li>
+<li>完整性规则表示：五元组<ul>
+<li>D：数据对象。（工资）</li>
+<li>O：触发完整性检查的数据库操作。（插入或修改）</li>
+<li>A：数据库对象必须满足的断言或语义约束。（工资&gt;&#x3D;500000000）</li>
+<li>C：选择A作用的数据对象值的谓词。（职称&#x3D;’老八’）</li>
+<li>P：违反完整性规则时触发的过程。（拒绝执行该操作）</li>
+</ul>
+</li>
+<li>SQL完整性：断言ASSERTION，触发器TRIGGER。</li>
+</ul>
+<h3 id="触发器（补充）"><a href="#触发器（补充）" class="headerlink" title="触发器（补充）"></a>触发器（补充）</h3><h2 id="第五章-关系数据理论"><a href="#第五章-关系数据理论" class="headerlink" title="第五章 关系数据理论"></a>第五章 关系数据理论</h2><h3 id="函数依赖"><a href="#函数依赖" class="headerlink" title="函数依赖"></a>函数依赖</h3><ul>
+<li>数据依赖：属性值之间相互依赖又相互制约的关系。最重要的有两种：函数依赖和多值依赖。</li>
+</ul>
+<h4 id="函数依赖的定义"><a href="#函数依赖的定义" class="headerlink" title="函数依赖的定义"></a>函数依赖的定义</h4><ul>
+<li>定义：对于X的每个具体值，Y有唯一的值与之对应，则称X函数确定Y或Y函数依赖于X。（$X\rightarrow Y$）</li>
+</ul>
+<h4 id="相关术语"><a href="#相关术语" class="headerlink" title="相关术语"></a>相关术语</h4><ul>
+<li>平凡函数依赖：$Y\sube X$。</li>
+<li>非平凡函数依赖：不是平凡函数依赖。</li>
+<li>决定因素：$X$是$X\rightarrow Y$的决定因素。</li>
+<li>完全函数依赖：如果有$X\rightarrow Y$且对于任意$X$的真子集$X’$都有$X’\nrightarrow Y$，则是完全函数依赖。</li>
+<li>部分函数依赖：不是完全函数依赖的函数依赖。</li>
+<li>传递函数依赖：$X\rightarrow Y$且$Y\rightarrow Z$，并且$Y \nrightarrow X$，则称$Z$对$X$传递函数依赖。</li>
+</ul>
+<h5 id="补充说明"><a href="#补充说明" class="headerlink" title="补充说明"></a>补充说明</h5><p>函数依赖是语义范畴的概念，不随时间变化。</p>
+<h4 id="与联系的关系"><a href="#与联系的关系" class="headerlink" title="与联系的关系"></a>与联系的关系</h4><ul>
+<li>1对1：有$X\rightarrow Y$和$Y\rightarrow X$。</li>
+<li>1对m：有$Y\rightarrow X$。</li>
+<li>n对m：无函数依赖关系。</li>
+</ul>
+<h4 id="关系键的形式定义"><a href="#关系键的形式定义" class="headerlink" title="关系键的形式定义"></a>关系键的形式定义</h4><ul>
+<li>候选码与主码：<ul>
+<li>候选码：U完全函数依赖于K。</li>
+<li>主码：如果多个候选码，就选一个作为主码。性质有唯一性和最小性。</li>
+</ul>
+</li>
+<li>主属性与非主属性：<ul>
+<li>主属性：包含在任何一个候选码中的属性。</li>
+<li>非主属性：不是主属性。</li>
+</ul>
+</li>
+<li>外部码：R中的属性或属性组X不是R的码但是是另一个关系模式的码，则X是R的外部码。</li>
+</ul>
+<h4 id="函数依赖的逻辑蕴涵"><a href="#函数依赖的逻辑蕴涵" class="headerlink" title="函数依赖的逻辑蕴涵"></a>函数依赖的逻辑蕴涵</h4><ul>
+<li>从$R&lt;U, F&gt;$中可以推出$X \rightarrow Y$则称为$F$逻辑蕴涵$X \rightarrow Y$。</li>
+<li>$F$的闭包：$F$所蕴涵的函数依赖的全体，记作$F^+$。</li>
+</ul>
+<h4 id="Armstrong公理系统"><a href="#Armstrong公理系统" class="headerlink" title="Armstrong公理系统"></a>Armstrong公理系统</h4><p>对于$R&lt;U, F&gt;$有如下规则：</p>
+<ul>
+<li>A1自反律：若$Y\sube X\sube U$则$X \rightarrow Y$为$F$所蕴涵。</li>
+<li>A2增广律：若$X \rightarrow Y$为$F$所蕴涵，且$Z\sube U$则$XZ\rightarrow YZ$为$F$所蕴涵。</li>
+<li>A3传递律：若$X \rightarrow Y$且$Y \rightarrow Z$为$F$所蕴涵，则$X \rightarrow Z$为$F$所蕴涵。</li>
+</ul>
+<h5 id="推论"><a href="#推论" class="headerlink" title="推论"></a>推论</h5><ul>
+<li>合并规则：由$X \rightarrow Y$，$X \rightarrow Z$，有$X \rightarrow YZ$。</li>
+<li>伪传递规则：由$X \rightarrow Y$，$WY \rightarrow Z$，有$XW \rightarrow Z$。</li>
+<li>分解规则：由$X \rightarrow Y$和$Z \sube Y$，有$X \rightarrow Z$。</li>
+<li>定理1：$X \rightarrow A_1 A_2 A_3\dots A_k$成立等价于$X\rightarrow A_i$（i &#x3D; 1, 2, 3…k）成立。</li>
+</ul>
+<h5 id="属性集闭包"><a href="#属性集闭包" class="headerlink" title="属性集闭包"></a>属性集闭包</h5><ul>
+<li>定理：$X \rightarrow Y$可以由$F$根据公理系统导出等价于$Y \sube X_F^+$。</li>
+</ul>
+<h5 id="公理系统的有效性与完备性"><a href="#公理系统的有效性与完备性" class="headerlink" title="公理系统的有效性与完备性"></a>公理系统的有效性与完备性</h5><ul>
+<li>有效性：由 $ F$ 出发根据 Armstrong 公里推导出来的每一个函数依赖一定在F所蕴涵的函数依赖的全体之中。</li>
+<li>完备性：F所蕴涵的函数依赖的全体中的每一个函数依赖，必定可以由F根据Armstrong公理系统导出。</li>
+</ul>
+<h5 id="求属性闭包的算法"><a href="#求属性闭包的算法" class="headerlink" title="求属性闭包的算法"></a>求属性闭包的算法</h5><ul>
+<li>初始，$X_F^+&#x3D;X$，然后把 $F$ 中所有 $X_F$ 下属性能推出的属性都加进去，直到不变或者变为属性全集 $U$。</li>
+</ul>
+<h5 id="函数依赖集等价"><a href="#函数依赖集等价" class="headerlink" title="函数依赖集等价"></a>函数依赖集等价</h5><ul>
+<li>若函数依赖集$F^+&#x3D;G^+$，则称F和G等价。</li>
+<li>最小函数依赖集条件：<ul>
+<li>$F$中任一函数依赖$X \rightarrow A$，$A$必须是单属性。</li>
+<li>$F$中不存在$X \rightarrow A$使得$F$与$F-{X\rightarrow A}$等价，即不存在多余的依赖。</li>
+<li>$F$中不存在$X \rightarrow A$，在$X$中有真子集$Z$，使得$F$与$F-{X \rightarrow A}∪{Z \rightarrow A}$等价，即左侧不能有多余的属性。</li>
+</ul>
+</li>
+<li>极小化的算法：<ul>
+<li>首先将所有$X\rightarrow Y$的$Y$展开。</li>
+<li>逐个检查$F$中的函数依赖的左侧，如果左侧是多属性，且删去一个属性后依然可以推出右侧，则能够删掉。形式化为：对于$X \rightarrow A$，设$X&#x3D;B_1\dots B_m$，如果$A∈(X-B_i)^+_F$，则以$(X-B_i)$取代$X$直到$F$不再改变。</li>
+<li>逐个检查$F$中的每个函数依赖，如果删掉函数依赖后的$G&#x3D;F-{X\rightarrow A}$，仍然可以有$A∈(X)_G^+$，就删除该函数依赖。</li>
+</ul>
+</li>
+</ul>
+<h3 id="范式"><a href="#范式" class="headerlink" title="范式"></a>范式</h3><p>如果一个关系满足某个指定的约束集，则称它属于某种特定的范式（Normal Form）。</p>
+<h4 id="1NF"><a href="#1NF" class="headerlink" title="1NF"></a>1NF</h4><p>当一个关系只包含原子值这一约束时，称为1NF。也就是表里每个格只有一个值。满足原子值这一约束条件的关系称为规范化关系简称范式。</p>
+<p>一个低一级范式的关系模式，可以通过<strong>模式分解</strong>转换为若干高级范式的关系模式的集合，这个过程称为<strong>规范化</strong>。</p>
+<h4 id="2NF"><a href="#2NF" class="headerlink" title="2NF"></a>2NF</h4><ul>
+<li>定义：1NF的关系的每个非主属性完全依赖于码，就是2NF。</li>
+<li>弊病：<ul>
+<li>插入异常有所改善但是仍然存在。</li>
+<li>删除异常。</li>
+<li>数据冗余得到了一定的改善。</li>
+</ul>
+</li>
+</ul>
+<h4 id="3NF"><a href="#3NF" class="headerlink" title="3NF"></a>3NF</h4><p>定义：如果不存在码$X$，属性组$Y$和非主属性$Z$($Z$不是$Y$的子集)，使得下式成立，$X\rightarrow Y$，$Y\rightarrow Z$，$Y \nrightarrow X$，则$R∈3NF$。（2NF的关系模式，每个非主属性都不传递依赖于任何码）</p>
+<h4 id="BCNF"><a href="#BCNF" class="headerlink" title="BCNF"></a>BCNF</h4><p>若关系模式 $R&lt; U , F &gt;\in 1NF$，如果对于 $R $ 的每个函数 依赖 $X \to Y$，且 $Y \nsubseteq X$时，$X$ 必含有码，则 $R&lt; U , F &gt; \in BCNF$。</p>
+<ul>
+<li>所有非主属性都完全函数依赖于每个候选码。</li>
+<li>所有主属性都完全函数依赖于每个不包含它的候选码。</li>
+<li>没任何属性完全函数依赖于非码的任意一组属性。</li>
+</ul>
+<h4 id="多值依赖与4NF"><a href="#多值依赖与4NF" class="headerlink" title="多值依赖与4NF"></a>多值依赖与4NF</h4><ul>
+<li>多值依赖定义：$Z &#x3D; U - X - Y$，关系模式$R(U)$中多值依赖$X\rightarrow \rightarrow Y$成立，当且仅当对$R(U)$的任一关系 r，给定的一对$(x,z)$值有一组$Y$的值，这组值仅仅取决于 $x$ 值而与 $z$ 值无关。</li>
+<li>多值依赖有对称性，若$X\rightarrow \rightarrow Y$则$X\rightarrow \rightarrow (U-X-Y)$。</li>
+<li>$X\rightarrow Y$可以推出$X\rightarrow \rightarrow Y$。</li>
+<li>4NF：对于每个非平凡的多值依赖$X\rightarrow \rightarrow Y$且必须是函数依赖，$X$都含有码。</li>
+</ul>
+<h3 id="规范化目的与基本思想"><a href="#规范化目的与基本思想" class="headerlink" title="规范化目的与基本思想"></a>规范化目的与基本思想</h3><p>在关系数据库中，对关系的最基本要求是满足1NF。</p>
+<p>规范化要逐步消除数据依赖中不合适的部分，使数据库模式中各关系模式达到某种程度的“分离”，使一个关系只描述一个实体或者实体间的一种联系，即**“一事一地”<strong>的设计原则。规范化的实质是</strong>概念的单一化**。</p>
+<h3 id="模式分解理论"><a href="#模式分解理论" class="headerlink" title="模式分解理论"></a>模式分解理论</h3><h4 id="无损连接性分解判定算法"><a href="#无损连接性分解判定算法" class="headerlink" title="无损连接性分解判定算法"></a>无损连接性分解判定算法</h4><p>$F&#x3D;{FD_1,\dots, FD_p}$</p>
+<ul>
+<li>如果将n个属性的关系模式分解为k个，先建立n列k行的表TB：<ul>
+<li>每一列对应一个属性$A_i$。</li>
+<li>每一行对应分解中的一个关系模式$R_i$。</li>
+<li>分量的取值：$C_{ij}&#x3D;A_j∈U_i?a_j:b_{ij}$。</li>
+</ul>
+</li>
+<li>对$FD_i$中每一个函数依赖$X\rightarrow Y$，若TB中存在元素 $t_1$ 和 $t_2$ 使，$t1[X]&#x3D;t2[X]$，则对每一个$A_i∈Y$：<ul>
+<li>若$t1[A_i], t2[A_i]$有一个等于 $a_i$，则另一个也改为 $a_i$。</li>
+<li>若上面不成立，就取$t1[A_i]&#x3D;t2[A_i]$。（$t_1$ 行号小于 $t_2$）</li>
+</ul>
+</li>
+<li>反复执行上一步直到：<ul>
+<li>TB出现一行为全 $a$，即为无损分解。</li>
+<li>TB不变且没有一行为全 $a$，为有损分解。</li>
+</ul>
+</li>
+</ul>
+<h4 id="无损分解判定准则"><a href="#无损分解判定准则" class="headerlink" title="无损分解判定准则"></a>无损分解判定准则</h4><p>定理：分解$ρ&#x3D;{R_1&lt;U_1,F_1&gt;,R_2&lt;U_2,F_2&gt;}$具有无损连接性的充分必要条件是，$U_1∩U_2\rightarrow U_1-U_2∈F^+$或$U_1∩U_2\rightarrow U_2-U_1∈F^+$。即$R_1, R_2$的共同属性至少构成$R_1,R_2$两者之一的候选码。</p>
+<h4 id="保持函数依赖判定准则"><a href="#保持函数依赖判定准则" class="headerlink" title="保持函数依赖判定准则"></a>保持函数依赖判定准则</h4><p>$R$中的每个函数依赖都能够从$R_1,\dots,R_n$函数依赖的并集中逻辑导出。</p>
+<h4 id="模式分解原则"><a href="#模式分解原则" class="headerlink" title="模式分解原则"></a>模式分解原则</h4><ul>
+<li>投影分解应遵循的原则：<ul>
+<li>具有无损连接性</li>
+<li>保持函数依赖</li>
+</ul>
+</li>
+<li>模式分解能够达到的最高范式等级：<ul>
+<li>要求保持函数依赖，总可以达到3NF，不一定到BCNF。</li>
+<li>要求无损连接，一定可以达到4NF或更高。</li>
+<li>要求两者都保持，可以达到3NF，但不一定到BCNF。</li>
+</ul>
+</li>
+</ul>
+<h4 id="达到3NF的等价模式分解"><a href="#达到3NF的等价模式分解" class="headerlink" title="达到3NF的等价模式分解"></a>达到3NF的等价模式分解</h4><h5 id="保持函数依赖的分解算法"><a href="#保持函数依赖的分解算法" class="headerlink" title="保持函数依赖的分解算法"></a>保持函数依赖的分解算法</h5><ul>
+<li>对F进行极小化。</li>
+<li>找出不在F的属性，将它们构成一个关系模式，并且从U中去掉。</li>
+<li>若有$X\rightarrow A∈F$，且$XA&#x3D;U$，则$ρ&#x3D;{R}$，算法终止。</li>
+<li>对 $F$ 按具有相同左部的原则分成 $k$ 组，每一组函数以阿里所涉及的属性全体记为$U_i$，若有$U_i\sube U_j$则去掉$U_i$。令$F_i$为$F$在$U_i$上的投影，则可以获得一个保持函数依赖的分解$ρ&#x3D;{R_1&lt;U_1,F_1&gt;,\dots,R_k&lt;U_k,F_k&gt;}$。</li>
+</ul>
+<h5 id="同时保持函数依赖和无损连接的分解算法"><a href="#同时保持函数依赖和无损连接的分解算法" class="headerlink" title="同时保持函数依赖和无损连接的分解算法"></a>同时保持函数依赖和无损连接的分解算法</h5><p>设$ρ$是一个保持函数依赖的分解，$X$为$R&lt;U,F&gt;$的码。</p>
+<ul>
+<li>如果有某个$U_i$满足$X\sube U_i$，则ρ即为所求。</li>
+<li>否则令$τ&#x3D;ρ∪{R*&lt;X,F_X&gt;}$，τ即为所求。</li>
+</ul>
+<h4 id="达到BCNF的无损连接分解算法"><a href="#达到BCNF的无损连接分解算法" class="headerlink" title="达到BCNF的无损连接分解算法"></a>达到BCNF的无损连接分解算法</h4><ul>
+<li>令$ρ&#x3D;R&lt;U,F&gt;$。</li>
+<li>检查$ρ$中各关系模式是否属于BCNF，若是，则算法终止。</li>
+<li>设ρ中的$R_i&lt;U_i,F_i&gt;$不属于BCNF，则存在函数依赖$X\rightarrow A∈F_i^+$，且$X$不是$R_i$的码，则$XA$是$U_i$的真子集，将$R_i$分解为$\sigma&#x3D;{S_1,S_2}$，其中$U_{S_1}&#x3D;XA,U_{S_2}&#x3D;U_i-{A}$，以$\sigma$代替$R_i$返回上一步。</li>
+</ul>
+<h3 id="候选码的求解"><a href="#候选码的求解" class="headerlink" title="候选码的求解"></a>候选码的求解</h3><h4 id="属性分类"><a href="#属性分类" class="headerlink" title="属性分类"></a>属性分类</h4><ul>
+<li>L类：只出现在F函数依赖左侧的属性。</li>
+<li>R类：只出现在F函数依赖右侧的属性。</li>
+<li>N类：没有出现在函数依赖中的属性。</li>
+<li>LR类：在左右均出现的属性。</li>
+</ul>
+<h4 id="定理"><a href="#定理" class="headerlink" title="定理"></a>定理</h4><ul>
+<li>如果X是L类属性，则必是任一候选码的成员。</li>
+<li>如果X是R类属性，则X不在R的任何一个候选码中。</li>
+<li>如果X是N类属性，则X必包含在任一候选码中。</li>
+</ul>
+<h4 id="图论判定法"><a href="#图论判定法" class="headerlink" title="图论判定法"></a>图论判定法</h4><p>将函数依赖关系绘制成有向图。</p>
+<ul>
+<li>入度为0的为原始点，L类。</li>
+<li>出度为0的为终结点，R类。</li>
+<li>入度出度均不为0的为途中点，LR类。</li>
+<li>入度出度均为0的为孤立点，N类。</li>
+<li>关键点：原始点和孤立点。</li>
+<li>独立回路：不能由其他点到达的回路。</li>
+</ul>
+<h4 id="定理-1"><a href="#定理-1" class="headerlink" title="定理"></a>定理</h4><ul>
+<li>关键点必在R的任何候选码中。</li>
+<li>终结点必不在R的任何候选码中。</li>
+<li>R具有唯一候选码的充要条件是G中不存在独立回路。</li>
+<li>若Y是途中点且Y在独立回路，则Y必在某候选码中。</li>
+</ul>
+<h4 id="多属性依赖集候选码求解"><a href="#多属性依赖集候选码求解" class="headerlink" title="多属性依赖集候选码求解"></a>多属性依赖集候选码求解</h4><ul>
+<li>将所有属性分成L、R、LR和N四类，并令X代表L和N类，Y代表LR类。</li>
+<li>求出$X_F^+$，如果是U，则X为唯一候选码，否则继续下一步。</li>
+<li>对于Y中任一一个属性A，求$(XA)_F^+$，若为U，则XA为一个候选码，否则在Y中依次取2个、3个，求属性闭包，直到闭包包含R的全部属性。</li>
+</ul>
+<h3 id="与数据库设计的联系"><a href="#与数据库设计的联系" class="headerlink" title="与数据库设计的联系"></a>与数据库设计的联系</h3><ul>
+<li>求最小依赖集消除冗余联系。</li>
+<li>一般情况下3NF足以满足要求。</li>
+</ul>
+<h2 id="第六章-数据库设计"><a href="#第六章-数据库设计" class="headerlink" title="第六章 数据库设计"></a>第六章 数据库设计</h2><h3 id="数据库设计概述"><a href="#数据库设计概述" class="headerlink" title="数据库设计概述"></a>数据库设计概述</h3><ul>
+<li>数据库设计：对于一个给定的应用环境，<strong>设计优化的数据库逻辑和物理结构，建立数据库</strong>，使之能够有效地存储数据，为开发满足用户需求的应用系统奠定基础。</li>
+<li>数据库设计的特点：要把<strong>数据设计</strong>和<strong>处理设计</strong>密切结合。</li>
+<li>设计方法：<ul>
+<li>手工试凑法：根据应用的数据要求与处理要求直接设计数据库的结构。</li>
+<li>规范设计法：运用软工思想，<strong>整个设计过程划分为若干阶段，每个阶段只解决整个设计中的部分问题，是迭代和逐步求精的过程</strong>。</li>
+</ul>
+</li>
+</ul>
+<h3 id="数据库设计的基本步骤"><a href="#数据库设计的基本步骤" class="headerlink" title="数据库设计的基本步骤"></a>数据库设计的基本步骤</h3><ul>
+<li>需求分析：现实世界</li>
+<li>概念结构设计：概念模式，生成概念模型，ER图</li>
+<li>逻辑结构设计：逻辑模式，生成DBMS支持的数据模型</li>
+<li>物理结构设计：内模式，设计存储结构和存取方法</li>
+<li>数据库实施</li>
+<li>数据库运行维护</li>
+</ul>
+<p>记：需概逻物实维</p>
+<h4 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h4><ul>
+<li>目标：收集支持系统应用目标的基础数据及其处理。重点是“数据”和“处理”，包括<strong>处理要求，信息要求，安全性与完整性要求</strong>。</li>
+<li>两个阶段：调查用户实际要求；分析表达需求，用数据流图和数据字典。</li>
+<li>数据流图<ul>
+<li>自顶向下逐步分解处理功能以及他们所用的数据。</li>
+</ul>
+</li>
+<li>数据字典：需求分析阶段，可以看成<strong>数据元素表</strong>。<ul>
+<li>包含每一个数据元素的名字、含义等各方面的描述。</li>
+<li>从数据流图提取出所有原子数据项。</li>
+<li>把有联系的数据项组合起来形成数据组。</li>
+<li>以数据组为单位写出语义定义、类型定义、完整性约束定义等。</li>
+</ul>
+</li>
+</ul>
+<h4 id="概念结构设计"><a href="#概念结构设计" class="headerlink" title="概念结构设计"></a>概念结构设计</h4><p>ER图：参考上面第一章内容。</p>
+<h5 id="设计概念结构四类方法"><a href="#设计概念结构四类方法" class="headerlink" title="设计概念结构四类方法"></a>设计概念结构四类方法</h5><ul>
+<li>自顶向下</li>
+<li>自底向上：最常用</li>
+<li>逐步扩张</li>
+<li>混合策略</li>
+</ul>
+<p>记：顶底扩混</p>
+<h5 id="数据抽象"><a href="#数据抽象" class="headerlink" title="数据抽象"></a>数据抽象</h5><ul>
+<li>分类：定义某一概念作为现实世界中一组对象的类型。</li>
+<li>聚集：定义某一类型的组成成分。</li>
+<li>概括：定义类型之间的一种子集联系。</li>
+</ul>
+<h5 id="实体模型的调整原则"><a href="#实体模型的调整原则" class="headerlink" title="实体模型的调整原则"></a>实体模型的调整原则</h5><ul>
+<li>属性不能再分，必须是<strong>不可分的数据项</strong>。</li>
+<li>属性不能与其他实体有联系。</li>
+<li>实体与属性之间保持1:1或n:1联系，不满足的情况可以将属性上升为实体。</li>
+</ul>
+<h5 id="集成局部ER图"><a href="#集成局部ER图" class="headerlink" title="集成局部ER图"></a>集成局部ER图</h5><ul>
+<li>合并：解决各分ER图之间的冲突，将各分ER图合并成初步ER图。冲突主要包括属性冲突、命名冲突和结构冲突。</li>
+<li>修改和重构：消除冗余生成基本ER图。</li>
+</ul>
+<h5 id="设计基本ER图"><a href="#设计基本ER图" class="headerlink" title="设计基本ER图"></a>设计基本ER图</h5><ul>
+<li>消除冗余，可能存在冗余数据或冗余联系。</li>
+</ul>
+<h4 id="逻辑结构设计"><a href="#逻辑结构设计" class="headerlink" title="逻辑结构设计"></a>逻辑结构设计</h4><p>把概念结构转换为选用的DBMS所支持的数据模型。</p>
+<h5 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h5><ul>
+<li>概念结构根据转换规则生成一般数据模型。</li>
+<li>根据关系数据理论，进行规范化。</li>
+<li>生成特定DBMS支持下的数据模型。</li>
+<li>优化数据模型。</li>
+</ul>
+<h4 id="物理结构设计"><a href="#物理结构设计" class="headerlink" title="物理结构设计"></a>物理结构设计</h4><ul>
+<li>确定存储结构：索引、聚集、hash。</li>
+<li>选择关系的存取方法</li>
+</ul>
+<h2 id="第七章-存储管理与索引"><a href="#第七章-存储管理与索引" class="headerlink" title="第七章 存储管理与索引"></a>第七章 存储管理与索引</h2><h3 id="数据存储结构-物理结构"><a href="#数据存储结构-物理结构" class="headerlink" title="数据存储结构&#x2F;物理结构"></a>数据存储结构&#x2F;物理结构</h3><h4 id="DBMS存储管理的目标"><a href="#DBMS存储管理的目标" class="headerlink" title="DBMS存储管理的目标"></a>DBMS存储管理的目标</h4><ul>
+<li>最小化磁盘和主存间传输存储块的数量，即最小化磁盘存取次数</li>
+<li>实现手段是在主存中保持尽量多的块， 使得上层要访问一个块时，它在主存中的概率最大。</li>
+</ul>
+<h4 id="文件中记录的几种组织方式的含义"><a href="#文件中记录的几种组织方式的含义" class="headerlink" title="文件中记录的几种组织方式的含义"></a>文件中记录的几种组织方式的含义</h4><ul>
+<li>堆文件组织：记录可以存放在文件空间中的任何位置 <ul>
+<li>链表方式：在文件开始维护一个header页，该页存储了空白页链 表头指针和数据页链表头指针， 每个页记录了当前包含的空槽数 </li>
+<li>页目录方式：DBMS维护特殊页保 存文件中的数据页的位置，并记 录每个页中空槽数</li>
+</ul>
+</li>
+<li>顺序文件组织： 文件中的记录按搜索码排序排列</li>
+<li>索引：索引是指记录的关键字与相应记录的存储地址的对照表<ul>
+<li>索引文件由主文件和索引表构成 <ul>
+<li>索引表必须按关键字有序 </li>
+<li>主文件本身可以按主关键字有序组织（即索引顺序文件）或 无序组织（即索引非顺序文件）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>散列：散列文件的存储单位称为桶(Bucket) 。桶号可以是相对块号， 最终可以转换为外存空间上的物理地址</li>
+<li>聚集 ：具有相同或相似属性值的记录存储于连续的磁盘块中<ul>
+<li>聚集码是一种属性，它定义了哪些记录被存储在一起</li>
+<li>多表聚集：将多个关系存储于一个文件中，在每个块中存储两个或更多关系的相关记录。可以加快特定的连接查询，但会使单个表的访问变慢</li>
+</ul>
+</li>
+</ul>
+<h4 id="页-块的分槽结构"><a href="#页-块的分槽结构" class="headerlink" title="页&#x2F;块的分槽结构"></a>页&#x2F;块的分槽结构</h4><p>数据库页&#x2F;块结构最常用的结构是分槽结构。</p>
+<ul>
+<li>Header记录了已使用的槽数，以及最后一个被用槽的起始位置偏移量，以及一个槽数组。</li>
+<li>槽数组保存了每个元组的起始位置偏移量； </li>
+<li>增加记录时，槽数组从开始到尾部的方向增长，而记录数据则从数据区的尾部到开始的方向增长。</li>
+<li>当槽数组与元组数据连接到一起时，认为页满。</li>
+<li>便于存储变长记录。</li>
+</ul>
+<h3 id="缓冲区管理"><a href="#缓冲区管理" class="headerlink" title="缓冲区管理"></a>缓冲区管理</h3><h4 id="缓冲区管理器的主要功能"><a href="#缓冲区管理器的主要功能" class="headerlink" title="缓冲区管理器的主要功能"></a>缓冲区管理器的主要功能</h4><p>缓冲区：是主存中可以存储磁盘块副本的区域 </p>
+<p>缓冲区管理器：<strong>负责缓存空间分配，内外存交换</strong> </p>
+<p>块&#x2F;页是存储分配和数据交换的单位 </p>
+<p>管理目标：<strong>最小化磁盘和主存间传输存储块的数量， 即最小化磁盘存取次数</strong>；</p>
+<ul>
+<li>实现手段是在主存中保持尽量多的块</li>
+</ul>
+<p>执行引擎需要操作某磁盘块时，通过资源管理器调用缓冲区管理 </p>
+<ul>
+<li>如果该块在缓冲区中，则缓冲区管理器返回该块在内存的地址</li>
+<li>如果不在缓冲区，则缓冲区管理器为该块在缓冲区中分配空间 （这可能替换某个块，如果被替换的块修改过，需要将其写回 磁盘），将块从磁盘读进缓冲区，并将内存地址返回给调用者</li>
+</ul>
+<h4 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h4><h4 id="索引的基本概念"><a href="#索引的基本概念" class="headerlink" title="索引的基本概念"></a>索引的基本概念</h4><p>索引文件构成 </p>
+<ul>
+<li>索引记录&#x2F;索引项，是索引文件的记录，包括两个域： <ul>
+<li>索引域（搜索码）：存储数据文件中一个或一组域（属性）；</li>
+<li>指针：指向索引域值为K的记录所在磁盘块的地址。</li>
+</ul>
+</li>
+<li>索引将表中的部分属性进行组织或排序，使得 DBMS 的执行引擎利用这些属性能够快速有效进行表的访问</li>
+<li>DBMS负责在执行查询时使用最恰当的索引</li>
+</ul>
+<h4 id="索引的分类"><a href="#索引的分类" class="headerlink" title="索引的分类"></a>索引的分类</h4><ul>
+<li>两种基本类型：排序索引，哈希索引</li>
+<li>聚集索引与非聚集索引<ul>
+<li>聚集索引：索引域&#x2F;搜索码值的排列顺序与记录在文件中的排列顺序一致，也称为主索引 （primary index ）</li>
+<li>非聚集索引：索引项排列的次序与文件中记录的排列顺序不同，也称为辅助索引（Secondary index）</li>
+</ul>
+</li>
+<li>稠密索引与稀疏索引 <ul>
+<li>稠密索引：对于文件中 的每个搜索码值都有一个索引项</li>
+<li>稀疏索引：只有部分索引域&#x2F;搜索码值有索引记录。当文件记录以索引域排序时，可以采用。</li>
+</ul>
+</li>
+</ul>
+<h4 id="B树和B-树的原理"><a href="#B树和B-树的原理" class="headerlink" title="B树和B+树的原理"></a>B树和B+树的原理</h4><p>B树（平衡树）索引 </p>
+<ul>
+<li>是附加限制条件的索引树。限制了每个节点放置关键 字与指针的最小和最大个数：根节点有 $\lbrack 2,n\rbrack$ 个子节点， 中间节点有 $\lceil n&#x2F;2, n \rceil$个子节点，叶节点有 $\lceil (n–1)&#x2F;2, n-1 \rceil$ 个记录指针，$n$ 值对特定树是固定的</li>
+<li>从树根到叶节点每条路径的长度都相同，因此所有的叶节点都在同一层上。 </li>
+<li>B树的关键字是散布在各层上。</li>
+</ul>
+<p>B+树</p>
+<p>是B树的改进。把树中所有关键字都按递增次序从左到右安排在<strong>叶节点</strong>上，并且链接起来。B+树能同时进行随机查找和顺序查找。 </p>
+<p>B+树节点结构</p>
+<ul>
+<li>每个节点最多包含 $n-1$ 个搜索码&#x2F;索引码 &#x2F;关键字值 $K_{1} ，K_{2} . . . , K_{n–1}$ ，以及 $n$ 个指针 $P_{1} ，P_{2} . . . , P_{n}$ 。<ul>
+<li>$K_i$ 是索引码的值</li>
+<li>$P_i$ 对于非叶子节点是指向子节点的指针；对于叶子节点 $P_{1} ，P_{2} . . . , P_{n-1}$ 是指向记录或记录桶的指针，$P_{n}$ 指向下个叶子节点。 节点中各索引码的值满足： $K_{1} &lt; K_{2} &lt; K_{3} &lt; . . . &lt; K_{n–1}$</li>
+</ul>
+</li>
+</ul>
+<h4 id="HASH索引的原理"><a href="#HASH索引的原理" class="headerlink" title="HASH索引的原理"></a>HASH索引的原理</h4><ul>
+<li>基于哈希表（Hash table）实现</li>
+<li>哈希表实现key到value的映射。通过键值映射到表中一 个位置来访问记录，这个映射函数叫做 Hash 函数，存 放记录的数组叫做哈希表。</li>
+<li>哈希表的实现包括两部分 <ul>
+<li>哈希函数：将很大的key空间映射到比较小的域，用于计 算桶&#x2F;槽数组的元素序号；非用于加密算法的哈希函数； 计算速度快且碰撞率低</li>
+<li>哈希方案（scheme）：解决一个哈希值对应多条记录。 最常使用溢出链接(Chaining)法</li>
+</ul>
+</li>
+<li>静态哈希：哈希表的大小是固定的 <ul>
+<li>文件增大时，太多的溢出桶将降低访问性能 </li>
+<li>数据规模缩小时，会造成空间浪费</li>
+</ul>
+</li>
+<li>动态哈希：允许哈希表的大小动态修改 <ul>
+<li>定期重哈希：创建新的大的哈希表，把原表上的key重新哈希到新表上 </li>
+<li>线性哈希：以一种递增的方式重新哈希</li>
+</ul>
+</li>
+<li>特点<ul>
+<li>周期性重组的开销大 </li>
+<li>适用于检索哈希码等于特定值的记录检索。</li>
+<li>不适用于区间值的 检索，以及部分匹配检索 </li>
+<li>有很多重复值的列，不适于做key</li>
+</ul>
+</li>
+</ul>
+<h2 id="第八章-关系查询处理与查询优化（不是重点）"><a href="#第八章-关系查询处理与查询优化（不是重点）" class="headerlink" title="第八章 关系查询处理与查询优化（不是重点）"></a>第八章 关系查询处理与查询优化（不是重点）</h2><h3 id="关系查询处理步骤——四个阶段"><a href="#关系查询处理步骤——四个阶段" class="headerlink" title="关系查询处理步骤——四个阶段"></a>关系查询处理步骤——四个阶段</h3><ul>
+<li>查询分析：词法分析，语法检查和语法分析。</li>
+<li>查询检查：语义检查，存取权限检查，SQL语句转换为关系代数表达式。</li>
+<li>查询优化：选择一个高效的查询处理策略，按照优化的层次分为代数优化和物理优化。</li>
+<li>查询执行：生成查询计划，生成执行查询计划的代码。</li>
+</ul>
+<h3 id="查询优化"><a href="#查询优化" class="headerlink" title="查询优化"></a>查询优化</h3><ul>
+<li>目标：选择一个高效的执行查询处理策略，使得查询代价最小。</li>
+<li>执行开销：总代价&#x3D;IO代价+CPU代价+内存代价</li>
+<li>按照优化层次分为代数优化和物理优化：<ul>
+<li>代数优化：改变代数表达式的操作次序和组合。</li>
+<li>物理优化：存取路径和底层操作算法选择。</li>
+</ul>
+</li>
+<li>一般步骤：<ul>
+<li>把查询转换成语法树，如关系代数语法树。</li>
+<li>代数优化语法树。</li>
+<li>物理优化，选择存取路径。</li>
+<li>生成查询计划。</li>
+</ul>
+</li>
+</ul>
+<h3 id="代数优化"><a href="#代数优化" class="headerlink" title="代数优化"></a>代数优化</h3><p>通过对关系代数表达式的等价变化来提高查询效率。</p>
+<p>等价：用相同的关系代替两个表达式中相应的关系所得到的结果是相同的。</p>
+<ul>
+<li>连接和笛卡尔积交换律。</li>
+<li>连接和笛卡尔积结合律。</li>
+<li>投影串接定律。</li>
+<li>选择串接定律。</li>
+<li>选择与投影的交换律。</li>
+<li>选择与笛卡尔积的交换律。</li>
+<li>选择与并的分配律。</li>
+<li>选择与差的分配律。</li>
+<li>选择对自然连接的分配律。</li>
+<li>投影与笛卡尔积的分配律。</li>
+<li>投影与并的分配律。</li>
+</ul>
+<p>查询树的启发式优化：</p>
+<ul>
+<li><strong>减小中间关系</strong>——选择运算早做（最重要），投影运算尽早做。</li>
+<li><strong>减少扫描关系的次数</strong>——投影选择一起执行，投影结合双目。</li>
+<li><strong>把笛卡尔积与选择转换为连接</strong></li>
+<li><strong>中间结果复用</strong></li>
+</ul>
+<h3 id="物理优化"><a href="#物理优化" class="headerlink" title="物理优化"></a>物理优化</h3><p>常用方法：</p>
+<ul>
+<li>基于规则的启发式优化方法</li>
+<li>基于代价估算的优化方法</li>
+<li>两者结合的优化方法</li>
+</ul>
+<p>基于启发式规则的存取路径选择优化：</p>
+<ul>
+<li>选择操作的启发式规则：<ul>
+<li>小关系使用全表顺序扫描。</li>
+<li>大关系可以使用索引扫描。</li>
+</ul>
+</li>
+<li>连接操作的启发式规则：<ul>
+<li>排序合并</li>
+<li>索引连接</li>
+<li>hash join</li>
+<li>嵌套循环</li>
+</ul>
+</li>
+</ul>
+<h2 id="第九章-事务处理技术"><a href="#第九章-事务处理技术" class="headerlink" title="第九章 事务处理技术"></a>第九章 事务处理技术</h2><h3 id="事务的概念"><a href="#事务的概念" class="headerlink" title="事务的概念"></a>事务的概念</h3><h4 id="事务的定义"><a href="#事务的定义" class="headerlink" title="事务的定义"></a>事务的定义</h4><p>事务是用户定义的数据库操作序列，这些操作要么都做，要么都不做。</p>
+<ul>
+<li><strong>事务与应用程序是两个概念。</strong></li>
+<li><strong>事务的开始与结束可以由用户显式控制。</strong></li>
+</ul>
+<h4 id="事务的特性"><a href="#事务的特性" class="headerlink" title="事务的特性"></a>事务的特性</h4><ul>
+<li>原子性(atom)：事务中包括的所有操作要么都做，要么都不做。</li>
+<li>一致性(consistency)：事务执行的结果必须是使数据库从一个一致性状态变到另一个一致性状态。</li>
+<li>隔离性(isolation)：一个事务的执行不能被其他事务干扰，一个事务内部的操作及使用的数据对其他并发事务是隔离的，并发执行的事务之间不能互相干扰。</li>
+<li>持久性(durability)：一个事务一旦提交，它对数据库的影响必须是永久的，其他操作或故障不应该对其执行的结果有任何影响。</li>
+</ul>
+<blockquote>
+<p>原子性由恢复机制实现，一致性是由事务的原子性保证，隔离性通过并发控制机制实现，持久性通过恢复机制实现</p>
+</blockquote>
+<p>ACID特性对于数据库数据的正确有效有重要意义。</p>
+<ul>
+<li>利用数据库并发控制机制以及数据库恢复机制保证事务的特性不被破坏。从而保证数据库数据的正确有效。</li>
+<li><strong>事务是数据库恢复和并发控制的基本单位。</strong></li>
+</ul>
+<h4 id="SQL事务的定义"><a href="#SQL事务的定义" class="headerlink" title="SQL事务的定义"></a>SQL事务的定义</h4><ul>
+<li>开始：<code>BEGIN TRANSACTION</code>。</li>
+<li>结束：<code>COMMIT</code>或<code>ROLLBACK</code>。</li>
+</ul>
+<h3 id="数据库恢复技术"><a href="#数据库恢复技术" class="headerlink" title="数据库恢复技术"></a>数据库恢复技术</h3><h4 id="概念-1"><a href="#概念-1" class="headerlink" title="概念"></a>概念</h4><p>把数据库从某一错误状态恢复到某一已知的正确状态。</p>
+<p>通过<strong>数据库管理系统的恢复子系统</strong>完成。</p>
+<h5 id="意义"><a href="#意义" class="headerlink" title="意义"></a>意义</h5><ul>
+<li>保证事务原子性、持久性。</li>
+<li>当系统故障后，使数据库恢复正常状态。</li>
+</ul>
+<h4 id="故障种类"><a href="#故障种类" class="headerlink" title="故障种类"></a>故障种类</h4><ul>
+<li>事务内部故障：<ul>
+<li>可预期的：事务根据内部条件来回滚。</li>
+<li>不可预期的：不能由应用程序处理，比如死锁、运算溢出、违反完整性规则等。</li>
+</ul>
+</li>
+<li>系统故障：<ul>
+<li>造成系统停止运行的任何事情。</li>
+<li>使事务都异常终止但不会破坏数据库。</li>
+</ul>
+</li>
+<li>介质故障：<ul>
+<li>外存故障。</li>
+<li>破坏全部或部分数据库，并影响正在存取这部分数据的所有事务。</li>
+</ul>
+</li>
+<li>计算机病毒：<ul>
+<li>数据库主要威胁，人为破坏或故障。</li>
+<li>对数据进行非法修改。</li>
+</ul>
+</li>
+</ul>
+<p>记：事务内部故障、系统故障、介质故障、计算机病毒。</p>
+<p>两种影响：</p>
+<ul>
+<li>数据库本身被破坏。</li>
+<li>数据库没有被破坏但数据可能不正确。</li>
+</ul>
+<h4 id="恢复的实现技术"><a href="#恢复的实现技术" class="headerlink" title="恢复的实现技术"></a>恢复的实现技术</h4><p>基本原理：<strong>冗余</strong>。</p>
+<h5 id="数据转储"><a href="#数据转储" class="headerlink" title="数据转储"></a>数据转储</h5><ul>
+<li>概念：DBA定期将整个数据库复制到磁带或另一个磁盘上保存起来的过程，备用数据称为<strong>后备副本或后援副本</strong>。</li>
+<li>两种<strong>转储状态</strong>：<ul>
+<li>静态转储：无事务运行时的转储操作。</li>
+<li>动态转储：转储期间允许对数据库进行存取或修改。需要用后援副本加上日志文件恢复。</li>
+</ul>
+</li>
+<li>两种<strong>转储方式</strong>：<ul>
+<li>海量转储：每次转储全部数据库。</li>
+<li>增量转储：每次只转储上一次转储后更新过的数据。</li>
+</ul>
+</li>
+<li>日志：记录事务对数据库更新操作的文件，分为以记录为单位和以数据块为单位的两种格式。<ul>
+<li>作用：事务故障和系统故障恢复必须使用日志文件。</li>
+<li>写入规则：先写入日志文件，后写数据库。</li>
+</ul>
+</li>
+</ul>
+<h5 id="故障的恢复策略"><a href="#故障的恢复策略" class="headerlink" title="故障的恢复策略"></a>故障的恢复策略</h5><ul>
+<li>事务故障的恢复：UNDO，撤销事务，在不影响其他事务的情况下强行回滚。反向扫描日志，执行所有更新操作的逆操作。</li>
+<li>系统故障：UNDO+REDO，撤销故障发生时未完成的事务，重做已完成但没有写入数据库的事务。</li>
+<li>介质故障：装入最新数据库后备副本，使数据库恢复到最近一次转储时的一致状态。装入转储以后的日志文件副本，重做已经完成的事务。</li>
+</ul>
+<h5 id="检查点技术"><a href="#检查点技术" class="headerlink" title="检查点技术"></a>检查点技术</h5><p>日志文件天啊及检查点记录，要记下所有正在执行的事务清单和这些事务最近一个日志记录的地址。</p>
+<p>增加一个重新开始文件，用来记录各个检查点记录在日志文件中的地址。</p>
+<h5 id="数据库镜像"><a href="#数据库镜像" class="headerlink" title="数据库镜像"></a>数据库镜像</h5><p>把整个DB或关键数据复制到另一个磁盘上，由DBMS自动保证镜像数据库与主数据库的一致性。</p>
+<h3 id="并发控制技术"><a href="#并发控制技术" class="headerlink" title="并发控制技术"></a>并发控制技术</h3><h4 id="并发控制"><a href="#并发控制" class="headerlink" title="并发控制"></a>并发控制</h4><h5 id="事务并发的优点"><a href="#事务并发的优点" class="headerlink" title="事务并发的优点"></a>事务并发的优点</h5><ul>
+<li>一个事务多个步骤并发执行，<strong>提高系统吞吐量</strong>。</li>
+<li>如果各个事务涉及的是数据库的不同部分，采用并发会<strong>减少平均响应时间</strong>。</li>
+</ul>
+<h5 id="带来的问题"><a href="#带来的问题" class="headerlink" title="带来的问题"></a>带来的问题</h5><ul>
+<li>多个事务同时存取同一数据时，不加以控制会读取或存取不正确的数据，破坏一致性。</li>
+<li><strong>丢失更新</strong>：两个事务同时读入数据并修改，后面的事务会破坏前面事务的结果，导致前面事务的结果丢失。</li>
+<li><strong>脏数据的读出</strong>：先前事务的结果被撤销，后面事务已经读出了错误的数据。</li>
+<li><strong>不能重复读</strong>：一个事务读取后，另一个事务更新了数据，导致第一个事务不能再现结果。</li>
+</ul>
+<h5 id="并发控制的基本思想"><a href="#并发控制的基本思想" class="headerlink" title="并发控制的基本思想"></a>并发控制的基本思想</h5><p>合理调度并发事务，避免并发事务之间的互相干扰造成数据的不一致性。</p>
+<p>主要方法是<strong>封锁机制</strong>。</p>
+<h4 id="封锁"><a href="#封锁" class="headerlink" title="封锁"></a>封锁</h4><p>事务T在对某个数据如表、记录等操作之前，先向系统发出请求，对其加锁，从而对该数据对象有了一定的控制权。</p>
+<h5 id="封锁的类型"><a href="#封锁的类型" class="headerlink" title="封锁的类型"></a>封锁的类型</h5><ul>
+<li>排它锁（X锁）：上锁后，则只允许当前事务对数据对象进行读取和修改，直到释放锁。</li>
+<li>共享锁（S锁）：上锁后可以读取但不能修改数据对象，其他事务只能加S锁，也不能加X锁，直到释放S锁。</li>
+</ul>
+<p><strong>数据库中封锁强度最高的锁 SIX（存疑）</strong>。</p>
+<h5 id="封锁协议"><a href="#封锁协议" class="headerlink" title="封锁协议"></a>封锁协议</h5><p>运用两种基本封锁可以建立不同的约定，形成不同级别的封锁协议。</p>
+<ul>
+<li>一级封锁协议：防止丢失修改。在修改数据R之前加X锁，结束才可以释放。</li>
+<li>二级封锁协议：防止读脏数据。一级封锁协议加上在读取R之前必须加S锁，读完释放S锁。</li>
+<li>三级封锁协议：保证数据可以重复读。一级封锁协议加上读取R前必须加S锁，直到事务结束才可以释放。</li>
+</ul>
+<h5 id="封锁粒度"><a href="#封锁粒度" class="headerlink" title="封锁粒度"></a>封锁粒度</h5><p>封锁对象的大小称为封锁的粒度。</p>
+<p>粒度大，则并发度低，封锁机构简单，开销小。</p>
+<p>粒度小，则并发度高，封锁机构复杂，开销高。</p>
+<p><strong>多粒度封锁</strong>：在一个系统中同时支持多种封锁粒度，选择封锁粒度时应同时考虑封锁开销和并发度两个因素。</p>
+<p><strong>多粒度封锁协议</strong>：允许多粒度树中每个结点被单独加锁，对一个结点加锁意味着所有后裔结点也被加以同样类型的锁。</p>
+<p><strong>意向锁</strong>：该结点的下层结点正在被加锁，对任意结点加锁时，必须先对上级结点加意向锁。好处是，对象加锁时，不需要再检查下级结点的封锁。</p>
+<h5 id="三种常用意向锁"><a href="#三种常用意向锁" class="headerlink" title="三种常用意向锁"></a>三种常用意向锁</h5><ul>
+<li>意向共享锁（IS锁）：如果要对一个对象加IS锁，表示他的后裔结点拟加S锁。</li>
+<li>意向排它锁（IX锁）：如果要对一个数据对象加IX锁，表示他的后裔结点拟加X锁。</li>
+<li>意向共享排它锁（SIX锁）：如果要对一个数据对象加SIX锁，表示对它加S锁，再加IX锁。</li>
+</ul>
+<h5 id="活锁与死锁"><a href="#活锁与死锁" class="headerlink" title="活锁与死锁"></a>活锁与死锁</h5><ul>
+<li>活锁：一个事务一直占用锁，后面可能一直等待，采用先来先服务法。</li>
+<li>死锁：预防死锁，死锁检测与解除。</li>
+<li><strong>死锁预防</strong>：<ul>
+<li>一次封锁法：要求每个事务必须一次将其所有要使用的数据全部加锁，否则就不能执行，降低了系统的并发度。</li>
+<li>顺序封锁法：预先对数据对象规定一个封锁顺序，所有事务都按照这个顺序封锁，实现难度大。</li>
+</ul>
+</li>
+<li><strong>死锁检测</strong>：<ul>
+<li>超时法：如果等待时间超过时限就认为发生死锁。</li>
+<li>等待图法：图中有回路说明出现了死锁。算法同 OS。</li>
+</ul>
+</li>
+<li>死锁恢复（OS 叫解除死锁）：选择一个处理死锁代价最小的事务，将其撤销。硬杀</li>
+</ul>
+<h4 id="事务的调度"><a href="#事务的调度" class="headerlink" title="事务的调度"></a>事务的调度</h4><p>N个事务的一个调度S是N个事务所有操作的一个序列S，表示这些操作的执行顺序，并且这个序列满足，对每个事务T，如果操作i在事务T中先于操作k，则在S中i也先于操作k。</p>
+<h4 id="并发调度正确性"><a href="#并发调度正确性" class="headerlink" title="并发调度正确性"></a>并发调度正确性</h4><ul>
+<li>一个事务正常或者预想的结果是没有其他并行事务干扰时得到的结果，因此<strong>一组事务的串行调度策略一定是正确的调度策略</strong>。</li>
+<li>各种结果都将保持数据库数据的一致性，所以都是正确的。</li>
+</ul>
+<h4 id="并发调度的可串行性"><a href="#并发调度的可串行性" class="headerlink" title="并发调度的可串行性"></a>并发调度的可串行性</h4><ul>
+<li><strong>可串行化</strong>：多个事务并发执行正确，当且仅当按某一次序串行执行它们时的结果相同，我们称这种调度策略为可串行化调度。</li>
+<li>可串行性是并行事务正确性的准则，一个给定的并发调度，当且仅当它是可串行化的，才认为是正确调度。</li>
+<li>一个调度Sc在保证冲突操作次序不变的情况下，可以通过交换两个事务不冲突操作的次序，得到另一个串行调度Sc’，则调度Sc为冲突可串行化调度。</li>
+<li>两段锁协议可以保证并行事务的可串行性。<ul>
+<li>内容：<ul>
+<li>对任何数据进行读写操作之前，事务首先要获得对该数据的封锁。</li>
+<li>在释放一个封锁之后，事务不再获得任何其他封锁。</li>
+</ul>
+</li>
+<li>含义：事务分为两个阶段，第一个阶段获得封锁称为<strong>扩展阶段</strong>，第二阶段释放封锁，称为<strong>收缩阶段</strong>。</li>
+<li>定理：若所有事务均遵从两段锁协议，则这些事务的所有并发调度都是可串行化的。</li>
+<li>注意：遵守两段锁协议只是充分条件。遵守两段锁的事务仍然可能发生死锁。</li>
+</ul>
+</li>
+</ul>
+<h2 id="第九章-分布式数据库"><a href="#第九章-分布式数据库" class="headerlink" title="第九章 分布式数据库"></a>第九章 分布式数据库</h2><p>分布式数据库比较抽象，需要多加记忆。</p>
+<h3 id="分布式数据库的定义"><a href="#分布式数据库的定义" class="headerlink" title="分布式数据库的定义"></a>分布式数据库的定义</h3><p>阐述</p>
+<ul>
+<li>分布性：数据分布存储在网络的各个节点。</li>
+<li>逻辑上的整体性：数据被一种机制联系在一起，构成一个有机整体。</li>
+</ul>
+<p>分布式数据库定义：<strong>分布式数据库由一组分布在计算机网络的不同结点上的数据组成，每个结点具有独立处理的能力，可以执行局部应用，同时每个结点也可以通过网络通信支持全局应用</strong>。</p>
+<ul>
+<li>局部应用：只操作一个结点上 数据库的应用 </li>
+<li>全局应用：操作两个或两个以上节点上数据库的应用</li>
+</ul>
+<p>分布式数据库以“数据分布”为前提，强调<strong>场地自治性</strong>（局部应用）以及<strong>自治场地之间的协作性</strong>（全局应用），两者缺一不可。</p>
+<ul>
+<li><strong>场地自治性</strong>：每个场地有自己的数据库，一组终端（局部应用）。</li>
+<li><strong>自治场地之间的协作性</strong>：逻辑上如同一个集中式数据库，可以在任何场地执行全局应用。</li>
+</ul>
+<p>一句话：场地自治和协作。</p>
+<h3 id="分布式数据库系统的特点"><a href="#分布式数据库系统的特点" class="headerlink" title="分布式数据库系统的特点"></a>分布式数据库系统的特点</h3><ul>
+<li>数据独立性：<ul>
+<li>逻辑独立性</li>
+<li>物理独立性</li>
+<li>分布独立性：逻辑分片、数据物理位置的分布细节等与用户无关。</li>
+</ul>
+</li>
+<li>集中与自治相结合的控制结构：<ul>
+<li>数据共享分为局部共享和全局共享。</li>
+<li>分布式数据库有自治功能，系统又设有集中控制结构。</li>
+</ul>
+</li>
+<li>适当增加数据冗余：<ul>
+<li>在不同结点存储同一个数据的多个副本。</li>
+<li>提高系统可靠性、可用性。</li>
+<li>提高系统性能。</li>
+</ul>
+</li>
+<li>全局的一致性、可串行性和可恢复性</li>
+</ul>
+<h3 id="分布式数据库系统的模式结构"><a href="#分布式数据库系统的模式结构" class="headerlink" title="分布式数据库系统的模式结构"></a>分布式数据库系统的模式结构</h3><p><img src="/2025/09/23/database-theory/%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%BA%93.png"></p>
+<ul>
+<li>全局外模式</li>
+<li>全局概念模式</li>
+<li>分片模式：<ul>
+<li>分片方式：水平分片、垂直分片、导出分片、混合分片。</li>
+<li>满足完全性、不相交性和可重构性。</li>
+</ul>
+</li>
+<li>分布模式<ul>
+<li>分布透明性：分片透明性、位置透明性、局部数据模型透明性。</li>
+</ul>
+</li>
+<li>局部概念模式</li>
+<li>局部内模式</li>
+</ul>
+<h3 id="数据分片方式"><a href="#数据分片方式" class="headerlink" title="数据分片方式"></a>数据分片方式</h3><p>1）水平分片，垂直分片，导出分片，混合分片 </p>
+<h3 id="分布透明性的概念"><a href="#分布透明性的概念" class="headerlink" title="分布透明性的概念"></a>分布透明性的概念</h3><p>1）分片透明性（最高），位置透明性，局部数据模型透明性 </p>
+<h3 id="分布式查询处理和优化"><a href="#分布式查询处理和优化" class="headerlink" title="分布式查询处理和优化"></a>分布式查询处理和优化</h3><p>1）分布式查询优化的目标 </p>
+<p>2）<strong>连接运算优化方法：半连接</strong></p>
+<h3 id="分布式事务处理"><a href="#分布式事务处理" class="headerlink" title="分布式事务处理"></a>分布式事务处理</h3><p>1）分布式事务的原子性概念</p>
+<p>2）分布式事务的两段提交协议</p>
+<h3 id="DDBMS"><a href="#DDBMS" class="headerlink" title="DDBMS"></a>DDBMS</h3><p>组成</p>
+<ul>
+<li>LDBMS：局部场地上的数据库管理系统。</li>
+<li>GDBMS：全局DBMS。</li>
+<li>GDD：全局数据字典。</li>
+<li>CM：通信管理。</li>
+</ul>
+<h3 id="主要技术"><a href="#主要技术" class="headerlink" title="主要技术"></a>主要技术</h3><h4 id="查询类型"><a href="#查询类型" class="headerlink" title="查询类型"></a>查询类型</h4><ul>
+<li>局部查询：单结点</li>
+<li>远程查询：单结点</li>
+<li>全局查询：多个结点</li>
+</ul>
+<h4 id="处理过程"><a href="#处理过程" class="headerlink" title="处理过程"></a>处理过程</h4><ul>
+<li>查询分解</li>
+<li>选择操作执行的次序</li>
+<li>选择执行操作的方法</li>
+<li>使用半连接缩减关系。（主要针对全局查询进行优化）</li>
+</ul>
+<h2 id="杂项整理"><a href="#杂项整理" class="headerlink" title="杂项整理"></a>杂项整理</h2><p>一些难记的公式：</p>
+<ul>
+<li>无损分解的判定算法</li>
+<li>无损分解的判定准则</li>
+<li>保持函数依赖的判定方法</li>
+<li>达到 3NF 且保持函数依赖的分解算法</li>
+<li>达到 3NF 且同时保持无损连接和函数依赖的分解算法</li>
+<li>达到 BCNF 的无损连接的分解算法</li>
+</ul>
+<p>如果对过程没有严格要求，可以直接写，采用投影操作将关系逐级分解（这样就只用记住定义就行！！！）。</p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>database_theory</p><p><a href="https://rookie-zgy1513.github.io/2025/09/23/database-theory/">https://rookie-zgy1513.github.io/2025/09/23/database-theory/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>作者</h6><p>RooKie_Z</p></div></div><div class="level-item is-narrow"><div><h6>发布于</h6><p>2025-09-23</p></div></div><div class="level-item is-narrow"><div><h6>更新于</h6><p>2025-09-23</p></div></div><div class="level-item is-narrow"><div><h6>许可协议</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/database/">database</a></div><div class="sharethis-inline-share-buttons"></div><script src="https://platform-api.sharethis.com/js/sharethis.js#property=689f30d60faa3a7358f6b458&amp;product=inline-share-buttons" defer></script></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2025/09/21/Algo/"><span class="level-item">BUAA 算法分析与设计记录</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card" id="comments"><div class="card-content"><h3 class="title is-5">评论</h3><div id="comment-container"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"><script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script><script>var gitalk = new Gitalk({
+            id: "250e1628f64561b91c57a06882141271",
+            repo: "rookie-zgy1513.github.io",
+            owner: "rookie-zgy1513",
+            clientID: "Ov23li6vyFeMUxsyVjCc",
+            clientSecret: "28debacc0df80666a6064a7f00cdad1cb7ad9248",
+            admin: ["rookie-zgy1513"],
+            createIssueManually: false,
+            distractionFreeMode: false,
+            perPage: 10,
+            pagerDirection: "last",
+            
+            
+            enableHotKey: true,
+            
+        })
+        gitalk.render('comment-container')</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1 is-sticky"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/avatar.png" alt="RooKie_Z"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">RooKie_Z</p><p class="is-size-6 is-block">RooKie_Z的小窝</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>BeiJing 🇨🇳</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives/"><p class="title">15</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories/"><p class="title">12</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags/"><p class="title">7</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/rookie-zgy1513" target="_blank" rel="me noopener">关注我</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Github" href="https://github.com/rookie-zgy1513"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Facebook" href="https://facebook.com"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Twitter" href="https://x.com"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Instagram" href="https://instagram.com"><i class="fab fa-instagram"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Bilibili" href="https://bilibili.com"><i class="fab fa-bilibili"></i></a></div></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">归档</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2025/09/"><span class="level-start"><span class="level-item">九月 2025</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2025/08/"><span class="level-start"><span class="level-item">八月 2025</span></span><span class="level-end"><span class="level-item tag">13</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Algorithm/"><span class="tag">Algorithm</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/CO/"><span class="tag">CO</span><span class="tag">5</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Hexo/"><span class="tag">Hexo</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/OO/"><span class="tag">OO</span><span class="tag">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/OS/"><span class="tag">OS</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/compiler/"><span class="tag">compiler</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/database/"><span class="tag">database</span><span class="tag">2</span></a></div></div></div></div></div><div class="card widget" data-type="links"><div class="card-content"><div class="menu"><h3 class="menu-label">链接</h3><ul class="menu-list"><li><a class="level is-mobile" href="https://hexo.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li><li><a class="level is-mobile" href="https://ppoffice.github.io/" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Icarus</span></span><span class="level-right"><span class="level-item tag">ppoffice.github.io</span></span></a></li></ul></div></div></div><div class="column-right-shadow is-hidden-widescreen is-sticky"></div></div><div class="column column-right is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only order-3 is-sticky"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><ul class="menu-list"><li><a class="level is-mobile" href="#写在前面"><span class="level-left"><span class="level-item">1.1</span><span class="level-item">写在前面</span></span></a></li></ul><li><a class="level is-mobile" href="#数据库-期末复习"><span class="level-left"><span class="level-item">2</span><span class="level-item">数据库 期末复习</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#第一章-概述"><span class="level-left"><span class="level-item">2.1</span><span class="level-item">第一章 概述</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#基本概念"><span class="level-left"><span class="level-item">2.1.1</span><span class="level-item">基本概念</span></span></a></li><li><a class="level is-mobile" href="#什么是数据库系统"><span class="level-left"><span class="level-item">2.1.2</span><span class="level-item">什么是数据库系统</span></span></a></li><li><a class="level is-mobile" href="#数据管理技术的发展"><span class="level-left"><span class="level-item">2.1.3</span><span class="level-item">数据管理技术的发展</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#人工管理阶段"><span class="level-left"><span class="level-item">2.1.3.1</span><span class="level-item">人工管理阶段</span></span></a></li><li><a class="level is-mobile" href="#文件系统阶段"><span class="level-left"><span class="level-item">2.1.3.2</span><span class="level-item">文件系统阶段</span></span></a></li><li><a class="level is-mobile" href="#数据库系统阶段"><span class="level-left"><span class="level-item">2.1.3.3</span><span class="level-item">数据库系统阶段</span></span></a></li></ul></li><li><a class="level is-mobile" href="#数据库系统（DBS）的组成"><span class="level-left"><span class="level-item">2.1.4</span><span class="level-item">数据库系统（DBS）的组成</span></span></a></li><li><a class="level is-mobile" href="#数据模型"><span class="level-left"><span class="level-item">2.1.5</span><span class="level-item">数据模型</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#数据模型的层次"><span class="level-left"><span class="level-item">2.1.5.1</span><span class="level-item">数据模型的层次</span></span></a></li><li><a class="level is-mobile" href="#概念模型"><span class="level-left"><span class="level-item">2.1.5.2</span><span class="level-item">概念模型</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#概念"><span class="level-left"><span class="level-item">2.1.5.2.1</span><span class="level-item">概念</span></span></a></li><li><a class="level is-mobile" href="#ER图"><span class="level-left"><span class="level-item">2.1.5.2.2</span><span class="level-item">ER图</span></span></a></li></ul></li><li><a class="level is-mobile" href="#数据模型-1"><span class="level-left"><span class="level-item">2.1.5.3</span><span class="level-item">数据模型</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#三要素"><span class="level-left"><span class="level-item">2.1.5.3.1</span><span class="level-item">三要素</span></span></a></li><li><a class="level is-mobile" href="#分类"><span class="level-left"><span class="level-item">2.1.5.3.2</span><span class="level-item">分类</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#数据库系统的结构"><span class="level-left"><span class="level-item">2.1.6</span><span class="level-item">数据库系统的结构</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#模式"><span class="level-left"><span class="level-item">2.1.6.1</span><span class="level-item">模式</span></span></a></li><li><a class="level is-mobile" href="#外模式"><span class="level-left"><span class="level-item">2.1.6.2</span><span class="level-item">外模式</span></span></a></li><li><a class="level is-mobile" href="#内模式"><span class="level-left"><span class="level-item">2.1.6.3</span><span class="level-item">内模式</span></span></a></li><li><a class="level is-mobile" href="#两级映象"><span class="level-left"><span class="level-item">2.1.6.4</span><span class="level-item">两级映象</span></span></a></li><li><a class="level is-mobile" href="#三级模式结构的优点"><span class="level-left"><span class="level-item">2.1.6.5</span><span class="level-item">三级模式结构的优点</span></span></a></li></ul></li><li><a class="level is-mobile" href="#DBMS"><span class="level-left"><span class="level-item">2.1.7</span><span class="level-item">DBMS</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#主要功能"><span class="level-left"><span class="level-item">2.1.7.1</span><span class="level-item">主要功能</span></span></a></li><li><a class="level is-mobile" href="#组成"><span class="level-left"><span class="level-item">2.1.7.2</span><span class="level-item">组成</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#第二章-关系数据库"><span class="level-left"><span class="level-item">2.2</span><span class="level-item">第二章 关系数据库</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#关系的数学定义"><span class="level-left"><span class="level-item">2.2.1</span><span class="level-item">关系的数学定义</span></span></a></li><li><a class="level is-mobile" href="#关系数据模型"><span class="level-left"><span class="level-item">2.2.2</span><span class="level-item">关系数据模型</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#数据结构"><span class="level-left"><span class="level-item">2.2.2.1</span><span class="level-item">数据结构</span></span></a></li><li><a class="level is-mobile" href="#数据操作"><span class="level-left"><span class="level-item">2.2.2.2</span><span class="level-item">数据操作</span></span></a></li></ul></li><li><a class="level is-mobile" href="#关系代数"><span class="level-left"><span class="level-item">2.2.3</span><span class="level-item">关系代数</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#传统集合运算"><span class="level-left"><span class="level-item">2.2.3.1</span><span class="level-item">传统集合运算</span></span></a></li><li><a class="level is-mobile" href="#专门的关系运算"><span class="level-left"><span class="level-item">2.2.3.2</span><span class="level-item">专门的关系运算</span></span></a></li></ul></li><li><a class="level is-mobile" href="#关系演算"><span class="level-left"><span class="level-item">2.2.4</span><span class="level-item">关系演算</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#元组关系演算"><span class="level-left"><span class="level-item">2.2.4.1</span><span class="level-item">元组关系演算</span></span></a></li><li><a class="level is-mobile" href="#域关系演算"><span class="level-left"><span class="level-item">2.2.4.2</span><span class="level-item">域关系演算</span></span></a></li></ul></li><li><a class="level is-mobile" href="#关系运算的安全约束"><span class="level-left"><span class="level-item">2.2.5</span><span class="level-item">关系运算的安全约束</span></span></a></li><li><a class="level is-mobile" href="#数据库数据语言"><span class="level-left"><span class="level-item">2.2.6</span><span class="level-item">数据库数据语言</span></span></a></li></ul></li><li><a class="level is-mobile" href="#第三章-关系数据库标准语言SQL"><span class="level-left"><span class="level-item">2.3</span><span class="level-item">第三章 关系数据库标准语言SQL</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#SQL的特点"><span class="level-left"><span class="level-item">2.3.1</span><span class="level-item">SQL的特点</span></span></a></li><li><a class="level is-mobile" href="#基本概念-1"><span class="level-left"><span class="level-item">2.3.2</span><span class="level-item">基本概念</span></span></a></li><li><a class="level is-mobile" href="#检索"><span class="level-left"><span class="level-item">2.3.3</span><span class="level-item">检索</span></span></a></li><li><a class="level is-mobile" href="#表操作"><span class="level-left"><span class="level-item">2.3.4</span><span class="level-item">表操作</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#定义基本表"><span class="level-left"><span class="level-item">2.3.4.1</span><span class="level-item">定义基本表</span></span></a></li><li><a class="level is-mobile" href="#修改基本表"><span class="level-left"><span class="level-item">2.3.4.2</span><span class="level-item">修改基本表</span></span></a></li><li><a class="level is-mobile" href="#删除基本表"><span class="level-left"><span class="level-item">2.3.4.3</span><span class="level-item">删除基本表</span></span></a></li><li><a class="level is-mobile" href="#定义索引"><span class="level-left"><span class="level-item">2.3.4.4</span><span class="level-item">定义索引</span></span></a></li><li><a class="level is-mobile" href="#删除索引"><span class="level-left"><span class="level-item">2.3.4.5</span><span class="level-item">删除索引</span></span></a></li><li><a class="level is-mobile" href="#定义视图"><span class="level-left"><span class="level-item">2.3.4.6</span><span class="level-item">定义视图</span></span></a></li></ul></li><li><a class="level is-mobile" href="#数据更新"><span class="level-left"><span class="level-item">2.3.5</span><span class="level-item">数据更新</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#插入"><span class="level-left"><span class="level-item">2.3.5.1</span><span class="level-item">插入</span></span></a></li><li><a class="level is-mobile" href="#修改"><span class="level-left"><span class="level-item">2.3.5.2</span><span class="level-item">修改</span></span></a></li><li><a class="level is-mobile" href="#删除"><span class="level-left"><span class="level-item">2.3.5.3</span><span class="level-item">删除</span></span></a></li></ul></li><li><a class="level is-mobile" href="#嵌入式SQL"><span class="level-left"><span class="level-item">2.3.6</span><span class="level-item">嵌入式SQL</span></span></a></li><li><a class="level is-mobile" href="#动态SQL"><span class="level-left"><span class="level-item">2.3.7</span><span class="level-item">动态SQL</span></span></a></li><li><a class="level is-mobile" href="#ODBC-JDBC"><span class="level-left"><span class="level-item">2.3.8</span><span class="level-item">ODBC/JDBC</span></span></a></li></ul></li><li><a class="level is-mobile" href="#第四章-数据库保护"><span class="level-left"><span class="level-item">2.4</span><span class="level-item">第四章 数据库保护</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#安全性控制"><span class="level-left"><span class="level-item">2.4.1</span><span class="level-item">安全性控制</span></span></a></li><li><a class="level is-mobile" href="#完整性控制"><span class="level-left"><span class="level-item">2.4.2</span><span class="level-item">完整性控制</span></span></a></li><li><a class="level is-mobile" href="#触发器（补充）"><span class="level-left"><span class="level-item">2.4.3</span><span class="level-item">触发器（补充）</span></span></a></li></ul></li><li><a class="level is-mobile" href="#第五章-关系数据理论"><span class="level-left"><span class="level-item">2.5</span><span class="level-item">第五章 关系数据理论</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#函数依赖"><span class="level-left"><span class="level-item">2.5.1</span><span class="level-item">函数依赖</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#函数依赖的定义"><span class="level-left"><span class="level-item">2.5.1.1</span><span class="level-item">函数依赖的定义</span></span></a></li><li><a class="level is-mobile" href="#相关术语"><span class="level-left"><span class="level-item">2.5.1.2</span><span class="level-item">相关术语</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#补充说明"><span class="level-left"><span class="level-item">2.5.1.2.1</span><span class="level-item">补充说明</span></span></a></li></ul></li><li><a class="level is-mobile" href="#与联系的关系"><span class="level-left"><span class="level-item">2.5.1.3</span><span class="level-item">与联系的关系</span></span></a></li><li><a class="level is-mobile" href="#关系键的形式定义"><span class="level-left"><span class="level-item">2.5.1.4</span><span class="level-item">关系键的形式定义</span></span></a></li><li><a class="level is-mobile" href="#函数依赖的逻辑蕴涵"><span class="level-left"><span class="level-item">2.5.1.5</span><span class="level-item">函数依赖的逻辑蕴涵</span></span></a></li><li><a class="level is-mobile" href="#Armstrong公理系统"><span class="level-left"><span class="level-item">2.5.1.6</span><span class="level-item">Armstrong公理系统</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#推论"><span class="level-left"><span class="level-item">2.5.1.6.1</span><span class="level-item">推论</span></span></a></li><li><a class="level is-mobile" href="#属性集闭包"><span class="level-left"><span class="level-item">2.5.1.6.2</span><span class="level-item">属性集闭包</span></span></a></li><li><a class="level is-mobile" href="#公理系统的有效性与完备性"><span class="level-left"><span class="level-item">2.5.1.6.3</span><span class="level-item">公理系统的有效性与完备性</span></span></a></li><li><a class="level is-mobile" href="#求属性闭包的算法"><span class="level-left"><span class="level-item">2.5.1.6.4</span><span class="level-item">求属性闭包的算法</span></span></a></li><li><a class="level is-mobile" href="#函数依赖集等价"><span class="level-left"><span class="level-item">2.5.1.6.5</span><span class="level-item">函数依赖集等价</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#范式"><span class="level-left"><span class="level-item">2.5.2</span><span class="level-item">范式</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#1NF"><span class="level-left"><span class="level-item">2.5.2.1</span><span class="level-item">1NF</span></span></a></li><li><a class="level is-mobile" href="#2NF"><span class="level-left"><span class="level-item">2.5.2.2</span><span class="level-item">2NF</span></span></a></li><li><a class="level is-mobile" href="#3NF"><span class="level-left"><span class="level-item">2.5.2.3</span><span class="level-item">3NF</span></span></a></li><li><a class="level is-mobile" href="#BCNF"><span class="level-left"><span class="level-item">2.5.2.4</span><span class="level-item">BCNF</span></span></a></li><li><a class="level is-mobile" href="#多值依赖与4NF"><span class="level-left"><span class="level-item">2.5.2.5</span><span class="level-item">多值依赖与4NF</span></span></a></li></ul></li><li><a class="level is-mobile" href="#规范化目的与基本思想"><span class="level-left"><span class="level-item">2.5.3</span><span class="level-item">规范化目的与基本思想</span></span></a></li><li><a class="level is-mobile" href="#模式分解理论"><span class="level-left"><span class="level-item">2.5.4</span><span class="level-item">模式分解理论</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#无损连接性分解判定算法"><span class="level-left"><span class="level-item">2.5.4.1</span><span class="level-item">无损连接性分解判定算法</span></span></a></li><li><a class="level is-mobile" href="#无损分解判定准则"><span class="level-left"><span class="level-item">2.5.4.2</span><span class="level-item">无损分解判定准则</span></span></a></li><li><a class="level is-mobile" href="#保持函数依赖判定准则"><span class="level-left"><span class="level-item">2.5.4.3</span><span class="level-item">保持函数依赖判定准则</span></span></a></li><li><a class="level is-mobile" href="#模式分解原则"><span class="level-left"><span class="level-item">2.5.4.4</span><span class="level-item">模式分解原则</span></span></a></li><li><a class="level is-mobile" href="#达到3NF的等价模式分解"><span class="level-left"><span class="level-item">2.5.4.5</span><span class="level-item">达到3NF的等价模式分解</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#保持函数依赖的分解算法"><span class="level-left"><span class="level-item">2.5.4.5.1</span><span class="level-item">保持函数依赖的分解算法</span></span></a></li><li><a class="level is-mobile" href="#同时保持函数依赖和无损连接的分解算法"><span class="level-left"><span class="level-item">2.5.4.5.2</span><span class="level-item">同时保持函数依赖和无损连接的分解算法</span></span></a></li></ul></li><li><a class="level is-mobile" href="#达到BCNF的无损连接分解算法"><span class="level-left"><span class="level-item">2.5.4.6</span><span class="level-item">达到BCNF的无损连接分解算法</span></span></a></li></ul></li><li><a class="level is-mobile" href="#候选码的求解"><span class="level-left"><span class="level-item">2.5.5</span><span class="level-item">候选码的求解</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#属性分类"><span class="level-left"><span class="level-item">2.5.5.1</span><span class="level-item">属性分类</span></span></a></li><li><a class="level is-mobile" href="#定理"><span class="level-left"><span class="level-item">2.5.5.2</span><span class="level-item">定理</span></span></a></li><li><a class="level is-mobile" href="#图论判定法"><span class="level-left"><span class="level-item">2.5.5.3</span><span class="level-item">图论判定法</span></span></a></li><li><a class="level is-mobile" href="#定理-1"><span class="level-left"><span class="level-item">2.5.5.4</span><span class="level-item">定理</span></span></a></li><li><a class="level is-mobile" href="#多属性依赖集候选码求解"><span class="level-left"><span class="level-item">2.5.5.5</span><span class="level-item">多属性依赖集候选码求解</span></span></a></li></ul></li><li><a class="level is-mobile" href="#与数据库设计的联系"><span class="level-left"><span class="level-item">2.5.6</span><span class="level-item">与数据库设计的联系</span></span></a></li></ul></li><li><a class="level is-mobile" href="#第六章-数据库设计"><span class="level-left"><span class="level-item">2.6</span><span class="level-item">第六章 数据库设计</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#数据库设计概述"><span class="level-left"><span class="level-item">2.6.1</span><span class="level-item">数据库设计概述</span></span></a></li><li><a class="level is-mobile" href="#数据库设计的基本步骤"><span class="level-left"><span class="level-item">2.6.2</span><span class="level-item">数据库设计的基本步骤</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#需求分析"><span class="level-left"><span class="level-item">2.6.2.1</span><span class="level-item">需求分析</span></span></a></li><li><a class="level is-mobile" href="#概念结构设计"><span class="level-left"><span class="level-item">2.6.2.2</span><span class="level-item">概念结构设计</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#设计概念结构四类方法"><span class="level-left"><span class="level-item">2.6.2.2.1</span><span class="level-item">设计概念结构四类方法</span></span></a></li><li><a class="level is-mobile" href="#数据抽象"><span class="level-left"><span class="level-item">2.6.2.2.2</span><span class="level-item">数据抽象</span></span></a></li><li><a class="level is-mobile" href="#实体模型的调整原则"><span class="level-left"><span class="level-item">2.6.2.2.3</span><span class="level-item">实体模型的调整原则</span></span></a></li><li><a class="level is-mobile" href="#集成局部ER图"><span class="level-left"><span class="level-item">2.6.2.2.4</span><span class="level-item">集成局部ER图</span></span></a></li><li><a class="level is-mobile" href="#设计基本ER图"><span class="level-left"><span class="level-item">2.6.2.2.5</span><span class="level-item">设计基本ER图</span></span></a></li></ul></li><li><a class="level is-mobile" href="#逻辑结构设计"><span class="level-left"><span class="level-item">2.6.2.3</span><span class="level-item">逻辑结构设计</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#步骤"><span class="level-left"><span class="level-item">2.6.2.3.1</span><span class="level-item">步骤</span></span></a></li></ul></li><li><a class="level is-mobile" href="#物理结构设计"><span class="level-left"><span class="level-item">2.6.2.4</span><span class="level-item">物理结构设计</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#第七章-存储管理与索引"><span class="level-left"><span class="level-item">2.7</span><span class="level-item">第七章 存储管理与索引</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#数据存储结构-物理结构"><span class="level-left"><span class="level-item">2.7.1</span><span class="level-item">数据存储结构/物理结构</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#DBMS存储管理的目标"><span class="level-left"><span class="level-item">2.7.1.1</span><span class="level-item">DBMS存储管理的目标</span></span></a></li><li><a class="level is-mobile" href="#文件中记录的几种组织方式的含义"><span class="level-left"><span class="level-item">2.7.1.2</span><span class="level-item">文件中记录的几种组织方式的含义</span></span></a></li><li><a class="level is-mobile" href="#页-块的分槽结构"><span class="level-left"><span class="level-item">2.7.1.3</span><span class="level-item">页/块的分槽结构</span></span></a></li></ul></li><li><a class="level is-mobile" href="#缓冲区管理"><span class="level-left"><span class="level-item">2.7.2</span><span class="level-item">缓冲区管理</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#缓冲区管理器的主要功能"><span class="level-left"><span class="level-item">2.7.2.1</span><span class="level-item">缓冲区管理器的主要功能</span></span></a></li><li><a class="level is-mobile" href="#索引"><span class="level-left"><span class="level-item">2.7.2.2</span><span class="level-item">索引</span></span></a></li><li><a class="level is-mobile" href="#索引的基本概念"><span class="level-left"><span class="level-item">2.7.2.3</span><span class="level-item">索引的基本概念</span></span></a></li><li><a class="level is-mobile" href="#索引的分类"><span class="level-left"><span class="level-item">2.7.2.4</span><span class="level-item">索引的分类</span></span></a></li><li><a class="level is-mobile" href="#B树和B-树的原理"><span class="level-left"><span class="level-item">2.7.2.5</span><span class="level-item">B树和B+树的原理</span></span></a></li><li><a class="level is-mobile" href="#HASH索引的原理"><span class="level-left"><span class="level-item">2.7.2.6</span><span class="level-item">HASH索引的原理</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#第八章-关系查询处理与查询优化（不是重点）"><span class="level-left"><span class="level-item">2.8</span><span class="level-item">第八章 关系查询处理与查询优化（不是重点）</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#关系查询处理步骤——四个阶段"><span class="level-left"><span class="level-item">2.8.1</span><span class="level-item">关系查询处理步骤——四个阶段</span></span></a></li><li><a class="level is-mobile" href="#查询优化"><span class="level-left"><span class="level-item">2.8.2</span><span class="level-item">查询优化</span></span></a></li><li><a class="level is-mobile" href="#代数优化"><span class="level-left"><span class="level-item">2.8.3</span><span class="level-item">代数优化</span></span></a></li><li><a class="level is-mobile" href="#物理优化"><span class="level-left"><span class="level-item">2.8.4</span><span class="level-item">物理优化</span></span></a></li></ul></li><li><a class="level is-mobile" href="#第九章-事务处理技术"><span class="level-left"><span class="level-item">2.9</span><span class="level-item">第九章 事务处理技术</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#事务的概念"><span class="level-left"><span class="level-item">2.9.1</span><span class="level-item">事务的概念</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#事务的定义"><span class="level-left"><span class="level-item">2.9.1.1</span><span class="level-item">事务的定义</span></span></a></li><li><a class="level is-mobile" href="#事务的特性"><span class="level-left"><span class="level-item">2.9.1.2</span><span class="level-item">事务的特性</span></span></a></li><li><a class="level is-mobile" href="#SQL事务的定义"><span class="level-left"><span class="level-item">2.9.1.3</span><span class="level-item">SQL事务的定义</span></span></a></li></ul></li><li><a class="level is-mobile" href="#数据库恢复技术"><span class="level-left"><span class="level-item">2.9.2</span><span class="level-item">数据库恢复技术</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#概念-1"><span class="level-left"><span class="level-item">2.9.2.1</span><span class="level-item">概念</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#意义"><span class="level-left"><span class="level-item">2.9.2.1.1</span><span class="level-item">意义</span></span></a></li></ul></li><li><a class="level is-mobile" href="#故障种类"><span class="level-left"><span class="level-item">2.9.2.2</span><span class="level-item">故障种类</span></span></a></li><li><a class="level is-mobile" href="#恢复的实现技术"><span class="level-left"><span class="level-item">2.9.2.3</span><span class="level-item">恢复的实现技术</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#数据转储"><span class="level-left"><span class="level-item">2.9.2.3.1</span><span class="level-item">数据转储</span></span></a></li><li><a class="level is-mobile" href="#故障的恢复策略"><span class="level-left"><span class="level-item">2.9.2.3.2</span><span class="level-item">故障的恢复策略</span></span></a></li><li><a class="level is-mobile" href="#检查点技术"><span class="level-left"><span class="level-item">2.9.2.3.3</span><span class="level-item">检查点技术</span></span></a></li><li><a class="level is-mobile" href="#数据库镜像"><span class="level-left"><span class="level-item">2.9.2.3.4</span><span class="level-item">数据库镜像</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#并发控制技术"><span class="level-left"><span class="level-item">2.9.3</span><span class="level-item">并发控制技术</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#并发控制"><span class="level-left"><span class="level-item">2.9.3.1</span><span class="level-item">并发控制</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#事务并发的优点"><span class="level-left"><span class="level-item">2.9.3.1.1</span><span class="level-item">事务并发的优点</span></span></a></li><li><a class="level is-mobile" href="#带来的问题"><span class="level-left"><span class="level-item">2.9.3.1.2</span><span class="level-item">带来的问题</span></span></a></li><li><a class="level is-mobile" href="#并发控制的基本思想"><span class="level-left"><span class="level-item">2.9.3.1.3</span><span class="level-item">并发控制的基本思想</span></span></a></li></ul></li><li><a class="level is-mobile" href="#封锁"><span class="level-left"><span class="level-item">2.9.3.2</span><span class="level-item">封锁</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#封锁的类型"><span class="level-left"><span class="level-item">2.9.3.2.1</span><span class="level-item">封锁的类型</span></span></a></li><li><a class="level is-mobile" href="#封锁协议"><span class="level-left"><span class="level-item">2.9.3.2.2</span><span class="level-item">封锁协议</span></span></a></li><li><a class="level is-mobile" href="#封锁粒度"><span class="level-left"><span class="level-item">2.9.3.2.3</span><span class="level-item">封锁粒度</span></span></a></li><li><a class="level is-mobile" href="#三种常用意向锁"><span class="level-left"><span class="level-item">2.9.3.2.4</span><span class="level-item">三种常用意向锁</span></span></a></li><li><a class="level is-mobile" href="#活锁与死锁"><span class="level-left"><span class="level-item">2.9.3.2.5</span><span class="level-item">活锁与死锁</span></span></a></li></ul></li><li><a class="level is-mobile" href="#事务的调度"><span class="level-left"><span class="level-item">2.9.3.3</span><span class="level-item">事务的调度</span></span></a></li><li><a class="level is-mobile" href="#并发调度正确性"><span class="level-left"><span class="level-item">2.9.3.4</span><span class="level-item">并发调度正确性</span></span></a></li><li><a class="level is-mobile" href="#并发调度的可串行性"><span class="level-left"><span class="level-item">2.9.3.5</span><span class="level-item">并发调度的可串行性</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#第九章-分布式数据库"><span class="level-left"><span class="level-item">2.10</span><span class="level-item">第九章 分布式数据库</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#分布式数据库的定义"><span class="level-left"><span class="level-item">2.10.1</span><span class="level-item">分布式数据库的定义</span></span></a></li><li><a class="level is-mobile" href="#分布式数据库系统的特点"><span class="level-left"><span class="level-item">2.10.2</span><span class="level-item">分布式数据库系统的特点</span></span></a></li><li><a class="level is-mobile" href="#分布式数据库系统的模式结构"><span class="level-left"><span class="level-item">2.10.3</span><span class="level-item">分布式数据库系统的模式结构</span></span></a></li><li><a class="level is-mobile" href="#数据分片方式"><span class="level-left"><span class="level-item">2.10.4</span><span class="level-item">数据分片方式</span></span></a></li><li><a class="level is-mobile" href="#分布透明性的概念"><span class="level-left"><span class="level-item">2.10.5</span><span class="level-item">分布透明性的概念</span></span></a></li><li><a class="level is-mobile" href="#分布式查询处理和优化"><span class="level-left"><span class="level-item">2.10.6</span><span class="level-item">分布式查询处理和优化</span></span></a></li><li><a class="level is-mobile" href="#分布式事务处理"><span class="level-left"><span class="level-item">2.10.7</span><span class="level-item">分布式事务处理</span></span></a></li><li><a class="level is-mobile" href="#DDBMS"><span class="level-left"><span class="level-item">2.10.8</span><span class="level-item">DDBMS</span></span></a></li><li><a class="level is-mobile" href="#主要技术"><span class="level-left"><span class="level-item">2.10.9</span><span class="level-item">主要技术</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#查询类型"><span class="level-left"><span class="level-item">2.10.9.1</span><span class="level-item">查询类型</span></span></a></li><li><a class="level is-mobile" href="#处理过程"><span class="level-left"><span class="level-item">2.10.9.2</span><span class="level-item">处理过程</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#杂项整理"><span class="level-left"><span class="level-item">2.11</span><span class="level-item">杂项整理</span></span></a></li></ul></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2025-09-23T04:01:03.000Z">2025-09-23</time></p><p class="title"><a href="/2025/09/23/database-theory/">database_theory</a></p><p class="categories"><a href="/categories/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E4%B8%8A/">大三上课上</a> / <a href="/categories/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E4%B8%8A/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%90%86%E8%AE%BA/">数据库理论</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2025-09-21T13:53:55.000Z">2025-09-21</time></p><p class="title"><a href="/2025/09/21/Algo/">BUAA 算法分析与设计记录</a></p><p class="categories"><a href="/categories/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E4%B8%8A/">大三上课上</a> / <a href="/categories/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E4%B8%8A/Algorithm/">Algorithm</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2025-08-14T15:46:07.000Z">2025-08-14</time></p><p class="title"><a href="/2025/08/14/database/">学海伴航——教辅平台系统设计文档</a></p><p class="categories"><a href="/categories/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E4%B8%8A/">大三上课上</a> / <a href="/categories/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E4%B8%8A/database/">database</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2025-08-14T13:06:06.000Z">2025-08-14</time></p><p class="title"><a href="/2025/08/14/compiler/">RooKie_Z Compiler编译器设计文档</a></p><p class="categories"><a href="/categories/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E4%B8%8A/">大三上课上</a> / <a href="/categories/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E4%B8%8A/compiler/">compiler</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2025-08-14T12:37:15.000Z">2025-08-14</time></p><p class="title"><a href="/2025/08/14/challenge-shell/">RooKie_Z challenge-shell实现报告</a></p><p class="categories"><a href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8B%E8%AF%BE%E4%B8%8A/">大二下课上</a> / <a href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8B%E8%AF%BE%E4%B8%8A/OS/">OS</a></p></div></article></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/Hexo/"><span class="level-start"><span class="level-item">Hexo</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E4%B8%8A/"><span class="level-start"><span class="level-item">大三上课上</span></span><span class="level-end"><span class="level-item tag">4</span></span></a><ul><li><a class="level is-mobile" href="/categories/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E4%B8%8A/Algorithm/"><span class="level-start"><span class="level-item">Algorithm</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E4%B8%8A/compiler/"><span class="level-start"><span class="level-item">compiler</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E4%B8%8A/database/"><span class="level-start"><span class="level-item">database</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E4%B8%8A/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%90%86%E8%AE%BA/"><span class="level-start"><span class="level-item">数据库理论</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></li><li><a class="level is-mobile" href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8A%E8%AF%BE%E4%B8%8A/"><span class="level-start"><span class="level-item">大二上课上</span></span><span class="level-end"><span class="level-item tag">5</span></span></a><ul><li><a class="level is-mobile" href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8A%E8%AF%BE%E4%B8%8A/CO%E5%AE%9E%E9%AA%8C/"><span class="level-start"><span class="level-item">CO实验</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile" href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8A%E8%AF%BE%E4%B8%8A/CO%E7%90%86%E8%AE%BA/"><span class="level-start"><span class="level-item">CO理论</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></li><li><a class="level is-mobile" href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8B%E8%AF%BE%E4%B8%8A/"><span class="level-start"><span class="level-item">大二下课上</span></span><span class="level-end"><span class="level-item tag">5</span></span></a><ul><li><a class="level is-mobile" href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8B%E8%AF%BE%E4%B8%8A/OO/"><span class="level-start"><span class="level-item">OO</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile" href="/categories/%E5%A4%A7%E4%BA%8C%E4%B8%8B%E8%AF%BE%E4%B8%8A/OS/"><span class="level-start"><span class="level-item">OS</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></li></ul></div></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.png" alt="RooKie_Z的小窝" height="28"></a><p class="is-size-7"><span>&copy; 2025 RooKie_Z</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p><p class="is-size-7">© 2025 RooKie_Z. All rights reserved.</p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/rookie-zgy1513"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-cn");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script data-pjax src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script data-pjax src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "此网站使用Cookie来改善您的体验。",
+          dismiss: "知道了！",
+          allow: "允许使用Cookie",
+          deny: "拒绝",
+          link: "了解更多",
+          policy: "Cookie政策",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script type="text/javascript" id="MathJax-script" async>MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+        fontCache: 'global'
+      },
+      chtml: {
+        matchFontHeight: false
+      }
+    };</script><script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script src="/js/pjax.js"></script><!--!--><!--!--><!--!--><script data-pjax src="/js/main.js" defer></script><script src="/js/night.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script data-pjax src="/js/insight.js" defer></script><script data-pjax>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
